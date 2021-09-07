@@ -1,0 +1,22 @@
+.App {
+  background: #1b1b1b;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 100vh;
+  min-height: 100vh;
+  user-select: none;
+  z-index: 10;
+  color: #999999;
+}
+
+.closed {
+  height: 0;
+  min-height: 0;
+}
+
+.ui-content {
+  margin-top: 80px;
+}
+

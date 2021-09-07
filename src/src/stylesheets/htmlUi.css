@@ -1,0 +1,230 @@
+.hidden {
+    display: none;
+}
+
+
+/* CONTROLS */
+
+.control {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    position: absolute;
+    width: 4.7em;
+    height: 4.7em;
+    border-radius: 100px;
+    border: none;
+    opacity: 0.8;
+    z-index: 500;
+    cursor: pointer;
+}
+.contol:focus {
+    outline: none;
+}
+.control.disabled-forever {
+    display: none;
+}
+
+
+
+.butt-sound {
+    background: center / contain no-repeat url("../assets/button/sound-on.jpg");
+    left: 1.5em;
+    top: 1.5em;
+}
+.butt-sound.muted {
+    background: center / contain no-repeat url("../assets/button/sound.jpg");
+}
+
+
+
+.butt-fullScreen {
+    background: center / contain no-repeat url("../assets/button/fullscreen.png");
+    left: 1.5em;
+    top: 7em;
+}
+.phoneTop .butt-fullScreen {
+    left: 7em;
+    top: 1.5em;
+}
+
+
+
+.butt-menu {
+    background: center / contain no-repeat url("../assets/button/menu.jpg");
+    left: 1.5em;
+    bottom: 4em;
+}
+.phoneTop .butt-menu {
+    bottom: 5em;
+}
+
+
+.butt-menu-info {
+    background: center / contain no-repeat url("../assets/button/info.jpg");
+    left: 1.5em;
+    bottom: 9em;
+}
+.phoneTop .butt-menu-info  {
+    bottom: 10.5em;
+}
+
+
+
+
+.butt-menu-rules {
+    background: center / contain no-repeat url("../assets/button/per-lines.jpg");
+    left: 1.5em;
+    bottom: 14em;
+}
+.phoneTop .butt-menu-rules {
+    bottom: 15.5em;
+}
+
+
+
+
+.butt-menu-settings {
+    background: center / contain no-repeat url("../assets/button/settings.jpg");
+    left: 1.5em;
+    bottom: 19em;
+}
+.phoneTop .butt-menu-settings {
+    bottom: 20.5em;
+}
+
+
+
+.butt-home {
+    background: center / contain no-repeat url("../assets/button/home.jpg");
+    right: 1.5em;
+    top: 1.5em;
+}
+
+
+
+.butt-bet {
+    background: center / contain no-repeat url("../assets/button/bet.jpg");
+    right: 1.5em;
+    bottom: 4em;
+}
+.phoneTop .butt-bet {
+    bottom: 5em;
+}
+
+
+/* CONTROL SPIN */
+
+.butt-main,
+.butt-stop-auto-play{
+    width: 8.5em;
+    height: 8.5em;
+    border: 2px solid #ffffff;
+}
+
+.butt-spin {
+    background: center / cover no-repeat url("../assets/button/spin.jpg");
+}
+
+.butt-spin.red {
+    background: center / cover no-repeat url("../assets/button/spinCanvasDisable.png");
+}
+
+.butt-main.butt-stop-auto-play {
+    background: center / contain no-repeat url("../assets/button/spinCanvasNoneStop.png");
+}
+
+.butt-main.butt-force-stop {
+    background: center / contain no-repeat url("../assets/button/forceStop.jpg");    
+}
+
+
+/* WIDGETS */
+
+.bottom-info-container {
+    /*font-family: 'Roboto-Light', sans-serif;*/
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex: 0 1 2em;
+    min-height: 10px;
+    background: rgb(20,20,20);
+    background: linear-gradient(180deg, rgba(20,20,20,1) 0%, rgba(131,131,131,1) 2%, rgba(116,115,115,0.9780287114845938) 4%, rgba(55,55,55,0.9780287114845938) 5%, rgba(0,0,0,0.9780287114845938) 100%);  color: rgba(255, 255, 255, 0.747);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 0.05em 0 0.8em 0;
+    /*font-size: 1.6em;*/
+}
+
+.phoneTop .bottom-info-container {
+    flex: 0 1 5em;
+    padding: 0.05em 0 0.8em 0;
+}
+
+.info-item {
+    flex: 0 1 25%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.phoneTop .info-item.balance-container {
+    justify-content: flex-start;
+}
+
+.phoneTop .info-item.win-container {
+    justify-content: flex-end;
+}
+
+.phoneTop .info-item {
+    flex-direction: column;
+}
+
+.phoneTop .container-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.phoneTop .balance-container {
+    align-items: flex-start;
+}
+
+.phoneTop .bet-container {
+    align-items: center;
+}
+
+.phoneTop .win-container {
+    align-items: flex-end;
+}
+
+
+span.currency {
+    font-size: 55%;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.phoneTop span.currency {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.info-item .bold {
+    font-weight: bold;
+    /*font-family: 'Roboto-Bold', sans-serif;*/
+    font-size: 120%;
+    margin-left: 0.33em;
+}
+
+.phoneTop .info-item .bold {
+    margin-left: 0;
+}
+
+.red {
+    color: #ff2121;
+}
+
+.pressed {
+    border: 3px solid #ffffff;
+}

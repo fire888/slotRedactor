@@ -1,0 +1,85 @@
+.bet-html-container {
+    position: absolute;
+    z-index: 5555555;
+    top: 0;
+    left: 0;
+    height: 92vh;
+    width: 100vw;
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    font-size: 10px;
+}
+
+
+
+.bet-html-container .bet-html-wrapper {
+    height: 8em;
+    width: 30em;
+    background: #00000066;
+    border-radius: 20em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    border: 0.5px solid #cccccc88;
+}
+
+.bet-html-container .bet-html-wrapper-inner {
+    height: 6em;
+    width: 28em;
+    background: #00000077;
+    border-radius: 20em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+}
+
+.bet-html-container .bet-butt-more {
+    display: block;
+    width: 6em;
+    height: 6em;
+    border-radius: 20em;
+    border: 1px solid #cccccccc;
+    background-image: url("../assets/button/bet-more.jpg");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.8;
+}
+
+.bet-html-container .bet-butt-less {
+    display: block;
+    width: 6em;
+    height: 6em;
+    border-radius: 20em;
+    border: 1px solid #cccccccc;
+    background-image: url("../assets/button/bet-less.jpg");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.8;
+}
+
+.bet-html-container .bet-value {
+    text-align: center;
+    color: #cccccc;
+    font-weight: bold;
+    font-size: 3em;
+    margin: 0.1em;
+}
+
+.bet-html-container .bet-value.red {
+    color: #ff2121;
+}
+
+.bet-html-container .bet-title {
+    text-align: center;
+    color: #cccccc;
+    font-weight: normal;
+    font-size: 1.5em;
+}
+

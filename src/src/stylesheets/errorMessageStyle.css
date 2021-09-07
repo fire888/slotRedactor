@@ -1,0 +1,19 @@
+.error-message {
+    position: absolute;
+    border: 1px #ffff00 solid;
+    background-color:  rgba(29, 6, 6, 0.774);
+    color: #ffff00;
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: normal;
+    text-align: center;
+    padding: 1.5em;
+    width: 80vw;
+    left: 10vw;
+    top: 10vw;
+    z-index: 9999999999999;
+}
+
+.error-message a {
+    color: #ffff00;
+}

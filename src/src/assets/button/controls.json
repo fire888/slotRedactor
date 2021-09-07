@@ -1,0 +1,132 @@
+{"frames": {
+
+"betDownCanvas.png":
+{
+	"frame": {"x":309,"y":95,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":40,"h":40}
+},
+"betDownCanvasH.png":
+{
+	"frame": {"x":351,"y":95,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":40,"h":40}
+},
+"betUpCanvas.png":
+{
+	"frame": {"x":369,"y":1,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":40,"h":40}
+},
+"betUpCanvasH.png":
+{
+	"frame": {"x":369,"y":43,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":40,"h":40}
+},
+"homeCanvas.png":
+{
+	"frame": {"x":1,"y":95,"w":42,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":42},
+	"sourceSize": {"w":42,"h":42}
+},
+"info.png":
+{
+	"frame": {"x":45,"y":95,"w":42,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":42},
+	"sourceSize": {"w":42,"h":42}
+},
+"menuCanvas.png":
+{
+	"frame": {"x":89,"y":95,"w":42,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":42},
+	"sourceSize": {"w":42,"h":42}
+},
+"per-lines.png":
+{
+	"frame": {"x":133,"y":95,"w":42,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":42},
+	"sourceSize": {"w":42,"h":42}
+},
+"settings.png":
+{
+	"frame": {"x":177,"y":95,"w":42,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":42},
+	"sourceSize": {"w":42,"h":42}
+},
+"soundOff.png":
+{
+	"frame": {"x":221,"y":95,"w":42,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":42},
+	"sourceSize": {"w":42,"h":42}
+},
+"soundOn.png":
+{
+	"frame": {"x":265,"y":95,"w":42,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":42},
+	"sourceSize": {"w":42,"h":42}
+},
+"spinCanvas.png":
+{
+	"frame": {"x":1,"y":1,"w":90,"h":92},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":4,"w":90,"h":92},
+	"sourceSize": {"w":100,"h":100}
+},
+"spinCanvasDisable.png":
+{
+	"frame": {"x":93,"y":1,"w":90,"h":92},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":4,"w":90,"h":92},
+	"sourceSize": {"w":100,"h":100}
+},
+"spinCanvasH.png":
+{
+	"frame": {"x":185,"y":1,"w":90,"h":92},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":4,"w":90,"h":92},
+	"sourceSize": {"w":100,"h":100}
+},
+"spinCanvasNoneStop.png":
+{
+	"frame": {"x":277,"y":1,"w":90,"h":92},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":4,"w":90,"h":92},
+	"sourceSize": {"w":100,"h":100}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "controls.png",
+	"format": "RGBA8888",
+	"size": {"w":410,"h":138},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:aa8f8d44eb04327eecd41fa65172affa:4ed4bec0bd490415bd02595df522e395:13db50ae431b1c60d076cd518d6333b1$"
+}
+}
