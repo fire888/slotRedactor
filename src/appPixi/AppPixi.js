@@ -1,12 +1,18 @@
-import * as PIXI from 'pixi.js-legacy'
-
 import { Application } from '../src/elementsCommon/Application'
 import { EventEmitter } from '../src/helpers/EventEmitter'
 import { DeviceResizer } from '../src/helpers/DeviceResizerFixedRatio'
+import { LoaderAssets } from './helpers/LoaderPixi'
+import { createContainerDragonSprites } from './containers/ContainerDragonSprites'
+
+
+import sSke from '../assets/testScatter/scatter_ske.json'
+import sTex from '../assets/testScatter/scatter_tex.json'
+import sImg from '../assets/testScatter/scatter_tex.png'
+
 
 
 const root = {
-    PIXI: PIXI,
+    PIXI: window.PIXI,
     container: document.querySelector('.app-container'),
     data: {
         windowData: {
@@ -41,8 +47,18 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
     },
 }})
 
-window.emitter.subscribe('dragonBonesFiles', f => {
-    console.log(f)
-})
+
 
 const app = new Application(root)
+const loader = new LoaderAssets(root)
+const container = createContainerDragonSprites(root)
+app.app.stage.addChild(container)
+
+
+loader.loadAnimated([{ 'sSke': sSke }, { 'sTex': sTex }, { 'sImg': sImg },], res => {
+    container.createDragonFactory('scatter', res)
+    const s = container.createSpByKey('scatter')
+    s.x = 300
+    s.y = 300
+    console.log(res)
+})
