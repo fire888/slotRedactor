@@ -3,42 +3,52 @@ import { AppButton } from "../components/AppButton";
 import { AppLoadFile } from "../components/AppLoadFile";
 
 
+const arrKeys = [ 'skeletonJson', 'textureJson', 'imageDr' ]
 const fileData = {}
 
 
 export function LoadDragonResources() {
 
-    const isStart = fileData.textureJson && fileData.skeletonJson && fileData.image
+    const [isShowStartButton, showStartButton] = useState(false)
+
+
+    const checkAllLoaded = v => {
+        fileData[v.type] = v.file
+        let isAllFiles = true
+        for (let i = 0; i < arrKeys.length; i++) {
+            if (!fileData[arrKeys[i]]) isAllFiles = false
+        }
+        isAllFiles && showStartButton(true)
+    }
+
 
     return (
         <div>
-                <AppLoadFile
-                    type='textureJson'
-                    val='textureJson'
-                    callBackClick = {v => {
-                        fileData[v.type] = v.file
-                    }}/>
 
                 <AppLoadFile
                     type='skeletonJson'
                     val='skeletonJson'
-                    callBackClick = {v => {
-                        fileData[v.type] = v.file
-                    }}/>
+                    callBackClick = {checkAllLoaded} />
+
 
                 <AppLoadFile
-                    type='image'
-                    val='image'
-                    callBackClick = {v => {
-                        fileData[v.type] = v.file
-                    }}/>
+                    type='textureJson'
+                    val='textureJson'
+                    callBackClick = {checkAllLoaded}/>
 
-                <AppButton
+
+                <AppLoadFile
+                    type='imageDr'
+                    val='image'
+                    callBackClick = {checkAllLoaded} />
+
+
+                {/*isShowStartButton &&*/ <AppButton
                     val = 'start'
                     classNameCustom = ''
                     callBackClick = {() =>
                         window.emitter && window.emitter.emit('dragonBonesFiles', fileData)
-                    }/>
+                    }/>}
 
             </div>
     );

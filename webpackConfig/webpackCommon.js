@@ -10,6 +10,11 @@ module.exports = env => {
         module: {
             rules: [
                 {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    use: "babel-loader"
+                },
+                {
                     test: /\.(png|svg|jpg|webp)$/,
                     use: [{
                         loader: 'file-loader',

@@ -5,11 +5,12 @@ export class SpriteDragonBones {
     constructor(root, files) {
 
         console.log(files)
+
         this.factory = DragonBones.PixiFactory.factory;
-        this.factory.parseDragonBonesData(files['sSke'].data);
+        this.factory.parseDragonBonesData(files['skeletonJson'].data);
         this.factory.parseTextureAtlasData(
-            files['sTex'].data,
-            files['sImg'].texture
+            files['textureJson'].data,
+            files['image'].texture
         )
     }
 }

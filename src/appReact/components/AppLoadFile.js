@@ -7,6 +7,7 @@ export function AppLoadFile (props) {
     // const [isFilePicked,  setIsSelected] = useState(false);
 
     const changeHandler = event => {
+        console.log(props.type)
         props.callBackClick({ type: props.type, file: event.target.files[0] })
     }
 
@@ -18,9 +19,9 @@ export function AppLoadFile (props) {
             {props.val}
             <br/>
             <input type="file" name="file" onChange={changeHandler} />
-            <div>
-                <button onClick={handleSubmission}>Submit</button>
-            </div>
+            {/*<div>*/}
+            {/*    <button onClick={handleSubmission}>Submit</button>*/}
+            {/*</div>*/}
     </div>
     )
 }

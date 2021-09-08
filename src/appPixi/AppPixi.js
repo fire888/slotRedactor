@@ -55,7 +55,34 @@ const container = createContainerDragonSprites(root)
 app.app.stage.addChild(container)
 
 
-loader.loadAnimated([{ 'sSke': sSke }, { 'sTex': sTex }, { 'sImg': sImg },], res => {
+window.emitter.subscribe('dragonBonesFiles', fileData => {
+    console.log(fileData)
+    const arrToLoad = []
+    for (let key in fileData) {
+        if (key === 'skeletonJson') {
+            arrToLoad.push({ 'skeletonJson': fileData[key] })
+        }
+        if (key === 'textureJson') {
+            arrToLoad.push({ 'textureJson': fileData[key] })
+        }
+        if ('image') {
+            arrToLoad.push({ 'imageDr': fileData[key] })
+        }
+    }
+
+
+    // loader.loadAnimated(arrToLoad, res => {
+    //     container.createDragonFactory('scatter2', res)
+    //     const s = container.createSpByKey('scatter2')
+    //     s.x = 400
+    //     s.y = 400
+    //     console.log(res)
+    // })
+
+})
+
+
+loader.loadAnimated([{ 'skeletonJson': sSke }, { 'textureJson': sTex }, { 'image': sImg },], res => {
     container.createDragonFactory('scatter', res)
     const s = container.createSpByKey('scatter')
     s.x = 300
