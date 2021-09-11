@@ -1,0 +1,41 @@
+
+pendullum.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+blik
+  rotate: false
+  xy: 513, 6
+  size: 57, 57
+  orig: 57, 57
+  offset: 0, 0
+  index: -1
+glass_pendullum
+  rotate: true
+  xy: 374, 34
+  size: 156, 137
+  orig: 156, 137
+  offset: 0, 0
+  index: -1
+glass_pendullum_light
+  rotate: false
+  xy: 2, 2
+  size: 216, 204
+  orig: 216, 204
+  offset: 0, 0
+  index: -1
+glow_pendullum
+  rotate: true
+  xy: 220, 2
+  size: 188, 152
+  orig: 188, 152
+  offset: 0, 0
+  index: -1
+magic_pendullum
+  rotate: false
+  xy: 513, 65
+  size: 107, 141
+  orig: 107, 141
+  offset: 0, 0
+  index: -1
