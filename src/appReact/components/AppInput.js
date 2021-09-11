@@ -8,10 +8,10 @@ export function AppInput (props) {
     }
 
     return (
-        <div className={`AppButton AppLoadFile`}>
-            {props.val}
+        <div className={`AppLoadFile`}>
+            {props.type}
             <br/>
-            <input type="text" name="name" onChange={changeHandler} />
+            <input type="text" name="name" defaultValue={props.val} onChange={changeHandler} />
         </div>
     )
 }

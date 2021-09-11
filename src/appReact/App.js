@@ -3,15 +3,21 @@ import ReactDOM from 'react-dom';
 import './stylesheets/index.css';
 import './App.css';
 import { AppButton } from "./components/AppButton";
-import { LoadDragonResources } from './containers/LoadDragonResources'
+import { RedactDragonResources } from './containers/RedactDragonResources'
 import { ListDragonResources } from './containers/ListDragonResourses'
-import { AppInput } from './components/AppInput'
 import { sendResponse } from '../toServerApi/requests'
 
 
 function App() {
       const [ isOpen, changeOpen ] = useState(true)
       const [ currentTab, changeCurrentTab ] = useState(false)
+      const [ dataRedactItem, setRedactItem ] = useState(null) 
+
+      const prepareToDedactItem = data => {
+          setRedactItem(data)
+          changeCurrentTab('edit-item')
+      }  
+    
 
       return (
             <div
@@ -39,8 +45,14 @@ function App() {
                         classNameCustom = {currentTab === 'items-list' && "current"}
                         callBackClick = {() => changeCurrentTab('items-list')}/>
 
-                    {currentTab === "add-item" && <LoadDragonResources />}
-                    {currentTab === "items-list" && <ListDragonResources />}
+                    {currentTab === "add-item" && 
+                        <RedactDragonResources mode="add-item"/>}
+                    
+                    {currentTab === "items-list" && 
+                        <ListDragonResources callBackClick={prepareToDedactItem}/>}
+                    
+                    {currentTab === "edit-item" && 
+                        <RedactDragonResources mode="edit-item" dataItem={dataRedactItem} />}
                 </div>
 
             </div>

@@ -1,6 +1,8 @@
-const HOST = "http://192.168.0.101:3010"
+//const HOST = "http://192.168.0.101:3010"
+const HOST = "http://192.168.10.2:3010"
 const PATHS = {
     "add-item": "/api/add-item",
+    "edit-item": "/api/edit-item",
     "remove-item": "/api/remove-item",
     "get-list": "/api/get-list",
 }
@@ -18,6 +20,7 @@ const reqParams = {
 }
 
 
+
 export function sendResponse (key, data, onDone, offDone) {
     const path = `${ HOST }${ PATHS[key] }`
 
@@ -31,19 +34,13 @@ export function sendResponse (key, data, onDone, offDone) {
 }
 
 
-const onSuccess = (json) =>  {
-    console.log(JSON.stringify(json) + ',')
-}
+const onSuccess = (json) =>  console.log(JSON.stringify(json) + ',')
 
 
-const onDenied = (mess, response) => {
-    console.log('denied', response)
-}
+const onDenied = (mess, response) => console.log('denied', response)
 
 
 const startFetch = (path, params, onSuccess, onDenied) => {
-    console.log(path, params)
-
     fetch(path, params)
         .then(function (response) {
             if (response.status === 200) {

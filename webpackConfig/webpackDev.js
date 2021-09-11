@@ -13,8 +13,10 @@ module.exports = env => {
             contentBase: path.join(__dirname, '../public'),
             //host: 'localhost',
             //host: '192.168.0.160',
-            host: '192.168.0.101',
+            //host: '192.168.0.101',
             //host: '192.168.42.75',
+            host: '192.168.10.2', // home
+            // host: 'localhost',
             compress: true,
             port: 9000,
             allowedHosts: ['ci.ait']

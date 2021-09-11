@@ -9,7 +9,7 @@ export function AppLoadFile (props) {
     }
 
     return (
-    <div className={`AppButton AppLoadFile`}>
+    <div className={`AppLoadFile`}>
             {props.val}
             <br/>
             <input type="file" name="file" onChange={changeHandler} />

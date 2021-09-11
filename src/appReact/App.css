@@ -9,6 +9,7 @@
   user-select: none;
   z-index: 10;
   color: #999999;
+  padding: 0 10px 0 10px;
 }
 
 .closed {
