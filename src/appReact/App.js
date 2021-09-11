@@ -4,11 +4,14 @@ import './stylesheets/index.css';
 import './App.css';
 import { AppButton } from "./components/AppButton";
 import { LoadDragonResources } from './containers/LoadDragonResources'
-
+import { ListDragonResources } from './containers/ListDragonResourses'
+import { AppInput } from './components/AppInput'
+import { sendResponse } from '../toServerApi/requests'
 
 
 function App() {
       const [ isOpen, changeOpen ] = useState(true)
+      const [ currentTab, changeCurrentTab ] = useState(false)
 
       return (
             <div
@@ -24,8 +27,20 @@ function App() {
                     className='ui-content '
                     style={{'display':  isOpen ? 'block' : 'none'}}>
 
+                    <AppButton
+                        val = "add item"
+                        classNameCustom = {currentTab === 'add-item' && "current"}
+                        callBackClick = {() => {
+                            changeCurrentTab('add-item')}
+                        }/>
 
-                    <LoadDragonResources />
+                    <AppButton
+                        val = "items-list"
+                        classNameCustom = {currentTab === 'items-list' && "current"}
+                        callBackClick = {() => changeCurrentTab('items-list')}/>
+
+                    {currentTab === "add-item" && <LoadDragonResources />}
+                    {currentTab === "items-list" && <ListDragonResources />}
                 </div>
 
             </div>

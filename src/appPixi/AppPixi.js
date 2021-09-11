@@ -70,6 +70,11 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
         }
     }
 
+    loader.load([ {key: 's', dataKey: fileData['imageDr']} ])
+
+    const s = new PIXI.Sprite.from(fileData.imageDr)
+
+    //app.app.style.addChild([s, )
 
     // loader.loadAnimated(arrToLoad, res => {
     //     container.createDragonFactory('scatter2', res)

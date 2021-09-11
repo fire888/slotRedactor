@@ -1,12 +1,21 @@
 .AppButton {
-    display: block;
+    display: inline-block;
     color: #cccccc;
     padding: 5px;
     min-width: 40px;
     border: 1px solid #cccccc;
     border-radius: 5px;
     cursor: pointer;
-    margin: 10px;
+    margin: 5px;
+}
+
+.AppButton.current {
+    background-color: #263c92;
+}
+
+.AppButton:hover {
+    color: #222222;
+    background: #cccccc;
 }
 
 .closeOpenApp {

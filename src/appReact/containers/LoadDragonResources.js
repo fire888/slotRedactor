@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
 import { AppLoadFile } from "../components/AppLoadFile";
+import {AppInput} from "../components/AppInput";
+
+import {sendResponse} from "../../toServerApi/requests";
 
 
 const arrKeys = [ 'skeletonJson', 'textureJson', 'imageDr' ]
@@ -24,6 +27,30 @@ export function LoadDragonResources() {
 
     return (
         <div>
+
+                <AppInput
+                    val="name"
+                    type={"item_name"}
+                    callBackClick = {e => {
+                        console.log(e)
+                        const data = {
+                            'type-exec': 'dragonBones',
+                            'type-view': 'slot-item',
+                            name: e.val,
+                            animationsNames: [e.val, e.val],
+                            armatureName: 'Arm' + e.val,
+                            files: [
+                                { 'type-file': 'dragon-ske', path: '././', name: 'aaaa.json', file: '--' },
+                                { 'type-file': 'dragon-tex', path: '././', name: 'bbb.json', file: '--' },
+                                { 'type-file': 'dragon-img', path: '././', name: 'bbb.png', file: '--' }
+                            ]
+                        }
+
+
+
+
+                        sendResponse('add-item', data)
+                    }}/>
 
                 <AppLoadFile
                     type='skeletonJson'
