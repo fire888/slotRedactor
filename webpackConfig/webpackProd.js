@@ -3,11 +3,6 @@ const merge = require('webpack-merge');
 const appCommonConfig = require('./webpackCommon.js');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const namesFiles = require('./preNamesFiles')
-
-
-const preNameFiles = namesFiles.getPreNamesFiles()
-
 
 module.exports = env => {
     const environment = env || {}
@@ -18,12 +13,14 @@ module.exports = env => {
 
 
     const config = merge.merge(appCommonConfig(environment), {
-        //mode: 'development',
-        //devtool: 'inline-source-map',
-        mode: 'production',
+        // TODO: REMOVE
+        mode: 'development',
+        devtool: 'inline-source-map',
+        
+        //mode: 'production',
         output: {
-            path: path.resolve(__dirname, '../../dist'),
-            filename: `${ preNameFiles }app.bundle.js`
+            path: path.resolve(__dirname, '../../slot_conf_back/uploads/redactor/'),
+            filename: `app.bundle.js`
         },
         plugins: plugins
     });

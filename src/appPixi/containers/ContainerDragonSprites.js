@@ -11,10 +11,12 @@ export const createContainerDragonSprites = root => {
                 super(data)
 
                 this.spritesFactory = {}
+                this.dataFactory = {}
             }
 
             createDragonFactory (key, dataFile) {
                 this.spritesFactory[key] = new SpriteDragonBones(root, dataFile)
+                this._dataFactory[key] = dataFile
             }
 
             createSpByKey (key) {
