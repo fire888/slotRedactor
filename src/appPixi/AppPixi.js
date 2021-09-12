@@ -2,14 +2,11 @@ import { Application } from './SlotMachineLibModified/src/elementsCommon/Applica
 import { EventEmitter } from './SlotMachineLibModified/src/helpers/EventEmitter'
 import { DeviceResizer } from './SlotMachineLibModified/src/helpers/DeviceResizerFixedRatio'
 import { LoaderAssets } from './helpers/LoaderPixi'
-import { createContainerDragonSprites } from './containers/ContainerDragonSprites'
 import { HOST } from "../globals";
 import DragonBones from './SlotMachineLibModified/src/libs/dragonBones'
 
 
-// import sSke from '../assets/testScatter/scatter_ske.json'
-// import sTex from '../assets/testScatter/scatter_tex.json'
-// import sImg from '../assets/testScatter/scatter_tex.png'
+
 
 
 
@@ -53,15 +50,17 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
 
 const app = new Application(root)
 const loader = new LoaderAssets(root)
-//app.app.stage.addChild(container)
+
 
 
 
 /************************************************************ */
 
 const factory = DragonBones.PixiFactory.factory
+const isFactoryCreated = {}
 
 const createFactory = (files) => {
+
     factory.parseDragonBonesData(files['skeletonJson'].data);
     factory.parseTextureAtlasData(
         files['textureJson'].data,
@@ -70,16 +69,19 @@ const createFactory = (files) => {
 } 
 
 
-const createDragonSprite = (armatureName, animationName) => {
+const createDragonSprite = armatureName => {
     const s = factory.buildArmatureDisplay(armatureName)
-    s.animation.play(animationName, 30)
     return s
 }
 
+/*************************************************************** */
 
+let currentDragonSprite = null 
 
-
-
+window.emitter.subscribe('startAnimate', animationName => {
+    console.log(animationName)
+    currentDragonSprite && currentDragonSprite.animation.play(animationName, 1)
+})
 
 
 
@@ -93,20 +95,29 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
 
     if(isLoaded) return;
     isLoaded = true
+    setTimeout(() => isLoaded = false, 2000)
 
-    console.log(fileData)
-    const dataSke = {'skeletonJson': `${ HOST }/${fileData.files['dragon-ske'].path}/${fileData.files['dragon-ske'].name}`}
-    const dataTex = {'textureJson': `${ HOST }/${fileData.files['dragon-tex'].path}/${fileData.files['dragon-tex'].name}`}
-    const img = {'image': `${ HOST }/${fileData.files['dragon-img'].path}/${fileData.files['dragon-img'].name}`}
 
-    console.log(dataSke, dataTex, img)
+    const dataSke = {"skeletonJson": `${ HOST }/${fileData.files['dragon-ske'].path}/${fileData.files['dragon-ske'].name}`}
+    const dataTex = {"textureJson": `${ HOST }/${fileData.files['dragon-tex'].path}/${fileData.files['dragon-tex'].name}`}
+    const img = {"image": `${ HOST }/${fileData.files['dragon-img'].path}/${fileData.files['dragon-img'].name}`}
 
     loader.loadAnimated([dataSke, dataTex, img],
         res => {
-            createFactory(res)
-            const s = createDragonSprite(fileData.armatureName, fileData.animationsNames[0])
-            s.x = 300
-            s.y = 300
-            app.app.stage.addChild(s)
+            if (!isFactoryCreated[fileData.armatureName]) {
+                createFactory(res)
+                isFactoryCreated[fileData.armatureName] = true
+            }
+
+            if (currentDragonSprite !== null) {
+                app.app.stage.removeChild(currentDragonSprite)
+                currentDragonSprite.destroy()
+            }
+
+
+            currentDragonSprite = createDragonSprite(fileData.armatureName)
+            currentDragonSprite.x = 300
+            currentDragonSprite.y = 300
+            app.app.stage.addChild(currentDragonSprite)
         })
 })

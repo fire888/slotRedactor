@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
 
+const startAnimate = animationName => {
+    window.emitter.emit('startAnimate', animationName)
+}
+
+
 const createArrFromObj = obj => {
     const arr = []
     for (let key in obj) {
@@ -22,7 +27,12 @@ export function ViewItem(props) {
             <div>arm: {props.currentDataItem.armatureName}</div>
             <div>
                 {props.currentDataItem.animationsNames.map((n, i) =>
-                    <div key={i}>animation {i} {n}</div>)}
+                    <div key={i}>
+                        animation {i} 
+                        <button onClick={() => startAnimate(n)}>
+                            {n}
+                        </button>
+                    </div>)}
             </div>
             <div>
                 {createArrFromObj(props.currentDataItem.files).map((n, i) =>
