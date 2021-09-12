@@ -1,22 +1,29 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom';
 import './stylesheets/index.css';
-import './App.css';
+import './stylesheets/App.css';
 import { AppButton } from "./components/AppButton";
 import { RedactDragonResources } from './containers/RedactDragonResources'
 import { ListDragonResources } from './containers/ListDragonResourses'
+import { ViewItem } from './containers/ViewItem'
 import { sendResponse } from '../toServerApi/requests'
 
 
 function App() {
       const [ isOpen, changeOpen ] = useState(true)
-      const [ currentTab, changeCurrentTab ] = useState(false)
-      const [ dataRedactItem, setRedactItem ] = useState(null) 
+      const [ currentTab, changeMainTab ] = useState('items-list')
+      //const [ dataRedactItem, setRedactItem ] = useState(null)
+      const [ currentDataItem, setDataItemToCurrent ] = useState(null)
 
       const prepareToDedactItem = data => {
           setRedactItem(data)
-          changeCurrentTab('edit-item')
-      }  
+          changeMainTab('edit-item')
+      }
+
+      const setToViewItem = data => {
+          setDataItemToCurrent(data)
+          changeMainTab('view-item')
+      }
     
 
       return (
@@ -34,25 +41,33 @@ function App() {
                     style={{'display':  isOpen ? 'block' : 'none'}}>
 
                     <AppButton
-                        val = "add item"
-                        classNameCustom = {currentTab === 'add-item' && "current"}
-                        callBackClick = {() => {
-                            changeCurrentTab('add-item')}
-                        }/>
-
-                    <AppButton
                         val = "items-list"
                         classNameCustom = {currentTab === 'items-list' && "current"}
-                        callBackClick = {() => changeCurrentTab('items-list')}/>
+                        callBackClick = {() => changeMainTab('items-list')}/>
 
                     {currentTab === "add-item" && 
-                        <RedactDragonResources mode="add-item"/>}
-                    
-                    {currentTab === "items-list" && 
-                        <ListDragonResources callBackClick={prepareToDedactItem}/>}
-                    
-                    {currentTab === "edit-item" && 
-                        <RedactDragonResources mode="edit-item" dataItem={dataRedactItem} />}
+                        <RedactDragonResources
+                            mode="add-item"
+                            changeMainTab={changeMainTab}/>}
+
+                    {currentTab === "view-item" &&
+                    <ViewItem
+                        mode="view-item"
+                        currentDataItem={currentDataItem}
+                        changeMainTab={changeMainTab}/>}
+
+
+                    {currentTab === "edit-item" &&
+                        <RedactDragonResources
+                            mode="edit-item"
+                            dataItem={currentDataItem}
+                            changeMainTab={changeMainTab}/>}
+
+
+                    {currentTab === "items-list" &&
+                        <ListDragonResources
+                            callBackClick={setToViewItem/*prepareToDedactItem*/}
+                            changeMainTab={changeMainTab}/>}
                 </div>
 
             </div>

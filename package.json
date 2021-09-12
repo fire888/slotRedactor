@@ -32,6 +32,7 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.3.0",
     "spectorjs": "^0.9.17",
+    "uniqid": "^5.4.0",
     "url-loader": "^4.1.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",

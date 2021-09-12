@@ -1,10 +1,12 @@
-//const HOST = "http://192.168.0.101:3010"
-const HOST = "http://192.168.10.2:3010"
+import { HOST } from '../globals'
+
+
 const PATHS = {
     "add-item": "/api/add-item",
     "edit-item": "/api/edit-item",
     "remove-item": "/api/remove-item",
     "get-list": "/api/get-list",
+    "upload-file": "/api/upload-file",
 }
 
 
@@ -16,6 +18,9 @@ const reqParams = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
+    },
+    postFiles: {
+        method: 'POST',
     }
 }
 
@@ -24,12 +29,26 @@ const reqParams = {
 export function sendResponse (key, data, onDone, offDone) {
     const path = `${ HOST }${ PATHS[key] }`
 
-    const body = JSON.stringify({
-        ...data
-    })
+    //const body = data
+    const body = JSON.stringify({...data})
     const params = Object.assign({}, reqParams.post, { body })
 
     console.log(params)
+    startFetch(path, params, onDone || onSuccess, offDone || onDenied)
+}
+
+
+
+export function uploadFile (key, fileData, onDone, offDone) {
+    const path = `${ HOST }${ PATHS[key] }`
+
+    const formData = new FormData();
+    formData.append('id', fileData.id, )
+    formData.append('type', fileData.type, )
+    formData.append('file', fileData.file, )
+
+    const params = Object.assign({}, reqParams.postFiles, { body: formData })
+
     startFetch(path, params, onDone || onSuccess, offDone || onDenied)
 }
 

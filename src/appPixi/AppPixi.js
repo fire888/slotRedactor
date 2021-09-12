@@ -1,8 +1,9 @@
-import { Application } from '../src/elementsCommon/Application'
-import { EventEmitter } from '../src/helpers/EventEmitter'
-import { DeviceResizer } from '../src/helpers/DeviceResizerFixedRatio'
+import { Application } from './SlotMachineLibModified/src/elementsCommon/Application'
+import { EventEmitter } from './SlotMachineLibModified/src/helpers/EventEmitter'
+import { DeviceResizer } from './SlotMachineLibModified/src/helpers/DeviceResizerFixedRatio'
 import { LoaderAssets } from './helpers/LoaderPixi'
 import { createContainerDragonSprites } from './containers/ContainerDragonSprites'
+import { HOST } from "../globals";
 
 
 import sSke from '../assets/testScatter/scatter_ske.json'
@@ -54,9 +55,43 @@ const loader = new LoaderAssets(root)
 const container = createContainerDragonSprites(root)
 app.app.stage.addChild(container)
 
+let isLoaded = false
 
 window.emitter.subscribe('dragonBonesFiles', fileData => {
+
+    if(isLoaded) return;
+    isLoaded = true
+
     console.log(fileData)
+    const dataSke = {'skeletonJson': `${ HOST }/${fileData.files['dragon-ske'].path}/${fileData.files['dragon-ske'].name}`}
+    const dataTex = {'textureJson': `${ HOST }/${fileData.files['dragon-tex'].path}/${fileData.files['dragon-tex'].name}`}
+    const img = {'image': `${ HOST }/${fileData.files['dragon-img'].path}/${fileData.files['dragon-img'].name}`}
+
+    console.log(dataSke, dataTex, img)
+
+    loader.loadAnimated([dataSke, dataTex, img],
+        res => {
+            container.createDragonFactory(fileData.armatureName, res)
+            const s = container.createSpByKey(fileData.armatureName)
+            s.x = 300
+            s.y = 300
+            console.log(res)
+        })
+
+
+
+    // loader.loadAnimated([{ 'skeletonJson': sSke }, { 'textureJson': sTex }, { 'image': sImg },], res => {
+    //     container.createDragonFactory('scatter', res)
+    //     const s = container.createSpByKey('scatter')
+    //     s.x = 300
+    //     s.y = 300
+    //     console.log(res)
+    // })
+
+
+    /*
+
+
     const arrToLoad = []
     for (let key in fileData) {
         if (key === 'skeletonJson') {
@@ -74,6 +109,10 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
 
     const s = new PIXI.Sprite.from(fileData.imageDr)
 
+
+
+     */
+
     //app.app.style.addChild([s, )
 
     // loader.loadAnimated(arrToLoad, res => {
@@ -86,7 +125,7 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
 
 })
 
-
+/*
 loader.loadAnimated([{ 'skeletonJson': sSke }, { 'textureJson': sTex }, { 'image': sImg },], res => {
     container.createDragonFactory('scatter', res)
     const s = container.createSpByKey('scatter')
@@ -94,3 +133,5 @@ loader.loadAnimated([{ 'skeletonJson': sSke }, { 'textureJson': sTex }, { 'image
     s.y = 300
     console.log(res)
 })
+
+ */

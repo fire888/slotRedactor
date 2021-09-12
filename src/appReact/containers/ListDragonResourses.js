@@ -7,6 +7,7 @@ export function ListDragonResources(props) {
     const [loadedRes, showList] = useState([])
 
     const prepareList = data => {
+        console.log(data.list)
         const arr = data.list.map(item =>
             <AppButton
                 classNameCustom={'long'}
@@ -25,6 +26,11 @@ export function ListDragonResources(props) {
     return (
         <div>
             {loadedRes.length !== 0 && loadedRes}
+            <AppButton
+                val = "add item"
+                callBackClick = {() => {
+                    props.changeMainTab('add-item')}
+                }/>
         </div>
     )
 }

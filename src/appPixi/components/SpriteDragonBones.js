@@ -1,5 +1,5 @@
 import '../../globals';
-import DragonBones from '../../src/libs/dragonBones'
+import DragonBones from '../SlotMachineLibModified/src/libs/dragonBones'
 
 export class SpriteDragonBones {
     constructor(root, files) {

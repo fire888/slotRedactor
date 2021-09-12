@@ -1,5 +1,5 @@
 import React from 'react'
-import '../stylesheets/AppLoadFile.css'
+import '../stylesheets/AppInput.css'
 
 
 export function AppInput (props) {
@@ -8,7 +8,7 @@ export function AppInput (props) {
     }
 
     return (
-        <div className={`AppLoadFile`}>
+        <div className={`AppInput`}>
             {props.type}
             <br/>
             <input type="text" name="name" defaultValue={props.val} onChange={changeHandler} />

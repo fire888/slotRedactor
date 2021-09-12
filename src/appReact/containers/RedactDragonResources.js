@@ -1,54 +1,62 @@
 import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
 import { AppLoadFile } from "../components/AppLoadFile";
-import {AppInput} from "../components/AppInput";
+import { AppInput } from "../components/AppInput";
 
-import {sendResponse} from "../../toServerApi/requests";
+import uniqid from 'uniqid'
+import { sendResponse, uploadFile } from "../../toServerApi/requests";
 
 
-const arrKeys = [ 'skeletonJson', 'textureJson', 'imageDr' ]
-const fileData = {}
+const arrKeys = [ 'dragon-ske', 'dragon-tex', 'dragon-img' ]
+const filesData = {}
 
 
 const startData = {
+    'id': null,
     'typeExec': 'dragonBones',
     'typeView': 'slot-item',
     'name': '',
-    'animationsNames': [],
+    'animationsNames': [null, null, null],
     'armatureName': '',
-    files: [
-        { 'type-file': 'dragon-ske', path: '././', name: 'aaaa.json', file: '--' },
-        { 'type-file': 'dragon-tex', path: '././', name: 'bbb.json', file: '--' },
-        { 'type-file': 'dragon-img', path: '././', name: 'bbb.png', file: '--' }
-    ]
+    files: {
+        'dragon-ske': {},
+        'dragon-tex': {},
+        'dragon-img': {},
+    }
+}
+
+const prepareNewDataFromStartData = () => {
+    const newData = JSON.parse(JSON.stringify(startData))
+    newData.id = uniqid()
+    return newData
 }
 
 
 export function RedactDragonResources(props) {
 
-    const [dataItem, setToStateData] = useState(props.dataItem || JSON.parse(JSON.stringify(startData)))
+    const [dataItem, setToStateData] = useState(props.dataItem || prepareNewDataFromStartData())
     const [alertMess, setAlertMess] = useState([])
-    const [isShowDelete, showButtonDelete] = useState(props.type !=="add-item")
 
 
     const changeDataFile = (key, data) => {
         if (key === "name" || key === "armatureName") {
             dataItem[key] = data
         }
+        if (key === "animationName_0" || key === "animationName_1" || key === "animationName_2") {
+            dataItem['animationsNames'][+key.split('_')[1]] = data
+        }
         setToStateData(dataItem)
     }
 
-    const checkAllLoaded = v => {
-        fileData[v.type] = v.file
-        let isAllFiles = true
-        for (let i = 0; i < arrKeys.length; i++) {
-            if (!fileData[arrKeys[i]]) isAllFiles = false
-        }
-        isAllFiles && showStartButton(true)
+    const setFileToData = data => {
+        data.id = dataItem.id
+        uploadFile('upload-file', data)
     }
 
+
     return (
-        <div>
+        <div className='content-tab'>
+            <div>id: {dataItem.id}</div>
             <AppInput
                 val={dataItem.name}
                 type={"name"}
@@ -62,25 +70,46 @@ export function RedactDragonResources(props) {
                 type={"armatureName"}
                 callBackClick = {e => {
                     changeDataFile('armatureName', e.val)
-                }} />    
+                }} />
+
+            <AppInput
+                val={dataItem.animationsNames && dataItem.animationsNames[0]}
+                type={"animationName_0"}
+                callBackClick = {e => {
+                    changeDataFile('animationName_0', e.val)
+                }} />
+
+            <AppInput
+                val={dataItem.animationsNames && dataItem.animationsNames[1]}
+                type={"animationName_1"}
+                callBackClick = {e => {
+                    changeDataFile('animationName_1', e.val)
+                }} />
+
+            <AppInput
+                val={dataItem.animationsNames && dataItem.animationsNames[2]}
+                type={"animationName_2"}
+                callBackClick = {e => {
+                    changeDataFile('animationName_2', e.val)
+                }} />
 
 
             <AppLoadFile
-                type='skeletonJson'
-                val='skeletonJson'
-                callBackClick = {checkAllLoaded} />
+                type='dragon-ske'
+                val='dragon-ske'
+                callBackClick = {setFileToData} />
 
 
             <AppLoadFile
-                type='textureJson'
-                val='textureJson'
-                callBackClick = {checkAllLoaded} />
+                type='dragon-tex'
+                val='dragon-tex'
+                callBackClick = {setFileToData} />
 
 
             <AppLoadFile
-                type='imageDr'
-                val='image'
-                callBackClick = {checkAllLoaded} />
+                type='dragon-img'
+                val='dragon-img'
+                callBackClick = {setFileToData} />
 
 
             <div style={{"color": "red"}}>
@@ -88,13 +117,24 @@ export function RedactDragonResources(props) {
             </div>    
 
 
-            <div> 
+            <div className="row-space-between">
+                {props.mode === "edit-item" &&
+                <AppButton
+                    val='close'
+                    classNameCustom=''
+                    callBackClick = {() => props.changeMainTab("view-item")}/>}
+
+
                 <AppButton
                         val='save'
                         classNameCustom=''
                         callBackClick = {() => {
                             if (props.mode === 'add-item') {
-                                sendResponse('add-item', dataItem, res => setAlertMess(res.mess))
+                                sendResponse('add-item', dataItem, res => {
+                                    res.mess[0] !== 'success'
+                                        ? setAlertMess(res.mess)
+                                        : props.changeMainTab("items-list")
+                                })
                             }
                             if (props.mode === 'edit-item') {
                                 sendResponse('edit-item', dataItem, res => setAlertMess(res.mess))
@@ -107,9 +147,12 @@ export function RedactDragonResources(props) {
                     <AppButton
                         val='delete'
                         classNameCustom=''
-                        callBackClick = {()=>sendResponse('remove-item', { id: dataItem.id })} 
-                    />}    
-            </div>       
+                        callBackClick = {() =>
+                            sendResponse(
+                                'remove-item',
+                                { id: dataItem.id },
+                                () => props.changeMainTab("items-list")) }/>}
+            </div>
         </div>
     )
 }
