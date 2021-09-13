@@ -50,7 +50,12 @@ export function RedactDragonResources(props) {
         if (key === "name" || key === "armatureName") {
             dataItem[key] = data
         }
-        if (key === "animationName_0" || key === "animationName_1" || key === "animationName_2") {
+        if (
+            key === "animationName_0" ||
+            key === "animationName_1" ||
+            key === "animationName_2" ||
+            key === "animationName_3"
+        ) {
             dataItem['animationsNames'][+key.split('_')[1]] = data
         }
         setToStateData(dataItem)
@@ -109,6 +114,14 @@ export function RedactDragonResources(props) {
                         }} />
 
 
+                    <AppInput
+                        val={dataItem.animationsNames && dataItem.animationsNames[3]}
+                        type={"animationName_3"}
+                        callBackClick = {e => {
+                            changeDataFile('animationName_3', e.val)
+                        }} />
+
+
                     <AppLoadFile
                         type='dragon-ske'
                         val='dragon-ske'
@@ -139,9 +152,7 @@ export function RedactDragonResources(props) {
                 <AppButton
                     val='close'
                     classNameCustom=''
-                    callBackClick = {() => modeView === "add-item"
-                        ? props.changeMainTab("items-list")
-                        : props.changeMainTab("view-item")}/>
+                    callBackClick = {() => props.changeMainTab("items-list")}/>
 
 
                 <AppButton
@@ -150,9 +161,8 @@ export function RedactDragonResources(props) {
                         callBackClick = {() => {
                             if (modeView === 'add-item') {
                                 addNewItem(dataItem, res => {
-                                    res.mess[0] !== 'success'
-                                        ? setAlertMess(res.mess)
-                                        : changeModeView("edit-item")
+                                    console.log(res)
+                                    props.changeMainTab("items-list")
                                 })
                             }
 

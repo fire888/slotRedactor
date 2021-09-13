@@ -7,6 +7,7 @@ export class LoaderAssets {
 
 
         this._resources = null
+        this._dragonResources = null
         this._loader = new this._PIXI.Loader()
         this._loader.onError.add(this._loadHandler.bind(this))
         this._loader.onProgress.add(e => {
@@ -87,8 +88,8 @@ export class LoaderAssets {
             }
         }
 
-        this._PIXI.Loader.shared
-            .load((loader, res) => {
+        this._PIXI.Loader.shared.load((loader, res) => {
+                this._dragonResources = res
                 callback(res)
             });
     }

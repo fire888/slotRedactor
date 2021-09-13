@@ -115,7 +115,9 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
     const arrKeys = []
     for (let key in fileData.files) {
         arrUnicKeysFiles.push(fileData.files[key].fileKey)
-        if (loader._resources && loader._resources[fileData.files[key].fileKey]) {
+        //console.log(loader._dragonResources)
+        //console.log(fileData.files[key].fileKey)
+        if (loader._dragonResources && loader._dragonResources[fileData.files[key].fileKey]) {
             console.log('already exists')
             showS(fileData.armatureName)
             return;

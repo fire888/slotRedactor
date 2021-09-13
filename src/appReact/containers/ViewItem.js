@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
 
 const startAnimate = animationName => {
+    console.log(animationName)
     window.emitter.emit('startAnimate', animationName)
 }
 
@@ -20,6 +21,7 @@ const setToView = data => setTimeout(() => {
 
 export function ViewItem(props) {
 
+    console.log(props.currentDataItem.name)
     setToView(props.currentDataItem)
 
     return (
@@ -28,12 +30,13 @@ export function ViewItem(props) {
             <div>name: {props.currentDataItem.name}</div>
             <div>arm: {props.currentDataItem.armatureName}</div>
             <div>
-                {props.currentDataItem.animationsNames.map((n, i) =>
+                {props.currentDataItem.animationsNames.map((n, i) => n &&
                     <div key={i}>
                         animation {i} 
-                        <button onClick={() => startAnimate(n)}>
-                            {n}
-                        </button>
+                        <AppButton
+                            val={n}
+                            callBackClick={()=>startAnimate(n)} />
+
                     </div>)}
             </div>
             <div>
@@ -44,7 +47,7 @@ export function ViewItem(props) {
                 <AppButton
                     val='edit'
                     classNameCustom=''
-                    callBackClick = {() => props.changeMainTab('edit-item')}
+                    callBackClick={() => props.changeMainTab('edit-item')}
                 />
             </div>
         </div>

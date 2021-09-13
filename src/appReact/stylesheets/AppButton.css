@@ -1,6 +1,6 @@
 .AppButton {
     display: inline-block;
-    padding: 5px;
+    padding: 2px 5px;
     min-width: 40px;
     border: 1px solid #1d4c35;
     border-radius: 5px;
