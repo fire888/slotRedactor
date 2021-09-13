@@ -117,10 +117,10 @@ export class DeviceResizer {
                 hApp = wApp / this._WINDOW.ratio
             }
 
-            if (window.innerWidth > 1100 && window.innerHeight > 800) {
-                hApp *= .85
-                wApp *= .85
-            }
+            // if (window.innerWidth > 1100 && window.innerHeight > 800) {
+            //     hApp *= .85
+            //     wApp *= .85
+            // }
         } else if (this._device.mode === 'phone' || this._device.mode === 'phoneLong') {
             hApp = Math.min(this._WINDOW.h, window.innerHeight)
             wApp = hApp * 2.

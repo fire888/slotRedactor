@@ -84,7 +84,7 @@ export class LoaderAssets {
             const objectData = data[key]
 
             for (let keyRes in objectData) {
-                if (keyRes !== 'imageDr')this._PIXI.Loader.shared.add(keyRes, objectData[keyRes])
+                if (keyRes !== 'imageDr') this._PIXI.Loader.shared.add(keyRes, objectData[keyRes])
             }
         }
 

@@ -4,6 +4,7 @@ import { DeviceResizer } from './SlotMachineLibModified/src/helpers/DeviceResize
 import { LoaderAssets } from './helpers/LoaderPixi'
 import { HOST } from "../globals";
 import DragonBones from './SlotMachineLibModified/src/libs/dragonBones'
+import dragonBones from './SlotMachineLibModified/src/libs/dragonBones';
 
 
 
@@ -26,13 +27,13 @@ window.emitter = root.components.eventEmitter
 root.components.deviceResizer = new DeviceResizer(root, { config: {
     w: 1920,
     h: 1080,
-    ratio: 1.85,
+    ratio: 1.5,
     maxHtmlFontSize: 12.5,
     minHtmlFontSize: 5.5,
     appSize: {
         fixedRatio: true,
         'desktop': {
-            ratio: 1.85
+            ratio: 1.5,
         },
         'phone': {
             ratio: 2,
@@ -49,7 +50,16 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
 
 
 const app = new Application(root)
-const loader = new LoaderAssets(root)
+
+/************************************************************ */
+
+const loadDragonResources = (arr, callback) => {
+    for (let i = 0; i < arr.length; i++) {
+        const { fileKey, path } = arr[i]
+        window.PIXI.Loader.shared.add(fileKey, path)
+    }
+    window.PIXI.Loader.shared.load((loader, res) => callback(res))
+}
 
 
 
@@ -67,7 +77,6 @@ const createFactory = (files) => {
         f[k] = files[key]
     }
 
-
     factory.parseDragonBonesData(f['dragon-ske'].data);
     factory.parseTextureAtlasData(
         f['dragon-tex'].data,
@@ -84,6 +93,9 @@ const createDragonSprite = armatureName => {
 /*************************************************************** */
 
 let currentDragonSprite = null 
+let currentData = null
+let currentSpriteSheetKey = null
+
 
 window.emitter.subscribe('startAnimate', animationName => {
     currentDragonSprite && currentDragonSprite.animation.play(animationName, 1)
@@ -95,8 +107,9 @@ window.emitter.subscribe('startAnimate', animationName => {
 
 /*************************************************************** */
 
-let isLoaded = false
+//let isLoaded = false
 const keysFiles = ['dragon-ske', 'dragon-tex', 'dragon-img']
+
 
 window.emitter.subscribe('dragonBonesFiles', fileData => {
 
@@ -106,70 +119,34 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
     }
     if (!isFiles) return;
 
-    if(isLoaded) return;
-    isLoaded = true
-    setTimeout(() => isLoaded = false, 2000)
+    window.PIXI.Loader.shared.reset()
 
-
-    const arrUnicKeysFiles = []
-    const arrKeys = []
-    for (let key in fileData.files) {
-        arrUnicKeysFiles.push(fileData.files[key].fileKey)
-        //console.log(loader._dragonResources)
-        //console.log(fileData.files[key].fileKey)
-        if (loader._dragonResources && loader._dragonResources[fileData.files[key].fileKey]) {
-            console.log('already exists')
-            showS(fileData.armatureName)
-            return;
-        }
-        arrKeys.push(key)
-    }
-    const objToLoad = {}
-    for (let i = 0; i < arrUnicKeysFiles.length; i++) {
-         objToLoad[i] = {}
-         const path = fileData.files[arrKeys[i]].path
-         const name = fileData.files[arrKeys[i]].name
-         objToLoad[i][arrUnicKeysFiles[i]] = `${ HOST }/${path}/${name}`
-    }
     const arrToLoad = []
-    for (let key in objToLoad) {
-        arrToLoad.push(objToLoad[key])
+    for (let key in fileData.files) {
+        const { fileKey, path, name } = fileData.files[key]
+        arrToLoad.push({ fileKey, path: `${HOST}/${path}/${name}` })
     }
 
+    loadDragonResources(arrToLoad, res => {
+        if (!isFactoryCreated[fileData.armatureName]) {
+            createFactory(res)
+            isFactoryCreated[fileData.armatureName] = true
+        }
 
-
-    loader.loadAnimated(arrToLoad,
-        res => {
-            if (!isFactoryCreated[fileData.armatureName]) {
-                createFactory(res)
-                isFactoryCreated[fileData.armatureName] = true
-            }
-
-            showS(fileData.armatureName)
-
-            // if (currentDragonSprite !== null) {
-            //     app.app.stage.removeChild(currentDragonSprite)
-            //     currentDragonSprite.destroy()
-            // }
-
-
-            // currentDragonSprite = createDragonSprite(fileData.armatureName)
-            // currentDragonSprite.x = 300
-            // currentDragonSprite.y = 300
-            // app.app.stage.addChild(currentDragonSprite)
-        })
+        showS(fileData.armatureName)
+    })
 })
 
 
 const showS = (armatureName) => {
     if (currentDragonSprite !== null) {
-        app.app.stage.removeChild(currentDragonSprite)
+        app.gameScene.removeChild(currentDragonSprite)
         currentDragonSprite.destroy()
     }
 
 
     currentDragonSprite = createDragonSprite(armatureName)
-    currentDragonSprite.x = 300
-    currentDragonSprite.y = 300
-    app.app.stage.addChild(currentDragonSprite)
+    currentDragonSprite.x = -100
+    currentDragonSprite.y = 0
+    app.gameScene.addChild(currentDragonSprite)
 }
