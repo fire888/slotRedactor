@@ -51,36 +51,31 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
 
 const app = new Application(root)
 
-/************************************************************ */
-
-const loadDragonResources = (arr, callback) => {
-    for (let i = 0; i < arr.length; i++) {
-        const { fileKey, path } = arr[i]
-        window.PIXI.Loader.shared.add(fileKey, path)
-    }
-    window.PIXI.Loader.shared.load((loader, res) => callback(res))
-}
-
-
-
 
 /************************************************************ */
 
 const factory = DragonBones.PixiFactory.factory
 const isFactoryCreated = {}
 
-const createFactory = (files) => {
-    const f = {}
+
+const createFactory = (files, armatureName) => {
+    if (!isFactoryCreated[armatureName]) {
+        isFactoryCreated[armatureName] = true
+    } else {
+        return;
+    }
+
+    const filesByKey = {}
 
     for (let key in files) {
         const k = key.split('_')[0]
-        f[k] = files[key]
+        filesByKey[k] = files[key]
     }
 
-    factory.parseDragonBonesData(f['dragon-ske'].data);
+    factory.parseDragonBonesData(filesByKey['dragon-ske'].data);
     factory.parseTextureAtlasData(
-        f['dragon-tex'].data,
-        f['dragon-img'].texture
+        filesByKey['dragon-tex'].data,
+        filesByKey['dragon-img'].texture
     )
 } 
 
@@ -90,12 +85,24 @@ const createDragonSprite = armatureName => {
     return s
 }
 
+
+
+
+
 /*************************************************************** */
 
 let currentDragonSprite = null 
-let currentData = null
-let currentSpriteSheetKey = null
 
+const showS = (armatureName) => {
+    if (currentDragonSprite !== null) {
+        app.gameScene.removeChild(currentDragonSprite)
+        currentDragonSprite.destroy()
+    }
+    currentDragonSprite = createDragonSprite(armatureName)
+    currentDragonSprite.x = -100
+    currentDragonSprite.y = 0
+    app.gameScene.addChild(currentDragonSprite)
+}
 
 window.emitter.subscribe('startAnimate', animationName => {
     currentDragonSprite && currentDragonSprite.animation.play(animationName, 1)
@@ -103,50 +110,35 @@ window.emitter.subscribe('startAnimate', animationName => {
 
 
 
+/************************************************************ */
+
+const loadDragonResources = (files, callback) => {
+    const keysFiles = ['dragon-ske', 'dragon-tex', 'dragon-img']
+
+    let isFiles = true
+    for (let i = 0; i < keysFiles.length; i++) {
+        if (!files[keysFiles[i]]) isFiles = false
+    }
+    if (!isFiles) return;
+
+    PIXI.Loader.shared.reset()
+    
+    for (let key in files) {
+        const { fileKey, path, name } = files[key]
+        PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
+    }
+    PIXI.Loader.shared.load((loader, res) => callback(res))
+}
+
 
 
 /*************************************************************** */
 
-//let isLoaded = false
-const keysFiles = ['dragon-ske', 'dragon-tex', 'dragon-img']
-
-
 window.emitter.subscribe('dragonBonesFiles', fileData => {
-
-    let isFiles = true
-    for (let i = 0; i < keysFiles.length; i++) {
-        if (!fileData.files[keysFiles[i]]) isFiles = false
-    }
-    if (!isFiles) return;
-
-    window.PIXI.Loader.shared.reset()
-
-    const arrToLoad = []
-    for (let key in fileData.files) {
-        const { fileKey, path, name } = fileData.files[key]
-        arrToLoad.push({ fileKey, path: `${HOST}/${path}/${name}` })
-    }
-
-    loadDragonResources(arrToLoad, res => {
-        if (!isFactoryCreated[fileData.armatureName]) {
-            createFactory(res)
-            isFactoryCreated[fileData.armatureName] = true
-        }
-
+    loadDragonResources(fileData.files, res => {
+        createFactory(res, fileData.armatureName)
         showS(fileData.armatureName)
     })
 })
 
 
-const showS = (armatureName) => {
-    if (currentDragonSprite !== null) {
-        app.gameScene.removeChild(currentDragonSprite)
-        currentDragonSprite.destroy()
-    }
-
-
-    currentDragonSprite = createDragonSprite(armatureName)
-    currentDragonSprite.x = -100
-    currentDragonSprite.y = 0
-    app.gameScene.addChild(currentDragonSprite)
-}
