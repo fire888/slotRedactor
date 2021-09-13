@@ -29,11 +29,9 @@ const reqParams = {
 export function sendResponse (key, data, onDone, offDone) {
     const path = `${ HOST }${ PATHS[key] }`
 
-    //const body = data
     const body = JSON.stringify({...data})
     const params = Object.assign({}, reqParams.post, { body })
 
-    console.log(params)
     startFetch(path, params, onDone || onSuccess, offDone || onDenied)
 }
 
@@ -43,9 +41,10 @@ export function uploadFile (key, fileData, onDone, offDone) {
     const path = `${ HOST }${ PATHS[key] }`
 
     const formData = new FormData();
-    formData.append('id', fileData.id, )
-    formData.append('type', fileData.type, )
-    formData.append('file', fileData.file, )
+    formData.append('id', fileData.id)
+    formData.append('type', fileData.type)
+    formData.append('fileKey', fileData.type + '_' + fileData.id)
+    formData.append('file', fileData.file)
 
     const params = Object.assign({}, reqParams.postFiles, { body: formData })
 

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AppButton } from "../components/AppButton";
 import { sendResponse } from "../../toServerApi/requests";
 
 
 export function ListDragonResources(props) {
-    const [loadedRes, showList] = useState([])
+    const [loadedRes, showList] = useState(null)
 
     const prepareList = data => {
         console.log(data.list)
@@ -19,15 +19,17 @@ export function ListDragonResources(props) {
         showList(arr)
     }
 
-
-    setTimeout(() => loadedRes.length === 0 && sendResponse('get-list', {}, prepareList))
+    useEffect(() => {
+        !loadedRes && sendResponse('get-list', {}, prepareList)
+    })
+    //setTimeout(() => loadedRes.length === 0 && sendResponse('get-list', {}, prepareList))
 
 
     return (
         <div>
-            {loadedRes.length !== 0 && loadedRes}
+            {loadedRes && loadedRes.length !== 0 && loadedRes}
             <AppButton
-                val = "add item"
+                val="add item"
                 callBackClick = {() => {
                     props.changeMainTab('add-item')}
                 }/>

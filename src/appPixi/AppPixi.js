@@ -60,11 +60,18 @@ const factory = DragonBones.PixiFactory.factory
 const isFactoryCreated = {}
 
 const createFactory = (files) => {
+    const f = {}
 
-    factory.parseDragonBonesData(files['skeletonJson'].data);
+    for (let key in files) {
+        const k = key.split('_')[0]
+        f[k] = files[key]
+    }
+
+
+    factory.parseDragonBonesData(f['dragon-ske'].data);
     factory.parseTextureAtlasData(
-        files['textureJson'].data,
-        files['image'].texture
+        f['dragon-tex'].data,
+        f['dragon-img'].texture
     )
 } 
 
@@ -79,7 +86,6 @@ const createDragonSprite = armatureName => {
 let currentDragonSprite = null 
 
 window.emitter.subscribe('startAnimate', animationName => {
-    console.log(animationName)
     currentDragonSprite && currentDragonSprite.animation.play(animationName, 1)
 })
 
@@ -90,34 +96,78 @@ window.emitter.subscribe('startAnimate', animationName => {
 /*************************************************************** */
 
 let isLoaded = false
+const keysFiles = ['dragon-ske', 'dragon-tex', 'dragon-img']
 
 window.emitter.subscribe('dragonBonesFiles', fileData => {
+
+    let isFiles = true
+    for (let i = 0; i < keysFiles.length; i++) {
+        if (!fileData.files[keysFiles[i]]) isFiles = false
+    }
+    if (!isFiles) return;
 
     if(isLoaded) return;
     isLoaded = true
     setTimeout(() => isLoaded = false, 2000)
 
 
-    const dataSke = {"skeletonJson": `${ HOST }/${fileData.files['dragon-ske'].path}/${fileData.files['dragon-ske'].name}`}
-    const dataTex = {"textureJson": `${ HOST }/${fileData.files['dragon-tex'].path}/${fileData.files['dragon-tex'].name}`}
-    const img = {"image": `${ HOST }/${fileData.files['dragon-img'].path}/${fileData.files['dragon-img'].name}`}
+    const arrUnicKeysFiles = []
+    const arrKeys = []
+    for (let key in fileData.files) {
+        arrUnicKeysFiles.push(fileData.files[key].fileKey)
+        if (loader._resources && loader._resources[fileData.files[key].fileKey]) {
+            console.log('already exists')
+            showS(fileData.armatureName)
+            return;
+        }
+        arrKeys.push(key)
+    }
+    const objToLoad = {}
+    for (let i = 0; i < arrUnicKeysFiles.length; i++) {
+         objToLoad[i] = {}
+         const path = fileData.files[arrKeys[i]].path
+         const name = fileData.files[arrKeys[i]].name
+         objToLoad[i][arrUnicKeysFiles[i]] = `${ HOST }/${path}/${name}`
+    }
+    const arrToLoad = []
+    for (let key in objToLoad) {
+        arrToLoad.push(objToLoad[key])
+    }
 
-    loader.loadAnimated([dataSke, dataTex, img],
+
+
+    loader.loadAnimated(arrToLoad,
         res => {
             if (!isFactoryCreated[fileData.armatureName]) {
                 createFactory(res)
                 isFactoryCreated[fileData.armatureName] = true
             }
 
-            if (currentDragonSprite !== null) {
-                app.app.stage.removeChild(currentDragonSprite)
-                currentDragonSprite.destroy()
-            }
+            showS(fileData.armatureName)
+
+            // if (currentDragonSprite !== null) {
+            //     app.app.stage.removeChild(currentDragonSprite)
+            //     currentDragonSprite.destroy()
+            // }
 
 
-            currentDragonSprite = createDragonSprite(fileData.armatureName)
-            currentDragonSprite.x = 300
-            currentDragonSprite.y = 300
-            app.app.stage.addChild(currentDragonSprite)
+            // currentDragonSprite = createDragonSprite(fileData.armatureName)
+            // currentDragonSprite.x = 300
+            // currentDragonSprite.y = 300
+            // app.app.stage.addChild(currentDragonSprite)
         })
 })
+
+
+const showS = (armatureName) => {
+    if (currentDragonSprite !== null) {
+        app.app.stage.removeChild(currentDragonSprite)
+        currentDragonSprite.destroy()
+    }
+
+
+    currentDragonSprite = createDragonSprite(armatureName)
+    currentDragonSprite.x = 300
+    currentDragonSprite.y = 300
+    app.app.stage.addChild(currentDragonSprite)
+}

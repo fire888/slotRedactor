@@ -7,14 +7,21 @@ import uniqid from 'uniqid'
 import { sendResponse, uploadFile } from "../../toServerApi/requests";
 
 
-const arrKeys = [ 'dragon-ske', 'dragon-tex', 'dragon-img' ]
-const filesData = {}
+
+const addNewItem = (dataItem, callback) => sendResponse('add-item', dataItem, callback)
 
 
-const startData = {
+
+
+const initSpriteData = {
     'id': null,
+    'name': '',
     'typeExec': 'dragonBones',
     'typeView': 'slot-item',
+}
+
+
+const editSpriteData = {
     'name': '',
     'animationsNames': [null, null, null],
     'armatureName': '',
@@ -25,8 +32,8 @@ const startData = {
     }
 }
 
-const prepareNewDataFromStartData = () => {
-    const newData = JSON.parse(JSON.stringify(startData))
+const prepareInitSpriteData = () => {
+    const newData = JSON.parse(JSON.stringify(initSpriteData))
     newData.id = uniqid()
     return newData
 }
@@ -34,7 +41,8 @@ const prepareNewDataFromStartData = () => {
 
 export function RedactDragonResources(props) {
 
-    const [dataItem, setToStateData] = useState(props.dataItem || prepareNewDataFromStartData())
+    const [modeView, changeModeView] = useState(props.mode)
+    const [dataItem, setToStateData] = useState(props.dataItem || prepareInitSpriteData())
     const [alertMess, setAlertMess] = useState([])
 
 
@@ -57,6 +65,8 @@ export function RedactDragonResources(props) {
     return (
         <div className='content-tab'>
             <div>id: {dataItem.id}</div>
+
+
             <AppInput
                 val={dataItem.name}
                 type={"name"}
@@ -65,85 +75,95 @@ export function RedactDragonResources(props) {
                 }} />
 
 
-            <AppInput
-                val={dataItem.armatureName}
-                type={"armatureName"}
-                callBackClick = {e => {
-                    changeDataFile('armatureName', e.val)
-                }} />
 
-            <AppInput
-                val={dataItem.animationsNames && dataItem.animationsNames[0]}
-                type={"animationName_0"}
-                callBackClick = {e => {
-                    changeDataFile('animationName_0', e.val)
-                }} />
+            {/** EDIT SECTOR *************************************/}
 
-            <AppInput
-                val={dataItem.animationsNames && dataItem.animationsNames[1]}
-                type={"animationName_1"}
-                callBackClick = {e => {
-                    changeDataFile('animationName_1', e.val)
-                }} />
+            {modeView === "edit-item" &&
+                <div>
+                    <AppInput
+                        val={dataItem.armatureName}
+                        type={"armatureName"}
+                        callBackClick = {e => {
+                            changeDataFile('armatureName', e.val)
+                        }} />
 
-            <AppInput
-                val={dataItem.animationsNames && dataItem.animationsNames[2]}
-                type={"animationName_2"}
-                callBackClick = {e => {
-                    changeDataFile('animationName_2', e.val)
-                }} />
+                    <AppInput
+                        val={dataItem.animationsNames && dataItem.animationsNames[0]}
+                        type={"animationName_0"}
+                        callBackClick = {e => {
+                            changeDataFile('animationName_0', e.val)
+                        }} />
 
+                    <AppInput
+                        val={dataItem.animationsNames && dataItem.animationsNames[1]}
+                        type={"animationName_1"}
+                        callBackClick = {e => {
+                            changeDataFile('animationName_1', e.val)
+                        }} />
 
-            <AppLoadFile
-                type='dragon-ske'
-                val='dragon-ske'
-                callBackClick = {setFileToData} />
-
-
-            <AppLoadFile
-                type='dragon-tex'
-                val='dragon-tex'
-                callBackClick = {setFileToData} />
+                    <AppInput
+                        val={dataItem.animationsNames && dataItem.animationsNames[2]}
+                        type={"animationName_2"}
+                        callBackClick = {e => {
+                            changeDataFile('animationName_2', e.val)
+                        }} />
 
 
-            <AppLoadFile
-                type='dragon-img'
-                val='dragon-img'
-                callBackClick = {setFileToData} />
+                    <AppLoadFile
+                        type='dragon-ske'
+                        val='dragon-ske'
+                        callBackClick = {setFileToData} />
 
 
-            <div style={{"color": "red"}}>
-                {alertMess.map(item => <div key={Math.random()}>{item}</div>)}
-            </div>    
+                    <AppLoadFile
+                        type='dragon-tex'
+                        val='dragon-tex'
+                        callBackClick = {setFileToData} />
+
+
+                    <AppLoadFile
+                        type='dragon-img'
+                        val='dragon-img'
+                        callBackClick = {setFileToData} />
+
+
+                    <div style={{"color": "red"}}>
+                        {alertMess.map(item => <div key={Math.random()}>{item}</div>)}
+                    </div>
+
+                </div>}
+
 
 
             <div className="row-space-between">
-                {props.mode === "edit-item" &&
                 <AppButton
                     val='close'
                     classNameCustom=''
-                    callBackClick = {() => props.changeMainTab("view-item")}/>}
+                    callBackClick = {() => modeView === "add-item"
+                        ? props.changeMainTab("items-list")
+                        : props.changeMainTab("view-item")}/>
 
 
                 <AppButton
                         val='save'
                         classNameCustom=''
                         callBackClick = {() => {
-                            if (props.mode === 'add-item') {
-                                sendResponse('add-item', dataItem, res => {
+                            if (modeView === 'add-item') {
+                                addNewItem(dataItem, res => {
                                     res.mess[0] !== 'success'
                                         ? setAlertMess(res.mess)
-                                        : props.changeMainTab("items-list")
+                                        : changeModeView("edit-item")
                                 })
                             }
-                            if (props.mode === 'edit-item') {
+
+                            if (modeView === 'edit-item') {
                                 sendResponse('edit-item', dataItem, res => setAlertMess(res.mess))
                             }
                         }} 
                     />
 
 
-                {props.mode === "edit-item" && 
+                {modeView === "edit-item" &&
                     <AppButton
                         val='delete'
                         classNameCustom=''

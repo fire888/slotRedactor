@@ -14,7 +14,9 @@ const createArrFromObj = obj => {
     return arr
 }
 
-const setToView = data => setTimeout(() => {window.emitter.emit('dragonBonesFiles', data)})
+const setToView = data => setTimeout(() => {
+    window.emitter.emit('dragonBonesFiles', data)
+})
 
 export function ViewItem(props) {
 
