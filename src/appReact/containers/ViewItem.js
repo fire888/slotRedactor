@@ -31,13 +31,12 @@ export function ViewItem(props) {
             <div>arm: {props.currentDataItem.armatureName}</div>
             <div>
                 {props.currentDataItem.animationsNames.map((n, i) => n &&
-                    <div key={i}>
-                        animation {i} 
-                        <AppButton
-                            val={n}
-                            callBackClick={()=>startAnimate(n)} />
-
-                    </div>)}
+                    <AppButton
+                        key={i}
+                        classNameCustom={'long'}
+                        val={n}
+                        callBackClick={()=>startAnimate(n)} />
+                   )}
             </div>
             <div>
                 {createArrFromObj(props.currentDataItem.files).map((n, i) =>
