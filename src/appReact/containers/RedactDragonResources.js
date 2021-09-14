@@ -22,15 +22,15 @@ const initSpriteData = {
 
 
 const editSpriteData = {
-    'name': '',
-    'animationsNames': [null, null, null],
+    'animationsNames': [null, null, null, null],
     'armatureName': '',
-    files: {
+    'files': {
         'dragon-ske': {},
         'dragon-tex': {},
         'dragon-img': {},
     }
 }
+
 
 const prepareInitSpriteData = () => {
     const newData = JSON.parse(JSON.stringify(initSpriteData))
@@ -41,6 +41,8 @@ const prepareInitSpriteData = () => {
 
 export function RedactDragonResources(props) {
 
+    console.log('dataItem', props.dataItem)
+    
     const [modeView, changeModeView] = useState(props.mode)
     const [dataItem, setToStateData] = useState(props.dataItem || prepareInitSpriteData())
     const [alertMess, setAlertMess] = useState([])
@@ -62,6 +64,7 @@ export function RedactDragonResources(props) {
     }
 
     const setFileToData = data => {
+        console.log(data)
         data.id = dataItem.id
         uploadFile('upload-file', data)
     }
@@ -125,7 +128,7 @@ export function RedactDragonResources(props) {
                     <AppLoadFile
                         type='dragon-ske'
                         val='dragon-ske'
-                        callBackClick = {setFileToData} />
+                        callBackClick={setFileToData} />
 
 
                     <AppLoadFile

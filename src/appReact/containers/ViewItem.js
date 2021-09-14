@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
 
-const startAnimate = animationName => {
-    console.log(animationName)
-    window.emitter.emit('startAnimate', animationName)
-}
-
+const startAnimate = animationName => window.emitter.emit('startAnimate', animationName)
 
 const createArrFromObj = obj => {
     const arr = []
@@ -14,6 +10,7 @@ const createArrFromObj = obj => {
     }
     return arr
 }
+
 
 const setToView = data => setTimeout(() => {
     window.emitter.emit('dragonBonesFiles', data)
@@ -30,13 +27,15 @@ export function ViewItem(props) {
             <div>name: {props.currentDataItem.name}</div>
             <div>arm: {props.currentDataItem.armatureName}</div>
             <div>
-                {props.currentDataItem.animationsNames.map((n, i) => n &&
+                {props.currentDataItem.animationsNames && 
+                props.currentDataItem.animationsNames.length &&
+                props.currentDataItem.animationsNames.map((n, i) => n &&
                     <AppButton
                         key={i}
                         classNameCustom={'long'}
                         val={n}
                         callBackClick={()=>startAnimate(n)} />
-                   )}
+                )}
             </div>
             <div>
                 {createArrFromObj(props.currentDataItem.files).map((n, i) =>
