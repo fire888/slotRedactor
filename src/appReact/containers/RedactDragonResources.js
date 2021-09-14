@@ -11,24 +11,11 @@ import { sendResponse, uploadFile } from "../../toServerApi/requests";
 const addNewItem = (dataItem, callback) => sendResponse('add-item', dataItem, callback)
 
 
-
-
 const initSpriteData = {
     'id': null,
     'name': '',
     'typeExec': 'dragonBones',
     'typeView': 'slot-item',
-}
-
-
-const editSpriteData = {
-    'animationsNames': [null, null, null, null],
-    'armatureName': '',
-    'files': {
-        'dragon-ske': {},
-        'dragon-tex': {},
-        'dragon-img': {},
-    }
 }
 
 
@@ -41,9 +28,6 @@ const prepareInitSpriteData = () => {
 
 export function RedactDragonResources(props) {
 
-    console.log('dataItem', props.dataItem)
-    
-    const [modeView, changeModeView] = useState(props.mode)
     const [dataItem, setToStateData] = useState(props.dataItem || prepareInitSpriteData())
     const [alertMess, setAlertMess] = useState([])
 
@@ -64,9 +48,8 @@ export function RedactDragonResources(props) {
     }
 
     const setFileToData = data => {
-        console.log(data)
         data.id = dataItem.id
-        uploadFile('upload-file', data)
+        uploadFile('upload-file', data, )
     }
 
 
@@ -86,7 +69,7 @@ export function RedactDragonResources(props) {
 
             {/** EDIT SECTOR *************************************/}
 
-            {modeView === "edit-item" &&
+            {props.mode === "edit-item" &&
                 <div>
                     <AppInput
                         val={dataItem.armatureName}
@@ -141,15 +124,11 @@ export function RedactDragonResources(props) {
                         type='dragon-img'
                         val='dragon-img'
                         callBackClick = {setFileToData} />
-
-
-                    <div style={{"color": "red"}}>
-                        {alertMess.map(item => <div key={Math.random()}>{item}</div>)}
-                    </div>
-
                 </div>}
 
-
+                <div>
+                        {alertMess.map(item => <div key={Math.random()}>{item}</div>)}
+                </div>
 
             <div className="row-space-between">
                 <AppButton
@@ -163,21 +142,21 @@ export function RedactDragonResources(props) {
                         classNameCustom=''
                         callBackClick = {() => {
                             console.log('!!!')
-                            if (modeView === 'add-item') {
+                            if (props.mode === 'add-item') {
                                 addNewItem(dataItem, res => {
                                     console.log(res)
                                     props.changeMainTab("items-list")
                                 })
                             }
 
-                            if (modeView === 'edit-item') {
+                            if (props.mode === 'edit-item') {
                                 sendResponse('edit-item', dataItem, res => setAlertMess(res.mess))
                             }
                         }} 
                     />
 
 
-                {modeView === "edit-item" &&
+                {props.mode === "edit-item" &&
                     <AppButton
                         val='delete'
                         classNameCustom=''
