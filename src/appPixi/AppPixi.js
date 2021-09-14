@@ -85,10 +85,6 @@ const createDragonSprite = armatureName => {
     return s
 }
 
-
-
-
-
 /*************************************************************** */
 
 let currentDragonSprite = null 

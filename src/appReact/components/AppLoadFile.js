@@ -1,18 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../stylesheets/AppLoadFile.css'
+import { AppButton } from './AppButton'
 
 
 export function AppLoadFile (props) {
-
-    const changeHandler = event => props.callBackClick({ type: props.type, file: event.target.files[0] })
-    const handleSubmission = event => console.log(event)
+    
+    const [currentFile, setCurrentFile] = useState(null)
 
     return (
         <div className={`AppLoadFile`}>
                 {props.val}
                 <br/>
-                <input type="file" name="file" onChange={changeHandler} />
-                <button type="submit" onClick={handleSubmission}>Submit</button>
+                <input 
+                    type="file" 
+                    name="file" 
+                    onChange={e => setCurrentFile(e.target.files[0])} />
+                <AppButton
+                    val="upload"
+                    callBackClick={() => {props.callBackClick({ type: props.type, file: currentFile })}} />
         </div>
     )
 }
