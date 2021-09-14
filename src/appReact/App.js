@@ -6,19 +6,12 @@ import { AppButton } from "./components/AppButton";
 import { RedactDragonResources } from './containers/RedactDragonResources'
 import { ListDragonResources } from './containers/ListDragonResourses'
 import { ViewItem } from './containers/ViewItem'
-import { sendResponse } from '../toServerApi/requests'
 
 
 function App() {
       const [ isOpen, changeOpen ] = useState(true)
       const [ currentTab, changeMainTab ] = useState('items-list')
-      //const [ dataRedactItem, setRedactItem ] = useState(null)
       const [ currentDataItem, setDataItemToCurrent ] = useState(null)
-
-      const prepareToDedactItem = data => {
-          setRedactItem(data)
-          changeMainTab('edit-item')
-      }
 
       const setToViewItem = data => {
           setDataItemToCurrent(data)
@@ -66,7 +59,7 @@ function App() {
 
                     {currentTab === "items-list" &&
                         <ListDragonResources
-                            callBackClick={setToViewItem/*prepareToDedactItem*/}
+                            callBackClick={setToViewItem}
                             changeMainTab={changeMainTab}/>}
                 </div>
 
