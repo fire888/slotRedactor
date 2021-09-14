@@ -159,6 +159,7 @@ export function RedactDragonResources(props) {
                         val='save'
                         classNameCustom=''
                         callBackClick = {() => {
+                            console.log('!!!')
                             if (modeView === 'add-item') {
                                 addNewItem(dataItem, res => {
                                     console.log(res)
@@ -177,11 +178,13 @@ export function RedactDragonResources(props) {
                     <AppButton
                         val='delete'
                         classNameCustom=''
-                        callBackClick = {() =>
+                        callBackClick = {() => {
+                            console.log('!!! delete')
                             sendResponse(
                                 'remove-item',
                                 { id: dataItem.id },
-                                () => props.changeMainTab("items-list")) }/>}
+                                () => props.changeMainTab("items-list")) }
+                        }/>}
             </div>
         </div>
     )

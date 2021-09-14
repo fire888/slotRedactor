@@ -132,6 +132,7 @@ const loadDragonResources = (files, callback) => {
 
 window.emitter.subscribe('dragonBonesFiles', fileData => {
     loadDragonResources(fileData.files, res => {
+        if (!fileData.armatureName) return;
         createFactory(res, fileData.armatureName)
         showS(fileData.armatureName)
     })
