@@ -4,7 +4,6 @@ import { DeviceResizer } from './SlotMachineLibModified/src/helpers/DeviceResize
 import { LoaderAssets } from './helpers/LoaderPixi'
 import { HOST } from "../globals";
 import DragonBones from './SlotMachineLibModified/src/libs/dragonBones'
-import dragonBones from './SlotMachineLibModified/src/libs/dragonBones';
 
 
 
@@ -49,21 +48,24 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
 
 
 
-const app = new Application(root)
+
 
 
 /************************************************************ */
+
+let app = null
 
 const factory = DragonBones.PixiFactory.factory
 const isFactoryCreated = {}
 
 
 const createFactory = (files, armatureName) => {
-    if (!isFactoryCreated[armatureName]) {
-        isFactoryCreated[armatureName] = true
-    } else {
-        return;
-    }
+
+    // if (!isFactoryCreated[armatureName]) {
+    //     isFactoryCreated[armatureName] = true
+    // } else {
+    //     return;
+    // }
 
     const filesByKey = {}
 
@@ -87,12 +89,13 @@ const createDragonSprite = armatureName => {
 
 /*************************************************************** */
 
+
 let currentDragonSprite = null 
 
 const showS = (armatureName) => {
     if (currentDragonSprite !== null) {
         app.gameScene.removeChild(currentDragonSprite)
-        currentDragonSprite.destroy()
+        currentDragonSprite.destroy({ children: true, texture: true, baseTexture: false })
     }
     currentDragonSprite = createDragonSprite(armatureName)
     currentDragonSprite.x = -100
@@ -131,9 +134,14 @@ const loadDragonResources = (files, callback) => {
 /*************************************************************** */
 
 window.emitter.subscribe('dragonBonesFiles', fileData => {
+    factory.clear()
+    console.log(factory)
+    app && app.destroy()
+    app = new Application(root)
     loadDragonResources(fileData.files, res => {
         if (!fileData.armatureName) return;
         createFactory(res, fileData.armatureName)
+
         showS(fileData.armatureName)
     })
 })

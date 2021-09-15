@@ -32,7 +32,14 @@ export class Application {
         this.gameScene.y = gameContext.data.windowData.hApp / 2
         this.app.stage.addChild(this.gameScene)
 
-        gameContext.components.eventEmitter.subscribe('resizeWindow', data => {
+        this._removeResize = gameContext.components.eventEmitter.subscribe('resizeWindow', data => {
+            if (!this.containerDOM) {
+                return;
+            }
+            if (!this.gameScene) {
+                return;
+            }
+
             this.containerDOM.style.width = data.wApp + 'px'
             this.containerDOM.style.height = data.hApp + 'px'
             this.containerDOM.style.fontSize = data.htmlFontSize + 'px'
@@ -51,5 +58,14 @@ export class Application {
         gameContext.components.deviceResizer.resize()
         this.app.resize()
         this.app.render()
+    }
+
+    destroy() {
+        debugger;
+        this._removeResize()
+        this.containerDOM.remove()
+        this.app.destroy(true, { children: true, texture: true, baseTexture	: true })
+        console.log('destroy !!!!!---', this.app)
+
     }
 }
