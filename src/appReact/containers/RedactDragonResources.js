@@ -8,6 +8,7 @@ import { sendResponse, uploadFile } from "../../toServerApi/requests";
 
 
 
+
 const addNewItem = (dataItem, callback) => sendResponse('add-item', dataItem, callback)
 
 
@@ -161,7 +162,6 @@ export function RedactDragonResources(props) {
                         val='delete'
                         classNameCustom=''
                         callBackClick = {() => {
-                            console.log('!!! delete')
                             sendResponse(
                                 'remove-item',
                                 { id: dataItem.id },
