@@ -90,6 +90,7 @@ window.emitter.subscribe('startAnimate', animationName => {
 
 
 /************************************************************ */
+let count = 0
 
 const loadDragonResources = (files, callback) => {
     const keysFiles = ['dragon-ske', 'dragon-tex', 'dragon-img']
@@ -99,12 +100,36 @@ const loadDragonResources = (files, callback) => {
         if (!files[keysFiles[i]]) isFiles = false
     }
     if (!isFiles) return;
-    
-    for (let key in files) {
-        const { fileKey, path, name } = files[key]
+
+    let currentKey = keysFiles[2]
+    const { fileKey, path, name } = files[currentKey]
+    window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
+    window.PIXI.Loader.shared.load((loader, res) => {
+
+        currentKey = keysFiles[1]
+        const { fileKey, path, name } = files[currentKey]
         window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
-    }
-    window.PIXI.Loader.shared.load((loader, res) => callback(res))
+        window.PIXI.Loader.shared.load((loader, res) => {
+
+            currentKey = keysFiles[0]
+            const { fileKey, path, name } = files[currentKey]
+            window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
+            window.PIXI.Loader.shared.load((loader, res) => {
+                callback(res)
+            })
+        })
+
+    })
+
+    //for (let key in files) {
+    //    const { fileKey, path, name } = files[key]
+    //    window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
+    //}
+    //console.log(window.PIXI.Loader.shared)
+    //window.PIXI.Loader.shared.load((loader, res) => {
+    //    console.log('res', res)
+    //    callback(res)
+    //})
 }
 
 
