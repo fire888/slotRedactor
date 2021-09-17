@@ -7,8 +7,12 @@ a.AppButton:link {
 }
 
 hr {
-  background-color: #1d4c35;
-  color: #1d4c35;
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #1d4c35;
+  margin: 1em 0;
+  padding: 0;
 }
 
 .color-alert {
@@ -24,7 +28,6 @@ hr {
   width: 350px;
   height: 100vh;
   min-height: 100vh;
-  user-select: none;
   z-index: 10;
   color: #379962;
   padding: 0 10px 0 10px;
