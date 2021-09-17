@@ -30,34 +30,34 @@ function App() {
 
 
                 <div
-                    className='ui-content '
+                    className='ui-content'
                     style={{'display':  isOpen ? 'block' : 'none'}}>
 
                     <AppButton
-                        val = "items-list"
+                        val="items-list"
                         classNameCustom = {currentTab === 'items-list' && "current"}
                         callBackClick = {() => changeMainTab('items-list')}/>
 
-                    {currentTab === "add-item" && 
+                    {currentTab==="add-item" && 
                         <RedactDragonResources
                             mode="add-item"
                             changeMainTab={changeMainTab}/>}
 
-                    {currentTab === "view-item" &&
+                    {currentTab==="view-item" &&
                     <ViewItem
                         mode="view-item"
                         currentDataItem={currentDataItem}
                         changeMainTab={changeMainTab}/>}
 
 
-                    {currentTab === "edit-item" &&
+                    {currentTab==="edit-item" &&
                         <RedactDragonResources
                             mode="edit-item"
                             dataItem={currentDataItem}
                             changeMainTab={changeMainTab}/>}
 
 
-                    {currentTab === "items-list" &&
+                    {currentTab==="items-list" &&
                         <ListDragonResources
                             callBackClick={setToViewItem}
                             changeMainTab={changeMainTab}/>}
@@ -74,4 +74,4 @@ ReactDOM.render(
         <App />
     </React.StrictMode>,
     document.getElementById('root')
-);
+)
