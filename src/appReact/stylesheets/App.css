@@ -1,3 +1,21 @@
+a.AppButton:hover,
+a.AppButton:visited,
+a.AppButton:active,
+a.AppButton:link {
+  color: #379962;
+  text-decoration: none;
+}
+
+hr {
+  background-color: #1d4c35;
+  color: #1d4c35;
+}
+
+.color-alert {
+  color: #b82a2a;
+}
+
+
 .App {
   background: #1b1b1b;
   position: absolute;
@@ -28,3 +46,14 @@
   margin-top: 15px;
 }
 
+
+.content-stroke {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.contrnt-right {
+  display: flex;
+  justify-content: end;
+}

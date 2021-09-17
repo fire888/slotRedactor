@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
 
-const startAnimate = animationName => window.emitter.emit('startAnimate', animationName)
+const startAnimate = (animationName, count) => window.emitter.emit('startAnimate', { animationName, count })
 
 const createArrFromObj = obj => {
     const arr = []
     for (let key in obj) {
-        arr.push({ type: key, name: obj[key].name})
+        arr.push({ ...obj[key] })
     }
     return arr
 }
@@ -23,24 +23,48 @@ export function ViewItem(props) {
 
     return (
         <div className='content-tab'>
-            <div>id: {props.currentDataItem.id}</div>
-            <div>name: {props.currentDataItem.name}</div>
+            <hr />
+            <div className="content-stroke">
+                <div>{props.currentDataItem.name}</div>
+                <div>id: {props.currentDataItem.id}</div>
+            </div>
+            <hr />
             <div>arm: {props.currentDataItem.armatureName}</div>
             <div>
                 {props.currentDataItem.animationsNames && 
                 props.currentDataItem.animationsNames.length &&
                 props.currentDataItem.animationsNames.map((n, i) => n &&
-                    <AppButton
-                        key={i}
-                        classNameCustom={'long'}
-                        val={n}
-                        callBackClick={()=>startAnimate(n)} />
+                    <div 
+                        className="content-stroke"
+                        key={i}>
+                        <span>{n}</span>
+                        <div className="contrnt-right">
+                            <AppButton
+                                val='once'
+                                callBackClick={()=>startAnimate(n, 1)} />
+                            <AppButton
+                                val='repeat'
+                                callBackClick={()=>startAnimate(n, 1000)} />
+                            <AppButton
+                                val='stop'
+                                callBackClick={()=>startAnimate(n, false)} />
+
+                        </div>       
+                    </div>    
                 )}
             </div>
             <div>
                 {createArrFromObj(props.currentDataItem.files).map((n, i) =>
-                    <div key={i}>type {n.type} file: {n.name}</div>)}
+                    <div 
+                        key={i}
+                        className='content-stroke' >
+                        <span>{n.name}</span>
+                        <span>    
+                            <a className='AppButton' href={`/${n.path}/${n.name}`} download={n.name}>download</a>
+                        </span>
+                    </div>)}
             </div>
+            <hr />
             <div className="row-space-between">
                 <AppButton
                     val='edit'

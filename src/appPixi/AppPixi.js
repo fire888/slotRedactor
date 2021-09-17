@@ -83,8 +83,13 @@ const showS = (armatureName) => {
     app.gameScene.addChild(currentArmature)
 }
 
-window.emitter.subscribe('startAnimate', animationName => {
-    currentArmature && currentArmature.animation.play(animationName, 1)
+window.emitter.subscribe('startAnimate', ({ animationName, count }) => {
+    if (!currentArmature) return;  
+    if (count) { 
+        currentArmature.animation.play(animationName, count)
+    } else {
+        currentArmature.animation.stop() 
+    }
 })
 
 

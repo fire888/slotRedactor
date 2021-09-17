@@ -48,16 +48,20 @@ export function RedactDragonResources(props) {
         setToStateData(dataItem)
     }
 
-    const setFileToData = data => {
-        data.id = dataItem.id
-        uploadFile('upload-file', data, )
-    }
-
-
     return (
         <div className='content-tab'>
-            <div>id: {dataItem.id}</div>
+            <div className='contrnt-right'>
+                <AppButton
+                        val='close'
+                        classNameCustom=''
+                        callBackClick = {()=>props.changeMainTab("view-item")}/>
+            </div>
+            <hr />
+            <div className='content-stroke'>
+                <span>id: {dataItem.id}</span>
+            </div>
 
+            <hr />
 
             <AppInput
                 val={dataItem.name}
@@ -99,8 +103,8 @@ export function RedactDragonResources(props) {
                         callBackClick = {e => {
                             changeDataFile('animationName_2', e.val)
                         }} />
-
-
+  
+                    
                     <AppInput
                         val={dataItem.animationsNames && dataItem.animationsNames[3]}
                         type={"animationName_3"}
@@ -108,65 +112,67 @@ export function RedactDragonResources(props) {
                             changeDataFile('animationName_3', e.val)
                         }} />
 
+                    </div>}           
 
-                    <AppLoadFile
-                        type='dragon-ske'
-                        val='dragon-ske'
-                        callBackClick={setFileToData} />
+                <AppButton
+                    val='save'
+                    classNameCustom=''
+                    callBackClick = {() => {
+                        if (props.mode === 'add-item') {
+                            addNewItem(dataItem, res => {
+                                console.log(res)
+                                props.changeMainTab("items-list")
+                            })
+                        }
+
+                        if (props.mode === 'edit-item') {
+                            sendResponse('edit-item', dataItem, res => setAlertMess(res.mess))
+                        }
+                    }} 
+                />    
+
+                <hr />            
+
+                {props.mode === "edit-item" &&            
+                    <div>
+
+                        <AppLoadFile
+                            type='dragon-ske'
+                            val='dragon-ske'
+                            itemId={dataItem.id} />
 
 
-                    <AppLoadFile
-                        type='dragon-tex'
-                        val='dragon-tex'
-                        callBackClick = {setFileToData} />
+                        <AppLoadFile
+                            type='dragon-tex'
+                            val='dragon-tex'
+                            itemId={dataItem.id} />
 
 
-                    <AppLoadFile
-                        type='dragon-img'
-                        val='dragon-img'
-                        callBackClick = {setFileToData} />
-                </div>}
+                        <AppLoadFile
+                            type='dragon-img'
+                            val='dragon-img'
+                            itemId={dataItem.id} />
+
+                        <hr />    
+
+                    </div>}
 
                 <div>
-                        {alertMess.map(item => <div key={Math.random()}>{item}</div>)}
+                    {alertMess.map(item => <div key={Math.random()}>{item}</div>)}
                 </div>
 
-            <div className="row-space-between">
-                <AppButton
-                    val='close'
-                    classNameCustom=''
-                    callBackClick = {() => props.changeMainTab("items-list")}/>
 
-
-                <AppButton
-                        val='save'
-                        classNameCustom=''
-                        callBackClick = {() => {
-                            console.log('!!!')
-                            if (props.mode === 'add-item') {
-                                addNewItem(dataItem, res => {
-                                    console.log(res)
-                                    props.changeMainTab("items-list")
-                                })
-                            }
-
-                            if (props.mode === 'edit-item') {
-                                sendResponse('edit-item', dataItem, res => setAlertMess(res.mess))
-                            }
-                        }} 
-                    />
-
-
-                {props.mode === "edit-item" &&
-                    <AppButton
-                        val='delete'
-                        classNameCustom=''
-                        callBackClick = {() => {
-                            sendResponse(
-                                'remove-item',
-                                { id: dataItem.id },
-                                () => props.changeMainTab("items-list")) }
-                        }/>}
+                <div className="contrnt-right">
+                    {props.mode === "edit-item" &&
+                        <AppButton
+                            val='delete'
+                            classNameCustom='color-alert'
+                            callBackClick = {() => {
+                                sendResponse(
+                                    'remove-item',
+                                    { id: dataItem.id },
+                                    () => props.changeMainTab("items-list")) }
+                            }/>}
             </div>
         </div>
     )
