@@ -1,38 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AppButton } from "../components/AppButton";
 import { AppLoadFile } from "../components/AppLoadFile";
 import { AppInput } from "../components/AppInput";
 
 import uniqid from 'uniqid'
-import { sendResponse, uploadFile } from "../../toServerApi/requests";
+import { sendResponse } from "../../toServerApi/requests";
 
 
-
-
-const addNewItem = (dataItem, callback) => sendResponse('add-item', dataItem, callback)
-
-
-const initSpriteData = {
-    'id': null,
+const prepareInitSpriteData = () => ({
+    'id': uniqid(),
     'name': '',
     'typeExec': 'dragonBones',
     'typeView': 'slot-item',
-}
+    'animationsNames': [null, null, null, null],
+    'files': {}
+})
 
 
-const prepareInitSpriteData = () => {
-    const newData = JSON.parse(JSON.stringify(initSpriteData))
-    newData.id = uniqid()
-    return newData
-}
+const addNewItemToServer = (dataItem, callback) => sendResponse('add-item', dataItem, callback)
+const changeItemOnServer = (dataItem, callback) => sendResponse('edit-item', dataItem, callback)
+
+
 
 
 export function RedactDragonResources(props) {
-
     const [dataItem, setToStateData] = useState(props.dataItem || prepareInitSpriteData())
-    const [alertMess, setAlertMess] = useState([])
+    const [alertMess, setAlertMess] = useState(null)
+    const [isShowSaveButton, toggleShowSaveButton] = useState(false)
 
 
+    /** set changes from inputs to state */
     const changeDataFile = (key, data) => {
         if (key === "name" || key === "armatureName") {
             dataItem[key] = data
@@ -46,29 +43,61 @@ export function RedactDragonResources(props) {
             dataItem['animationsNames'][+key.split('_')[1]] = data
         }
         setToStateData(dataItem)
+        toggleShowSaveButton(true)
     }
+
+
+    /** send state to server */
+    const sendDataToServer = () => {
+        toggleShowSaveButton(false)
+
+        if (props.mode === 'add-item') {
+            addNewItemToServer(dataItem, () =>props.changeMainTab("items-list"))
+        }
+
+        if (props.mode === 'edit-item') {
+            changeItemOnServer(dataItem, (res) => {
+                setAlertMess(res.mess)
+            })
+        }
+    } 
+
+
+    /** remove message since 3 sec */
+    useEffect(() => {
+        let timeout = null
+        if (alertMess !== null) {
+            timeout = setTimeout(() => setAlertMess(null), 3000)
+        } 
+        return () => { 
+            timeout && clearTimeout(timeout)
+        }
+    })
+
+
+
 
     return (
         <div className='content-tab'>
             <div className='contrnt-right'>
                 <AppButton
-                        val='close'
-                        classNameCustom=''
-                        callBackClick = {()=>props.changeMainTab("view-item")}/>
+                    val='close'
+                    classNameCustom=''
+                    callBackClick = {()=>props.changeMainTab("items-list")}/>
             </div>
             <hr />
+
+
             <div className='content-stroke'>
                 <span>id: {dataItem.id}</span>
             </div>
-
             <hr />
+
 
             <AppInput
                 val={dataItem.name}
                 type={"name"}
-                callBackClick = {e => {
-                    changeDataFile('name', e.val)
-                }} />
+                callBackClick = {e => changeDataFile('name', e.val)} />
 
 
 
@@ -79,59 +108,49 @@ export function RedactDragonResources(props) {
                     <AppInput
                         val={dataItem.armatureName}
                         type={"armatureName"}
-                        callBackClick = {e => {
-                            changeDataFile('armatureName', e.val)
-                        }} />
+                        callBackClick = {e => changeDataFile('armatureName', e.val)} />
 
                     <AppInput
                         val={dataItem.animationsNames && dataItem.animationsNames[0]}
                         type={"animationName_0"}
-                        callBackClick = {e => {
-                            changeDataFile('animationName_0', e.val)
-                        }} />
+                        callBackClick = {e => changeDataFile('animationName_0', e.val)} />
 
                     <AppInput
                         val={dataItem.animationsNames && dataItem.animationsNames[1]}
                         type={"animationName_1"}
-                        callBackClick = {e => {
-                            changeDataFile('animationName_1', e.val)
-                        }} />
+                        callBackClick = {e => changeDataFile('animationName_1', e.val)} />
 
                     <AppInput
                         val={dataItem.animationsNames && dataItem.animationsNames[2]}
                         type={"animationName_2"}
-                        callBackClick = {e => {
-                            changeDataFile('animationName_2', e.val)
-                        }} />
+                        callBackClick = {e => changeDataFile('animationName_2', e.val)} />
   
                     
                     <AppInput
                         val={dataItem.animationsNames && dataItem.animationsNames[3]}
                         type={"animationName_3"}
-                        callBackClick = {e => {
-                            changeDataFile('animationName_3', e.val)
-                        }} />
+                        callBackClick = {e => changeDataFile('animationName_3', e.val)} /> 
+                </div>}           
 
-                    </div>}           
 
-                <AppButton
-                    val='save'
-                    classNameCustom=''
-                    callBackClick = {() => {
-                        if (props.mode === 'add-item') {
-                            addNewItem(dataItem, res => {
-                                console.log(res)
-                                props.changeMainTab("items-list")
-                            })
-                        }
+                <div className="offset-top" />
 
-                        if (props.mode === 'edit-item') {
-                            sendResponse('edit-item', dataItem, res => setAlertMess(res.mess))
-                        }
-                    }} 
-                />    
+
+                <div>
+                    {alertMess && alertMess.map(item => <div key={Math.random()}>{item}</div>)}
+                </div>  
+
+
+                {isShowSaveButton && 
+                    <AppButton
+                        val='save'
+                        callBackClick={sendDataToServer} />}
+
+
 
                 <hr />            
+
+
 
                 {props.mode === "edit-item" &&            
                     <div>
@@ -156,10 +175,6 @@ export function RedactDragonResources(props) {
                         <hr />    
 
                     </div>}
-
-                <div>
-                    {alertMess.map(item => <div key={Math.random()}>{item}</div>)}
-                </div>
 
 
                 <div className="contrnt-right">

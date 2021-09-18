@@ -49,6 +49,9 @@ hr {
   margin-top: 15px;
 }
 
+.offset-top {
+    margin-top: 15px;
+}
 
 .content-stroke {
   display: flex;

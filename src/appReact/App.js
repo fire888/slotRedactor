@@ -38,17 +38,25 @@ function App() {
                         classNameCustom = {currentTab === 'items-list' && "current"}
                         callBackClick = {() => changeMainTab('items-list')}/>
 
-                    {currentTab==="add-item" && 
-                        <RedactDragonResources
-                            mode="add-item"
+
+                    {/** TABS  *******************************/} 
+
+                    {currentTab==="items-list" &&
+                        <ListDragonResources
+                            callBackClick={setToViewItem}
                             changeMainTab={changeMainTab}/>}
 
                     {currentTab==="view-item" &&
-                    <ViewItem
-                        mode="view-item"
-                        currentDataItem={currentDataItem}
-                        changeMainTab={changeMainTab}/>}
+                        <ViewItem
+                            mode="view-item"
+                            currentDataItem={currentDataItem}
+                            changeMainTab={changeMainTab}/>}
 
+                    {currentTab==="add-item" && 
+                        <RedactDragonResources
+                            mode="add-item"
+                            dataItem={null}
+                            changeMainTab={changeMainTab}/>}
 
                     {currentTab==="edit-item" &&
                         <RedactDragonResources
@@ -56,11 +64,6 @@ function App() {
                             dataItem={currentDataItem}
                             changeMainTab={changeMainTab}/>}
 
-
-                    {currentTab==="items-list" &&
-                        <ListDragonResources
-                            callBackClick={setToViewItem}
-                            changeMainTab={changeMainTab}/>}
                 </div>
 
             </div>

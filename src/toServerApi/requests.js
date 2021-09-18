@@ -63,10 +63,12 @@ const startFetch = (path, params, onSuccess, onDenied) => {
         .then(function (response) {
             if (response.status === 200) {
                 response.json()
-                    .then(onSuccess)
+                    .then((r) => { 
+                        onSuccess(r) 
+                    })
             }
             else if (response.status === 404) {
-                onDenied('Session token doesnt exist or has expired', response)
+                onDenied('404 error', response)
             }
             else if (response.status === 412) {
                 response.text()

@@ -125,16 +125,6 @@ const loadDragonResources = (files, callback) => {
         })
 
     })
-
-    //for (let key in files) {
-    //    const { fileKey, path, name } = files[key]
-    //    window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
-    //}
-    //console.log(window.PIXI.Loader.shared)
-    //window.PIXI.Loader.shared.load((loader, res) => {
-    //    console.log('res', res)
-    //    callback(res)
-    //})
 }
 
 
@@ -151,6 +141,7 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
     
     currentArmature && currentArmature.destroy({ children: true, texture: true, baseTexture: true })
     currentArmature && currentArmature.dispose()
+    currentArmature = null
 
     factory.clear(true)
     DragonBones.TextureData.clearPool()

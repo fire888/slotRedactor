@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import '../stylesheets/AppLoadFile.css'
 import { AppButton } from './AppButton'
 
@@ -11,6 +11,22 @@ export function AppLoadFile (props) {
     const [currentFile, setCurrentFile] = useState(null)
     const [isShowUploadButton, toggleUploadButton] = useState(false)
     const [message, changeMessage] = useState(null)
+
+
+    /**
+     * create timeout to reset messages after time  
+     * remove timeout of reset messages if component unmounted 
+     */
+    useEffect(() => {
+        let timeout = null
+        if (message !== null) {
+            timeout = setTimeout(() => changeMessage(null), 3000)
+        } 
+        return () => { 
+            timeout && clearTimeout(timeout)
+        }
+    })
+
 
     return (
         <div className={`AppLoadFile`}>
@@ -34,8 +50,7 @@ export function AppLoadFile (props) {
                                 const mess = resp.mess[0] === 'loaded'
                                     ? `loaded ${resp.mess[1]}`
                                     : 'denied'
-                                changeMessage(mess)    
-                                setTimeout(()=>changeMessage(null), 3000)    
+                                changeMessage(mess)      
                             }
                         )
                         
@@ -45,39 +60,3 @@ export function AppLoadFile (props) {
         </div>
     )
 }
-
-// import React, {useState} from 'react'
-// import '../stylesheets/AppInput.css'
-
-/*
-export function AppInput (props) {
-    const [isShowUploadButton, toggleUploadButton] = useState(false)
-    const [dataFile, changeDataFile] = useState(null)
-    const [valMessage, changeMessage] = useState(null)
-
-    const changeHandler = event => {
-        changeDataFile({ type: props.type, val: event.target.value })
-        toggleUploadButton(true)
-    }
-
-    return (
-        <div className={`AppInput`}>
-            {props.type}
-            <div className='content-stroke'>
-                <input type="text" name="name" defaultValue={props.val} onChange={changeHandler} />
-                {isShowUploadButton && 
-                    <button
-                        onClick={() => { 
-                            props.callBackClick(dataFile)
-                            toggleUploadButton(false)
-                            changeMessage('done')
-                            setTimeout(()=>changeMessage(null), 2000) 
-                        }}>
-                        upload
-                    </button>}
-                {valMessage}    
-            </div>    
-        </div>
-    )
-}
-*/

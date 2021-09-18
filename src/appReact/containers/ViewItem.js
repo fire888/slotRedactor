@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AppButton } from "../components/AppButton";
 
 const startAnimate = (animationName, count) => window.emitter.emit('startAnimate', { animationName, count })
@@ -12,13 +12,16 @@ const createArrFromObj = obj => {
 }
 
 
+
+
 const setToView = data => setTimeout(() => {
     window.emitter.emit('dragonBonesFiles', data)
 })
 
-export function ViewItem(props) {
 
-    console.log(props.currentDataItem.name)
+
+
+export function ViewItem(props) {
     setToView(props.currentDataItem)
 
     return (
