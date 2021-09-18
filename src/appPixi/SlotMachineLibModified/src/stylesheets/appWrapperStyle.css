@@ -32,13 +32,12 @@ body {
     width: 100%;
     height: 100%;
     position: fixed;
-    display: flex;
     top: 0;
     left: 0;
     z-index: 1;
     background-size: cover;
     align-content: center;
-    justify-content: center;
+    justify-content: left;
     background-color: black;
 
     -webkit-touch-callout: none; /* iOS Safari */
@@ -55,14 +54,11 @@ body {
     top: 0;
     left: 0;
     z-index: 1;
-    flex-direction: column;
-    align-items: center;
 }
 
 
 .app-wrapper {
     box-shadow: 5px 0 10px 2px rgba(29, 6, 6, 0.541), -5px 0 10px 2px rgba(29, 6, 6, 0.527);
     max-height: 100vh;
-    overflow: hidden;
     position: relative;
 }

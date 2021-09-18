@@ -40,9 +40,9 @@ export class Application {
                 return;
             }
 
-            this.containerDOM.style.width = data.wApp + 'px'
-            this.containerDOM.style.height = data.hApp + 'px'
-            this.containerDOM.style.fontSize = data.htmlFontSize + 'px'
+            this.containerDOM.style.width = (window.innerWidth - 320) + 'px'
+            this.containerDOM.style.height = window.innerHeight + 'px'
+
 
             this.containerDOM.classList.remove('phone')
             this.containerDOM.classList.remove('phoneLong')
@@ -51,8 +51,8 @@ export class Application {
             const { deviceMode } = gameContext.data.windowData
             this.containerDOM.classList.add(deviceMode)
 
-            this.gameScene.x = data.wApp / 2
-            this.gameScene.y = data.hApp / 2
+            this.gameScene.x = (window.innerWidth - 320) / 2 + 100
+            this.gameScene.y = window.innerHeight / 2
         })
 
         gameContext.components.deviceResizer.resize()
