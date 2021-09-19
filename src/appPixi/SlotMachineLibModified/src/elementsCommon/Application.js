@@ -40,7 +40,7 @@ export class Application {
                 return;
             }
 
-            this.containerDOM.style.width = (window.innerWidth - 320) + 'px'
+            this.containerDOM.style.width = window.innerWidth + 'px'
             this.containerDOM.style.height = window.innerHeight + 'px'
 
 
@@ -51,7 +51,7 @@ export class Application {
             const { deviceMode } = gameContext.data.windowData
             this.containerDOM.classList.add(deviceMode)
 
-            this.gameScene.x = (window.innerWidth - 320) / 2 + 100
+            this.gameScene.x = window.innerWidth / 2
             this.gameScene.y = window.innerHeight / 2
         })
 

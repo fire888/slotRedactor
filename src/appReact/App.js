@@ -2,74 +2,21 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom';
 import './stylesheets/index.css';
 import './stylesheets/App.css';
-import { AppButton } from "./components/AppButton";
-import { RedactDragonResources } from './containers/RedactDragonResources'
-import { ListDragonResources } from './containers/ListDragonResourses'
-import { ViewItem } from './containers/ViewItem'
+import { ContainerMainTabs } from "./containers/ContainerMainTabs";
+import { ContainerAuth } from './containers/ContainerAuth'
 
 
 function App() {
-      const [ isOpen, changeOpen ] = useState(true)
-      const [ currentTab, changeMainTab ] = useState('items-list')
-      const [ currentDataItem, setDataItemToCurrent ] = useState(null)
+        const [ isAuth, toggleAuth ] = useState(false)
 
-      const setToViewItem = data => {
-          setDataItemToCurrent(data)
-          changeMainTab('view-item')
-      }
-    
-
-      return (
-            <div
-                className={`App ${!isOpen && 'closed'}`}>
-
-                <AppButton
-                    val = {isOpen ? 'close' : 'open'}
-                    classNameCustom = 'closeOpenApp'
-                    callBackClick = {() => changeOpen(!isOpen)}/>
-
-
-                <div
-                    className='ui-content'
-                    style={{'display':  isOpen ? 'block' : 'none'}}>
-
-                    <AppButton
-                        val="items-list"
-                        classNameCustom = {currentTab === 'items-list' && "current"}
-                        callBackClick = {() => changeMainTab('items-list')}/>
-
-
-                    {/** TABS  *******************************/} 
-
-                    {currentTab==="items-list" &&
-                        <ListDragonResources
-                            callBackClick={setToViewItem}
-                            changeMainTab={changeMainTab}/>}
-
-                    {currentTab==="view-item" &&
-                        <ViewItem
-                            mode="view-item"
-                            currentDataItem={currentDataItem}
-                            changeMainTab={changeMainTab}/>}
-
-                    {currentTab==="add-item" && 
-                        <RedactDragonResources
-                            mode="add-item"
-                            dataItem={null}
-                            changeMainTab={changeMainTab}/>}
-
-                    {currentTab==="edit-item" &&
-                        <RedactDragonResources
-                            mode="edit-item"
-                            dataItem={currentDataItem}
-                            changeMainTab={changeMainTab}/>}
-
-                </div>
-
-            </div>
-      );
+        return (
+            <div className="App">
+                {isAuth 
+                    ? <ContainerMainTabs /> 
+                    : <ContainerAuth callback={() => toggleAuth(true)}/>}
+            </div>    
+        )
 }
-
 
 
 ReactDOM.render(

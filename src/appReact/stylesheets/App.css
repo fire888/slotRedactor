@@ -1,10 +1,16 @@
-a.AppButton:hover,
-a.AppButton:visited,
-a.AppButton:active,
-a.AppButton:link {
+.App {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  min-height: 100vh;
+  z-index: 10;
   color: #379962;
-  text-decoration: none;
+  padding: 0 10px 0 10px;
+  user-select: auto;
 }
+
 
 hr {
   display: block;
@@ -20,27 +26,8 @@ hr {
 }
 
 
-.App {
-  background: #1b1b1b;
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 300px;
-  height: 100vh;
-  min-height: 100vh;
-  z-index: 10;
-  color: #379962;
-  padding: 0 10px 0 10px;
-  user-select: auto;
-}
-
-.closed {
-  height: 0;
-  min-height: 0;
-}
-
 .ui-content {
-  margin-top: 60px;
+  margin-top: 20px;
   overflow: auto;
   height: calc(100vh - 100px);
 }

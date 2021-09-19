@@ -78,8 +78,6 @@ const createFactory = (files) => {
 
 const showS = (armatureName) => {
     currentArmature = factory.buildArmatureDisplay(armatureName)
-    currentArmature.x = -100
-    currentArmature.y = 0
     app.gameScene.addChild(currentArmature)
 }
 

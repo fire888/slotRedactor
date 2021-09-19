@@ -13,11 +13,10 @@ module.exports = env => {
 
 
     const config = merge.merge(appCommonConfig(environment), {
-        // TODO: REMOVE
-        mode: 'development',
-        devtool: 'inline-source-map',
+        // mode: 'development',
+        // devtool: 'inline-source-map',
         
-        //mode: 'production',
+        mode: 'production',
         output: {
             path: path.resolve(__dirname, '../../slot_conf_back/uploads/redactor/'),
             filename: `app.bundle.js`
