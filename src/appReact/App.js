@@ -11,9 +11,8 @@ function App() {
 
         return (
             <div className="App">
-                {isAuth 
-                    ? <ContainerMainTabs /> 
-                    : <ContainerAuth callback={() => toggleAuth(true)}/>}
+                <ContainerAuth callback={toggleAuth}/>
+                {isAuth && <ContainerMainTabs />}
             </div>    
         )
 }

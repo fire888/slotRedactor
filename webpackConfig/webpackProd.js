@@ -18,7 +18,7 @@ module.exports = env => {
         
         mode: 'production',
         output: {
-            path: path.resolve(__dirname, '../../slot_conf_back/uploads/redactor/'),
+            path: path.resolve(__dirname, '../../slot_conf_back/www/redactor/'),
             filename: `app.bundle.js`
         },
         plugins: plugins

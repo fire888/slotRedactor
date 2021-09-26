@@ -4,11 +4,18 @@ import { AppButton } from '../components/AppButton'
 
 const WORD = 'kitten'
 
+
 export function ContainerAuth(props) {
+    const userRole = localStorage.getItem('userRole')
+
+    const [isAuth, toggleAuth] = useState(!!userRole)
     const [isShowSendButton, toggleSendButton] = useState(false)
     const [value, changeValueFromInput] = useState('')
-    const [alertMess, changeAlertMess] = useState(null) 
+    const [alertMess, changeAlertMess] = useState(null)
 
+    setTimeout(() => {
+        props.callback(isAuth)
+    })
 
     const changeViewSendButton = e => {
         changeAlertMess(null) 
@@ -18,7 +25,9 @@ export function ContainerAuth(props) {
 
     const checkInputValue = () => {
         if (value === WORD) {
-            props.callback()
+            localStorage.setItem('userRole', 'animator')
+            toggleAuth(true)
+            props.callback(true)
         } else {
             toggleSendButton(false)
             changeAlertMess('denied')
@@ -41,21 +50,29 @@ export function ContainerAuth(props) {
 
 
     return (
-        <div className='ui-content'>
-            <div className='content-stroke'>
-                <AppInput
-                    val={''}
-                    type={''}
-                    callBackClick={changeViewSendButton} />
+        <div className='fixed left top'>
+            { !isAuth
+                ? <div className='content-stroke'>
+                    <AppInput
+                        val={''}
+                        type={''}
+                        callBackClick={changeViewSendButton} />
 
-                {alertMess}
+                    {alertMess}
 
-                {isShowSendButton && 
-                    <AppButton 
-                        val="send"
-                        classNameCustom=''
-                        callBackClick={checkInputValue} />}
-                </div>                
+                    {isShowSendButton &&
+                        <AppButton
+                            val="send"
+                            classNameCustom=''
+                            callBackClick={checkInputValue} />}
+                    </div>
+                : <AppButton
+                    val='exit'
+                    callBackClick={() => {
+                        localStorage.removeItem('userRole');
+                        toggleAuth(false)
+                        props.callback(false)
+                    }}/> }
         </div>
     )
 }
