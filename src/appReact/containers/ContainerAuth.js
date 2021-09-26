@@ -52,27 +52,32 @@ export function ContainerAuth(props) {
     return (
         <div className='fixed left top'>
             { !isAuth
-                ? <div className='content-stroke'>
-                    <AppInput
-                        val={''}
-                        type={''}
-                        callBackClick={changeViewSendButton} />
+                ?   <div className='content-stroke'>
+                        <AppInput
+                            val={''}
+                            type={''}
+                            callBackClick={changeViewSendButton} />
 
-                    {alertMess}
+                        {alertMess}
 
-                    {isShowSendButton &&
-                        <AppButton
-                            val="send"
-                            classNameCustom=''
-                            callBackClick={checkInputValue} />}
+                        {isShowSendButton &&
+                            <AppButton
+                                val="send"
+                                classNameCustom=''
+                                callBackClick={checkInputValue} />}
                     </div>
-                : <AppButton
-                    val='exit'
-                    callBackClick={() => {
-                        localStorage.removeItem('userRole');
-                        toggleAuth(false)
-                        props.callback(false)
-                    }}/> }
+
+                :  <div className='contrnt-right'>
+                        <AppButton
+                            val='exit'
+                            callBackClick={() => {
+                                localStorage.removeItem('userRole');
+                                toggleAuth(false)
+                                props.callback(false)
+                            }}/>
+                    </div>}
+
+            <hr />
         </div>
     )
 }

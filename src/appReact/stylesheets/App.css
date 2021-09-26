@@ -50,3 +50,10 @@ hr {
   display: flex;
   justify-content: end;
 }
+
+.bg-green {
+  padding: 5px;
+  background-color: rgba(50, 92, 59, 0.22);
+  border-radius: 3px;
+
+}
