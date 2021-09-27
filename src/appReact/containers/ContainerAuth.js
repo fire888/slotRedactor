@@ -2,19 +2,26 @@ import React, { useState, useEffect } from 'react'
 import { AppInput } from "../components/AppInput";
 import { AppButton } from '../components/AppButton'
 
-const WORD = 'kitten'
+
+const ROLES_BY_WORLD = {
+    'kitten':'user',
+    '@animator': 'animator',
+}
+
+
+const getRole = pass => ROLES_BY_WORLD[pass] || null
 
 
 export function ContainerAuth(props) {
     const userRole = localStorage.getItem('userRole')
 
-    const [isAuth, toggleAuth] = useState(!!userRole)
+    const [role, changeRole] = useState(userRole)
     const [isShowSendButton, toggleSendButton] = useState(false)
     const [value, changeValueFromInput] = useState('')
     const [alertMess, changeAlertMess] = useState(null)
 
     setTimeout(() => {
-        props.callback(isAuth)
+        props.callback(role)
     })
 
     const changeViewSendButton = e => {
@@ -24,10 +31,12 @@ export function ContainerAuth(props) {
     }
 
     const checkInputValue = () => {
-        if (value === WORD) {
-            localStorage.setItem('userRole', 'animator')
-            toggleAuth(true)
-            props.callback(true)
+        const role = getRole(value)
+
+        if (role) {
+            localStorage.setItem('userRole', role)
+            changeRole(role)
+            props.callback(role)
         } else {
             toggleSendButton(false)
             changeAlertMess('denied')
@@ -51,30 +60,34 @@ export function ContainerAuth(props) {
 
     return (
         <div className='fixed left top'>
-            { !isAuth
-                ? <div className='content-stroke'>
-                    <AppInput
-                        val={''}
-                        type={''}
-                        callBackClick={changeViewSendButton} />
+            { !role
+                ?   <div className='content-stroke'>
+                        <AppInput
+                            val={''}
+                            type={''}
+                            callBackClick={changeViewSendButton} />
 
-                    {alertMess}
+                        {alertMess}
 
-                    {isShowSendButton &&
-                        <AppButton
-                            val="send"
-                            classNameCustom=''
-                            callBackClick={checkInputValue} />}
+                        {isShowSendButton &&
+                            <AppButton
+                                val="send"
+                                classNameCustom=''
+                                callBackClick={checkInputValue} />}
                     </div>
-                : <AppButton
-                    val='exit'
-                    callBackClick={() => {
-                        localStorage.removeItem('userRole');
-                        toggleAuth(false)
-                        props.callback(false)
-                    }}/> }
+
+                :  <div className='contrnt-right'>
+                        <AppButton
+                            val='exit'
+                            callBackClick={() => {
+                                localStorage.removeItem('userRole');
+                                changeRole(false)
+                                props.callback(false)
+                            }}/>
+                    </div>}
+
+            <hr />
         </div>
     )
 }
-
 

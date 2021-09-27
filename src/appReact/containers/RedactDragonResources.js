@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { AppButton } from "../components/AppButton";
 import { AppLoadFile } from "../components/AppLoadFile";
 import { AppInput } from "../components/AppInput";
+import { AppLoadMultFiles } from '../components/AppLoadMultFiles'
 
 import uniqid from 'uniqid'
 import { sendResponse } from "../../toServerApi/requests";
@@ -154,6 +155,7 @@ export function RedactDragonResources(props) {
 
                 {props.mode === "edit-item" &&            
                     <div>
+                        <AppLoadMultFiles />
 
                         <AppLoadFile
                             type='dragon-ske'

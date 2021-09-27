@@ -24,6 +24,8 @@ const setToView = data => setTimeout(() => {
 export function ViewItem(props) {
     setToView(props.currentDataItem)
 
+    const userRole = localStorage.getItem('userRole')
+
     return (
         <div className='content-tab'>
             <hr />
@@ -68,13 +70,14 @@ export function ViewItem(props) {
                     </div>)}
             </div>
             <hr />
-            <div className="row-space-between">
-                <AppButton
-                    val='edit'
-                    classNameCustom=''
-                    callBackClick={() => props.changeMainTab('edit-item')}
-                />
-            </div>
+            { userRole && userRole === 'animator' &&
+                <div className="row-space-between">
+                    <AppButton
+                        val='edit'
+                        classNameCustom=''
+                        callBackClick={() => props.changeMainTab('edit-item')}
+                    />
+                </div>}
         </div>
     )
 }
