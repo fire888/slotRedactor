@@ -58,12 +58,13 @@ export function AppLoadMultFiles ({ children }) {
     return (
         <div>
             {children}
-            {isVisible &&
+            {/*{isVisible &&*/}
                 <div
                     className="bg-green"
                     onDragLeave={onDragLeave} >
                     Drop files to Upload
-                </div>}
+                </div>
+            {/*}*/}
         </div>
     )
 }
