@@ -8,63 +8,64 @@ import { uploadFile } from "../../toServerApi/requests";
 
 
 
-export function AppLoadMultFiles ({ children }) {
-    const [isVisible, setIsVisible] = useState(false);
+export function AppLoadMultFiles (props) {
+    const [filesNames, setFilesNames] = useState(false)
+
+    const files = null
 
     const onDragEnter = useCallback((e) => {
-        setIsVisible(true);
-        e.stopPropagation();
-        e.preventDefault();
+        e.stopPropagation()
+        e.preventDefault()
         return false;
     }, []);
 
     const onDragOver = useCallback((e) => {
-        console.log('!---!')
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault()
+        e.stopPropagation()
         return false;
     }, []);
 
     const onDragLeave = useCallback((e) => {
-        setIsVisible(false);
-        e.stopPropagation();
-        e.preventDefault();
+        e.stopPropagation()
+        e.preventDefault()
         return false;
     }, []);
 
     const onDrop = useCallback((e) => {
-        e.preventDefault();
-        const files = e.dataTransfer.files;
-        console.log('Files dropped: ', files);
-        // Upload files
-        setIsVisible(false);
-        return false;
+        e.preventDefault()
+        const files = e.dataTransfer.files
+        console.log('Files dropped: ', files.length)
+        const names = []
+        for (let i = 0; i < files.length; i++) {
+            names.push(files[i].name)
+        }
+        setFilesNames(names)
+        props.callback(files)
+        return false
     }, []);
 
     useEffect(() => {
-        console.log('!!!!')
-        window.addEventListener('mouseup', onDragLeave);
-        window.addEventListener('dragenter', onDragEnter);
-        window.addEventListener('dragover', onDragOver);
-        window.addEventListener('drop', onDrop);
+        window.addEventListener('mouseup', onDragLeave)
+        window.addEventListener('dragenter', onDragEnter)
+        window.addEventListener('dragover', onDragOver)
+        window.addEventListener('drop', onDrop)
         return () => {
-            window.removeEventListener('mouseup', onDragLeave);
-            window.removeEventListener('dragenter', onDragEnter);
-            window.removeEventListener('dragover', onDragOver);
-            window.removeEventListener('drop', onDrop);
+            window.removeEventListener('mouseup', onDragLeave)
+            window.removeEventListener('dragenter', onDragEnter)
+            window.removeEventListener('dragover', onDragOver)
+            window.removeEventListener('drop', onDrop)
         };
-    }, [onDragEnter, onDragLeave, onDragOver, onDrop]);
+    }, [onDragEnter, onDragLeave, onDragOver, onDrop])
 
     return (
         <div>
-            {children}
-            {/*{isVisible &&*/}
-                <div
-                    className="bg-green"
-                    onDragLeave={onDragLeave} >
-                    Drop files to Upload
-                </div>
-            {/*}*/}
+            <div
+                className="bg-green height-min-5"
+                onDragLeave={onDragLeave} >
+                {filesNames 
+                    ? filesNames.map(item => <div key={item}>{item}</div>)
+                    : 'Drop files to upload'}
+            </div>
         </div>
     )
 }

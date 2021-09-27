@@ -3,6 +3,7 @@ import { AppButton } from "../components/AppButton";
 import { AppLoadFile } from "../components/AppLoadFile";
 import { AppInput } from "../components/AppInput";
 import { AppLoadMultFiles } from '../components/AppLoadMultFiles'
+import { prepareDragonFilesToSend } from '../helpers/prepareFilesToSend'
 
 import uniqid from 'uniqid'
 import { sendResponse } from "../../toServerApi/requests";
@@ -74,6 +75,12 @@ export function RedactDragonResources(props) {
             timeout && clearTimeout(timeout)
         }
     })
+
+
+
+    const onLoadMultFiles = files => {
+        prepareDragonFilesToSend(dataItem.id, files)
+    }
 
 
 
@@ -155,9 +162,11 @@ export function RedactDragonResources(props) {
 
                 {props.mode === "edit-item" &&            
                     <div>
-                        <AppLoadMultFiles />
+                        <AppLoadMultFiles 
+                            callback={onLoadMultFiles}/>
 
-                        <AppLoadFile
+
+                        {/* <AppLoadFile
                             type='dragon-ske'
                             val='dragon-ske'
                             itemId={dataItem.id} />
@@ -172,7 +181,7 @@ export function RedactDragonResources(props) {
                         <AppLoadFile
                             type='dragon-img'
                             val='dragon-img'
-                            itemId={dataItem.id} />
+                            itemId={dataItem.id} /> */}
 
                         <hr />    
 
