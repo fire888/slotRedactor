@@ -1,4 +1,4 @@
-import { uploadFile } from "../../toServerApi/requests";
+import { sendResponse, uploadFile } from "../../toServerApi/requests";
 
 
 const TYPES = [
@@ -9,11 +9,21 @@ const TYPES = [
 
 
 export const prepareDragonFilesToSend = (id, files) => {
+    const preparedFiles = prepareFiles(id, files)
+    removeFilesFromSever(id, () => {
+        sendFiles(preparedFiles, () => {
+            console.log('done')
+        })
+    })
+}
+
+
+const prepareFiles = (id, files) => {
     const filesDataToSend = []
     for (let i = 0; i < files.length; i++) {
         for (let j = 0; j < TYPES.length; j++) {
             if (files[i].name.includes(TYPES[j].include)) {
-                filesDataToSend.push({ 
+                filesDataToSend.push({
                     id,
                     type: TYPES[j].type,
                     file: files[i],
@@ -21,30 +31,36 @@ export const prepareDragonFilesToSend = (id, files) => {
             }
         }
     }
+    return filesDataToSend
+}
 
 
+const removeFilesFromSever = (id, callback) => {
+    sendResponse("remove-files", { id }, res => {
+        if (res.mess[0] === 'files removed') {
+            callback()
+        }
+    })
+}
+
+
+const sendFiles = (arr, callback) => {
     const checkerIsUploadComplete = resp => {
         if (resp.mess[0] === 'loaded') {
             console.log(`loaded ${resp.mess[1]}`)
             return true
         }
-        
         console.log('mistake')
         return false
     }
 
 
     const iterator = i => {
-        if (i === TYPES.length) {
-            return;
-        }
+        if (i === arr.length) return void callback()
 
-        uploadFile('upload-file', filesDataToSend[i], resp => {
-            if (checkerIsUploadComplete(resp)) {
-                iterator(++i)
-            }
-        })
+        uploadFile('upload-file', arr[i], resp => checkerIsUploadComplete(resp) && iterator(++i))
     }
 
     iterator(0)
 }
+

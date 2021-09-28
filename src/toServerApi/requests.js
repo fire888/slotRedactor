@@ -7,6 +7,7 @@ const PATHS = {
     "remove-item": "/api/remove-item",
     "get-list": "/api/get-list",
     "upload-file": "/api/upload-file",
+    "remove-files": "/api/remove-files"
 }
 
 
@@ -49,6 +50,11 @@ export function uploadFile (key, fileData, onDone, offDone) {
     const params = Object.assign({}, reqParams.postFiles, { body: formData })
 
     startFetch(path, params, onDone || onSuccess, offDone || onDenied)
+}
+
+
+export function removeFiles() {
+
 }
 
 
