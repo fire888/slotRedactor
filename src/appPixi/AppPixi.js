@@ -55,7 +55,7 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
 let app = null
 let currentArmature = null 
 const factory = DragonBones.PixiFactory.factory
-
+let armatureNames = null
 
 
 
@@ -73,11 +73,17 @@ const createFactory = (files) => {
         filesByKey['dragon-tex'].data,
         filesByKey['dragon-img'].texture
     )
+
+    for (let key in factory._dragonBonesDataMap) {
+        const n = factory._dragonBonesDataMap[key]
+        armatureNames = n.armatureNames    
+        console.log('arm:', armatureNames[0])
+    }
 } 
 
 
-const showS = (armatureName) => {
-    currentArmature = factory.buildArmatureDisplay(armatureName)
+const showS = () => {
+    currentArmature = factory.buildArmatureDisplay(armatureNames[0])
     app.gameScene.addChild(currentArmature)
 }
 
@@ -132,7 +138,6 @@ const loadDragonResources = (files, callback) => {
 let isLoading = false
 
 window.emitter.subscribe('dragonBonesFiles', fileData => {
-    
     if (isLoading) return
     isLoading = true
     setTimeout(() => isLoading = false, 1000)
@@ -164,9 +169,8 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
 
     app = new Application(root)
     loadDragonResources(fileData.files, res => {
-        if (!fileData.armatureName) return;
         createFactory(res)
-        showS(fileData.armatureName)
+        showS()
     })
 })
 

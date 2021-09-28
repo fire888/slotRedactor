@@ -12,7 +12,9 @@ export const prepareDragonFilesToSend = (id, files) => {
     const preparedFiles = prepareFiles(id, files)
     removeFilesFromSever(id, () => {
         sendFiles(preparedFiles, () => {
-            console.log('done')
+            getItemDataById(id, data => {
+                window.emitter.emit('dragonBonesFiles', data.item)
+            })
         })
     })
 }
@@ -62,5 +64,12 @@ const sendFiles = (arr, callback) => {
     }
 
     iterator(0)
+}
+
+
+const getItemDataById = (id, callback) => {
+    sendResponse('get-item', { id }, res => {
+        callback(res)
+    })
 }
 

@@ -113,10 +113,10 @@ export function RedactDragonResources(props) {
 
             {props.mode === "edit-item" &&
                 <div>
-                    <AppInput
+                    {/* <AppInput
                         val={dataItem.armatureName}
                         type={"armatureName"}
-                        callBackClick = {e => changeDataFile('armatureName', e.val)} />
+                        callBackClick = {e => changeDataFile('armatureName', e.val)} /> */}
 
                     <AppInput
                         val={dataItem.animationsNames && dataItem.animationsNames[0]}

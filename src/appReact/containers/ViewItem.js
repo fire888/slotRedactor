@@ -34,7 +34,7 @@ export function ViewItem(props) {
                 <div>id: {props.currentDataItem.id}</div>
             </div>
             <hr />
-            <div>arm: {props.currentDataItem.armatureName}</div>
+            {/* <div>arm: {props.currentDataItem.armatureName}</div> */}
             <div>
                 {props.currentDataItem.animationsNames && 
                 props.currentDataItem.animationsNames.length &&

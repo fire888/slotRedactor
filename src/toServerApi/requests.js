@@ -6,6 +6,7 @@ const PATHS = {
     "edit-item": "/api/edit-item",
     "remove-item": "/api/remove-item",
     "get-list": "/api/get-list",
+    "get-item": "/api/get-item",
     "upload-file": "/api/upload-file",
     "remove-files": "/api/remove-files"
 }
