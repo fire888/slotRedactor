@@ -30,12 +30,6 @@ export function RedactDragonResources(props) {
     const [alertMess, setAlertMess] = useState(null)
     const [isShowSaveButton, toggleShowSaveButton] = useState(false)
     const [animations, setAnimations] = useState([])
-    // useEffect(() => {
-    //     showDragonSpr(props.dataItem, setAnimations)
-    // })
-
-    //setTimeout(() => { showDragonSpr(props.dataItem, setAnimations)})
-
 
 
     /** set changes from inputs to state */
@@ -84,15 +78,7 @@ export function RedactDragonResources(props) {
     })
 
 
-
-    const onLoadMultFiles = files => {
-        prepareDragonFilesToSend(dataItem.id, files, arr => {
-            console.log('----------------', arr)
-            setAnimations(arr)
-        })
-    }
-
-
+    const onLoadMultFiles = files => prepareDragonFilesToSend(dataItem.id, files, setAnimations)
 
 
     return (

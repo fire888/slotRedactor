@@ -4,7 +4,7 @@ import { sendResponse } from "../../toServerApi/requests";
 
 
 
-export function ListDragonResources(props) {
+export function ListSets(props) {
     const [loadedRes, showList] = useState(null)
 
     const userRole = localStorage.getItem('userRole')
@@ -14,28 +14,27 @@ export function ListDragonResources(props) {
         const arr = data.list.map(item =>
             <AppButton
                 classNameCustom={'long'}
-                key={item.id}    
+                key={item.id}
                 val={item.name}
                 callBackClick = {() => props.callBackClick(props.type, item)}
             />)
-            
+
         showList(arr)
     }
 
     useEffect(() => {
-        !loadedRes && sendResponse('get-list', {}, prepareList)
+        !loadedRes && sendResponse('get-sets-list', {}, prepareList)
     })
-    //setTimeout(() => loadedRes.length === 0 && sendResponse('get-list', {}, prepareList))
 
 
     return (
         <div>
             {loadedRes && loadedRes.length !== 0 && loadedRes}
-            {userRole && userRole==='animator'&&
-                <AppButton
-                    val="add item"
-                    callBackClick = {() => {
-                        props.changeMainTab('add-item')}}/>}
+            {userRole && userRole==='animator' &&
+            <AppButton
+                val="add item"
+                callBackClick = {() => {
+                    props.changeMainTab('add-set')}}/>}
         </div>
     )
 }

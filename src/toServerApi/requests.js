@@ -8,7 +8,9 @@ const PATHS = {
     "get-list": "/api/get-list",
     "get-item": "/api/get-item",
     "upload-file": "/api/upload-file",
-    "remove-files": "/api/remove-files"
+    "remove-files": "/api/remove-files",
+
+    "get-sets-list": "/api/get-sets-list",
 }
 
 

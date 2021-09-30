@@ -2,17 +2,24 @@ import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
 import { RedactDragonResources } from './RedactDragonResources'
 import { ListDragonResources } from './ListDragonResourses'
+import { ListSets } from './ListSets'
 import { ViewItem } from './ViewItem'
 
 
+
 export function ContainerMainTabs() {
-    const [ currentTab, changeMainTab ] = useState('items-list')
+    const [ currentTab, changeMainTab ] = useState('sets-list')
     const [ currentDataItem, setDataItemToCurrent ] = useState(null)
 
 
-    const setToViewItem = data => {
-        setDataItemToCurrent(data)
-        changeMainTab('view-item')
+    const setToViewItem = (type, data) => {
+        if (type === 'sets-list') {
+            console.log('111111')
+        }
+        if (type === 'items-list') {
+            setDataItemToCurrent(data)
+            changeMainTab('view-item')
+        }
     }
     
 
@@ -21,15 +28,31 @@ export function ContainerMainTabs() {
             className='ui-content'>
 
             <AppButton
-                val="items-list"
+                val="sets-list"
+                classNameCustom = {currentTab === 'sets-list' && "current"}
+                callBackClick = {() => changeMainTab('sets-list')}/>
+
+
+            <AppButton
+                val="all-items"
                 classNameCustom = {currentTab === 'items-list' && "current"}
                 callBackClick = {() => changeMainTab('items-list')}/>
 
 
-            {/** TABS  *******************************/} 
+            {/** TABS  *******************************/}
+
+            {currentTab==="sets-list" &&
+            <div>
+                <ListSets
+                    type="sets-list"
+                    callBackClick={setToViewItem}
+                    changeMainTab={changeMainTab}/>
+            </div>}
+
 
             {currentTab==="items-list" &&
                 <ListDragonResources
+                    type="items-list"
                     callBackClick={setToViewItem}
                     changeMainTab={changeMainTab}/>}
 
