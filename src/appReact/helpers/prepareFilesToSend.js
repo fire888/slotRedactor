@@ -1,4 +1,5 @@
 import { sendResponse, uploadFile } from "../../toServerApi/requests";
+import { showDragonSpr, playAnimation } from "../../appPixi/AppPixi"
 
 
 const TYPES = [
@@ -8,12 +9,12 @@ const TYPES = [
 ]
 
 
-export const prepareDragonFilesToSend = (id, files) => {
+export const prepareDragonFilesToSend = (id, files, callback) => {
     const preparedFiles = prepareFiles(id, files)
     removeFilesFromSever(id, () => {
         sendFiles(preparedFiles, () => {
             getItemDataById(id, data => {
-                window.emitter.emit('dragonBonesFiles', data.item)
+                showDragonSpr(data.item, callback)
             })
         })
     })

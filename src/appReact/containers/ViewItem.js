@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
+import { showDragonSpr, playAnimation } from '../../appPixi/AppPixi'
 
-const startAnimate = (animationName, count) => window.emitter.emit('startAnimate', { animationName, count })
+const startAnimate = (animationName, count) => playAnimation({ animationName, count })
 
 const createArrFromObj = obj => {
     const arr = []
@@ -13,16 +14,11 @@ const createArrFromObj = obj => {
 
 
 
-
-const setToView = data => setTimeout(() => {
-    window.emitter.emit('dragonBonesFiles', data)
-})
-
-
-
-
 export function ViewItem(props) {
-    setToView(props.currentDataItem)
+    const [animations, setAnimations] = useState([])
+    setTimeout(() => showDragonSpr(props.currentDataItem, setAnimations))
+
+
 
     const userRole = localStorage.getItem('userRole')
 
@@ -36,9 +32,7 @@ export function ViewItem(props) {
             <hr />
             {/* <div>arm: {props.currentDataItem.armatureName}</div> */}
             <div>
-                {props.currentDataItem.animationsNames && 
-                props.currentDataItem.animationsNames.length &&
-                props.currentDataItem.animationsNames.map((n, i) => n &&
+                {animations.map((n, i) => n &&
                     <div 
                         className="content-stroke"
                         key={i}>
@@ -70,7 +64,7 @@ export function ViewItem(props) {
                     </div>)}
             </div>
             <hr />
-            { userRole && userRole === 'animator' &&
+            {userRole && userRole === 'animator' &&
                 <div className="row-space-between">
                     <AppButton
                         val='edit'

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, } from 'react'
 import { AppButton } from "../components/AppButton";
-import { AppLoadFile } from "../components/AppLoadFile";
 import { AppInput } from "../components/AppInput";
 import { AppLoadMultFiles } from '../components/AppLoadMultFiles'
 import { prepareDragonFilesToSend } from '../helpers/prepareFilesToSend'
 
 import uniqid from 'uniqid'
 import { sendResponse } from "../../toServerApi/requests";
+import { playAnimation, showDragonSpr } from "../../appPixi/AppPixi";
 
 
 const prepareInitSpriteData = () => ({
@@ -29,6 +29,13 @@ export function RedactDragonResources(props) {
     const [dataItem, setToStateData] = useState(props.dataItem || prepareInitSpriteData())
     const [alertMess, setAlertMess] = useState(null)
     const [isShowSaveButton, toggleShowSaveButton] = useState(false)
+    const [animations, setAnimations] = useState([])
+    // useEffect(() => {
+    //     showDragonSpr(props.dataItem, setAnimations)
+    // })
+
+    //setTimeout(() => { showDragonSpr(props.dataItem, setAnimations)})
+
 
 
     /** set changes from inputs to state */
@@ -54,7 +61,7 @@ export function RedactDragonResources(props) {
         toggleShowSaveButton(false)
 
         if (props.mode === 'add-item') {
-            addNewItemToServer(dataItem, () =>props.changeMainTab("items-list"))
+            addNewItemToServer(dataItem, ()=>props.changeMainTab("items-list"))
         }
 
         if (props.mode === 'edit-item') {
@@ -79,7 +86,10 @@ export function RedactDragonResources(props) {
 
 
     const onLoadMultFiles = files => {
-        prepareDragonFilesToSend(dataItem.id, files)
+        prepareDragonFilesToSend(dataItem.id, files, arr => {
+            console.log('----------------', arr)
+            setAnimations(arr)
+        })
     }
 
 
@@ -113,33 +123,26 @@ export function RedactDragonResources(props) {
 
             {props.mode === "edit-item" &&
                 <div>
-                    {/* <AppInput
-                        val={dataItem.armatureName}
-                        type={"armatureName"}
-                        callBackClick = {e => changeDataFile('armatureName', e.val)} /> */}
+                    {animations.map((n, i) => n &&
+                        <div
+                            className="content-stroke"
+                            key={i}>
+                            <span>{n}</span>
+                            <div className="contrnt-right">
+                                <AppButton
+                                    val='once'
+                                    callBackClick={()=>playAnimation({ animationName: n, count: 1 })} />
+                                <AppButton
+                                    val='repeat'
+                                    callBackClick={()=>playAnimation({ animationName: n, count: 1000 })} />
+                                <AppButton
+                                    val='stop'
+                                    callBackClick={()=>playAnimation({ animationName: n, count: false })} />
 
-                    <AppInput
-                        val={dataItem.animationsNames && dataItem.animationsNames[0]}
-                        type={"animationName_0"}
-                        callBackClick = {e => changeDataFile('animationName_0', e.val)} />
-
-                    <AppInput
-                        val={dataItem.animationsNames && dataItem.animationsNames[1]}
-                        type={"animationName_1"}
-                        callBackClick = {e => changeDataFile('animationName_1', e.val)} />
-
-                    <AppInput
-                        val={dataItem.animationsNames && dataItem.animationsNames[2]}
-                        type={"animationName_2"}
-                        callBackClick = {e => changeDataFile('animationName_2', e.val)} />
-  
-                    
-                    <AppInput
-                        val={dataItem.animationsNames && dataItem.animationsNames[3]}
-                        type={"animationName_3"}
-                        callBackClick = {e => changeDataFile('animationName_3', e.val)} /> 
-                </div>}           
-
+                            </div>
+                        </div>
+                    )}
+                </div>}
 
                 <div className="offset-top" />
 
@@ -164,27 +167,7 @@ export function RedactDragonResources(props) {
                     <div>
                         <AppLoadMultFiles 
                             callback={onLoadMultFiles}/>
-
-
-                        {/* <AppLoadFile
-                            type='dragon-ske'
-                            val='dragon-ske'
-                            itemId={dataItem.id} />
-
-
-                        <AppLoadFile
-                            type='dragon-tex'
-                            val='dragon-tex'
-                            itemId={dataItem.id} />
-
-
-                        <AppLoadFile
-                            type='dragon-img'
-                            val='dragon-img'
-                            itemId={dataItem.id} /> */}
-
-                        <hr />    
-
+                        <hr />
                     </div>}
 
 

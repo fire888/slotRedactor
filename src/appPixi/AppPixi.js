@@ -56,6 +56,7 @@ let app = null
 let currentArmature = null 
 const factory = DragonBones.PixiFactory.factory
 let armatureNames = null
+let animationNames = null
 
 
 
@@ -68,16 +69,35 @@ const createFactory = (files) => {
         filesByKey[k] = files[key]
     }
 
-    factory.parseDragonBonesData(filesByKey['dragon-ske'].data);
-    factory.parseTextureAtlasData(
-        filesByKey['dragon-tex'].data,
-        filesByKey['dragon-img'].texture
-    )
+    if (!filesByKey['dragon-ske']) {
+        return;
+    }
+
+
+    try {
+        factory.parseDragonBonesData(filesByKey['dragon-ske'].data);
+    } catch {
+        console.log('create factory mistake')
+    }
+
+    try {
+        factory.parseTextureAtlasData(
+            filesByKey['dragon-tex'].data,
+            filesByKey['dragon-img'].texture
+        )
+    } catch {
+        console.log('parse factory mistake')
+    }
+
 
     for (let key in factory._dragonBonesDataMap) {
-        const n = factory._dragonBonesDataMap[key]
-        armatureNames = n.armatureNames    
-        console.log('arm:', armatureNames[0])
+        const dataItem = factory._dragonBonesDataMap[key]
+        for (let keyArms in dataItem.armatures) {
+            console.log('animations: ', dataItem.armatures[keyArms].animationNames)
+            animationNames = dataItem.armatures[keyArms].animationNames
+        }
+        console.log('arm: ', dataItem.armatureNames[0])
+        armatureNames = dataItem.armatureNames
     }
 } 
 
@@ -87,14 +107,15 @@ const showS = () => {
     app.gameScene.addChild(currentArmature)
 }
 
-window.emitter.subscribe('startAnimate', ({ animationName, count }) => {
+const playAnimation = ({ animationName, count }) => {
+//window.emitter.subscribe('startAnimate', () => {
     if (!currentArmature) return;  
     if (count) { 
         currentArmature.animation.play(animationName, count)
     } else {
         currentArmature.animation.stop() 
     }
-})
+}
 
 
 
@@ -137,11 +158,12 @@ const loadDragonResources = (files, callback) => {
 
 let isLoading = false
 
-window.emitter.subscribe('dragonBonesFiles', fileData => {
+
+const showDragonSpr = (filesData, callback) => {
     if (isLoading) return
     isLoading = true
     setTimeout(() => isLoading = false, 1000)
-    
+
     currentArmature && currentArmature.destroy({ children: true, texture: true, baseTexture: true })
     currentArmature && currentArmature.dispose()
     currentArmature = null
@@ -164,14 +186,58 @@ window.emitter.subscribe('dragonBonesFiles', fileData => {
         delete window.PIXI.Loader.shared.resources[url]
     }
     PIXI.utils.destroyTextureCache()
-    
+
     app && app.destroy()
 
     app = new Application(root)
-    loadDragonResources(fileData.files, res => {
+    loadDragonResources(filesData.files, res => {
         createFactory(res)
         showS()
+        console.log('!!!!', animationNames)
+        callback(animationNames)
     })
-})
+}
+
+export {
+    showDragonSpr,
+    playAnimation,
+}
+//
+// window.emitter.subscribe('dragonBonesFiles', fileData => {
+//     if (isLoading) return
+//     isLoading = true
+//     setTimeout(() => isLoading = false, 1000)
+//
+//     currentArmature && currentArmature.destroy({ children: true, texture: true, baseTexture: true })
+//     currentArmature && currentArmature.dispose()
+//     currentArmature = null
+//
+//     factory.clear(true)
+//     DragonBones.TextureData.clearPool()
+//     DragonBones.TextureAtlasData.clearPool()
+//     DragonBones.PixiTextureAtlasData.clearPool()
+//     DragonBones.BaseFactory && DragonBones.BaseFactory.clear && DragonBones.BaseFactory.clear()
+//
+//
+//
+//     for (var textureUrl in window.PIXI.utils.BaseTextureCache) {
+//         delete PIXI.utils.BaseTextureCache[textureUrl]
+//     }
+//     for (var textureUrl in window.PIXI.utils.TextureCache) {
+//         delete PIXI.utils.TextureCache[textureUrl]
+//     }
+//     for (var url in window.PIXI.Loader.shared.resources) {
+//         delete window.PIXI.Loader.shared.resources[url]
+//     }
+//     PIXI.utils.destroyTextureCache()
+//
+//     app && app.destroy()
+//
+//     app = new Application(root)
+//     loadDragonResources(fileData.files, res => {
+//         createFactory(res)
+//         showS()
+//     })
+// })
 
 
