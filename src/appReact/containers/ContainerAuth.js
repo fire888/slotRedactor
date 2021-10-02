@@ -6,6 +6,7 @@ import { AppButton } from '../components/AppButton'
 const ROLES_BY_WORLD = {
     'kitten':'user',
     '@animator': 'animator',
+    '@superAdmin': 'superAdmin',
 }
 
 

@@ -68,7 +68,7 @@ const sendFiles = (arr, callback) => {
 }
 
 
-const getItemDataById = (id, callback) => {
+export const getItemDataById = (id, callback) => {
     sendResponse('get-item', { id }, res => {
         callback(res)
     })

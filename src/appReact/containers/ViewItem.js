@@ -30,7 +30,6 @@ export function ViewItem(props) {
                 <div>id: {props.currentDataItem.id}</div>
             </div>
             <hr />
-            {/* <div>arm: {props.currentDataItem.armatureName}</div> */}
             <div>
                 {animations.map((n, i) => n &&
                     <div 
@@ -52,17 +51,18 @@ export function ViewItem(props) {
                     </div>    
                 )}
             </div>
-            <div>
-                {createArrFromObj(props.currentDataItem.files).map((n, i) =>
-                    <div 
-                        key={i}
-                        className='content-stroke' >
-                        <span>{n.name}</span>
-                        <span>    
-                            <a className='AppButton' href={`/${n.path}/${n.name}`} download={n.name}>download</a>
-                        </span>
-                    </div>)}
-            </div>
+            {userRole && userRole === 'animator' &&
+                <div>
+                    {createArrFromObj(props.currentDataItem.files).map((n, i) =>
+                        <div
+                            key={i}
+                            className='content-stroke' >
+                            <span>{n.name}</span>
+                            <span>
+                                <a className='AppButton' href={`/${n.path}/${n.name}`} download={n.name}>download</a>
+                            </span>
+                        </div>)}
+                </div>}
             <hr />
             {userRole && userRole === 'animator' &&
                 <div className="row-space-between">

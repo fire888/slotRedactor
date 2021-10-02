@@ -22,14 +22,27 @@ a.AppButton,
 }
 
 .AppButton.current {
-    background-color: #327956;
+    background: #327956;
     color: #f3ecaf;
 }
 
 .AppButton:hover {
-    color: #9a9875;
     background: #153426;
+    color: #9a9875;
 }
+
+.AppButton.current:hover {
+    background: #1c9358;
+    color: #f3ecaf;
+}
+
+
+.AppButton.color-alert {
+    background-color: #4b0101;
+    color: #a1987b;
+    border: 1px solid #a1987b;
+}
+
 
 .closeOpenApp {
     position: absolute;

@@ -108,7 +108,6 @@ const showS = () => {
 }
 
 const playAnimation = ({ animationName, count }) => {
-//window.emitter.subscribe('startAnimate', () => {
     if (!currentArmature) return;  
     if (count) { 
         currentArmature.animation.play(animationName, count)
@@ -120,7 +119,7 @@ const playAnimation = ({ animationName, count }) => {
 
 
 /************************************************************ */
-let count = 0
+
 
 const loadDragonResources = (files, callback) => {
     const keysFiles = ['dragon-ske', 'dragon-tex', 'dragon-img']

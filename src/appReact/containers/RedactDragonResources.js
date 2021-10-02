@@ -7,6 +7,7 @@ import { prepareDragonFilesToSend } from '../helpers/prepareFilesToSend'
 import uniqid from 'uniqid'
 import { sendResponse } from "../../toServerApi/requests";
 import { playAnimation, showDragonSpr } from "../../appPixi/AppPixi";
+import { AppButtonAlertDoneOrNot } from "../components/AppButtonAlertDoneOrNot";
 
 
 const prepareInitSpriteData = () => ({
@@ -159,18 +160,29 @@ export function RedactDragonResources(props) {
 
                 <div className="contrnt-right">
                     {props.mode === "edit-item" &&
-                        <AppButton
+                        <AppButtonAlertDoneOrNot
                             val='delete'
                             classNameCustom='color-alert'
                             callBackClick = {() => {
                                 sendResponse(
                                     'remove-item',
                                     { id: dataItem.id },
-                                    () => props.changeMainTab("items-list")) }
-                            }/>}
+                                    () => props.changeMainTab("items-list")) }}/>
+                    }
             </div>
         </div>
     )
 }
+
+
+                        // <AppButton
+                        //     val='delete'
+                        //     classNameCustom='color-alert'
+                        //     callBackClick = {() => {
+                        //         sendResponse(
+                        //             'remove-item',
+                        //             { id: dataItem.id },
+                        //             () => props.changeMainTab("items-list")) }
+                        //     }/>}
 
 

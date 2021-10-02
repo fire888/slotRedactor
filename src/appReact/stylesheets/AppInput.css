@@ -3,9 +3,9 @@
 }
 
 .AppInput input {
-    border-radius: 30px;
+    border-radius: 3px;
     background-color: #1d4c35;
-    color: #35c15d;
-    border: 1px solid #35c15d;
-    padding-left: 10px;
+    color: #92c29e;
+    border: 1px solid #1d6332;
+    padding-left: 2px;
 }

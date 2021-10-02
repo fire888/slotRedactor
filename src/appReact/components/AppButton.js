@@ -5,8 +5,7 @@ export function AppButton (props) {
 
     return <div
         className={`AppButton ${props.classNameCustom}`}
-        onClick={() => {
-            props.callBackClick()}}>
+        onClick={props.callBackClick}>
         {props.val}
     </div>
 }
