@@ -25,6 +25,10 @@ const reqParams = {
     },
     postFiles: {
         method: 'POST',
+        headers: {
+            mode: 'cors',
+            credentials: 'include'
+        }
     }
 }
 
