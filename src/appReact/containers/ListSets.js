@@ -23,7 +23,6 @@ export function ListSets(props) {
         })
 
     }
-
     const userRole = localStorage.getItem('userRole')
 
     const prepareList = data => {
@@ -61,10 +60,10 @@ export function ListSets(props) {
         <div>
             {loadedRes && loadedRes.length !== 0 && loadedRes}
             {userRole && userRole==='animator' &&
-            <AppButton
-                val="add item"
-                callBackClick = {() => {
-                    props.changeMainTab('add-set')}}/>}
+                <AppButton
+                    val="add item"
+                    callBackClick = {() => {
+                        props.changeMainTab('add-set')}}/>}
         </div>
     )
 }
