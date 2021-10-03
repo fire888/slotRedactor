@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { AppButton } from "../components/AppButton";
 import { showDragonSpr, playAnimation } from '../../appPixi/AppPixi'
-import { getItemDataById } from '../helpers/prepareFilesToSend'
+import {getItemDataById, prepareDragonFilesToSend} from '../helpers/prepareFilesToSend'
+import {AppLoadMultFiles} from "../components/AppLoadMultFiles";
+import {AppInput} from "../components/AppInput";
+import {sendResponse} from "../../toServerApi/requests";
+import {AppButtonAlertDoneOrNot} from "../components/AppButtonAlertDoneOrNot";
 
 const startAnimate = (animationName, count) => playAnimation({ animationName, count })
 
@@ -26,24 +30,29 @@ export function ViewItem(props) {
     const [isLight, toggleLigth] = useState(false)
     const viewElem = useRef(null)
     const [viewMode, changeViewMode] = useState(VIEW_MODES['none'])
-    const [animations, setAnimations] = useState([])
-    const [itemData, setItemData] = useState(null)
 
+    const [animations, setAnimations] = useState([])
+    const [fileNames, setFileNames] = useState([])
+    const [name, changeName] = useState(null)
+    const [itemData, setItemData] = useState(null)
 
 
     useEffect(() => {
         const onWindowClick = e => {
-             if (viewElem && viewElem.current && !viewElem.current.contains(e.target)) {
-                 changeViewMode(VIEW_MODES['preview'])
-                 toggleLigth(false)
-             }
+            if (viewElem && viewElem.current && !viewElem.current.contains(e.target)) {
+                changeViewMode(VIEW_MODES['preview'])
+                toggleLigth(false)
+            }
         }
-
         window.addEventListener('click', onWindowClick)
-        !itemData && getItemDataById(props.item.id, res => {
+
+
+        getItemDataById(props.item.id, res => {
+            changeName(props.item.name)
             setItemData(res.item)
             changeViewMode(VIEW_MODES['preview'])
         })
+
 
         return () => {
             window.removeEventListener('click', onWindowClick)
@@ -54,18 +63,45 @@ export function ViewItem(props) {
     const getResourcesItem = () => {
         showDragonSpr(itemData, animations => {
             setAnimations(animations)
-
-            const userRole = localStorage.getItem('userRole')
-            if (userRole === 'animator') {
-                changeViewMode(VIEW_MODES['edit'])
-            } else {
-                changeViewMode(VIEW_MODES['view'])
-            }
-
-
+            setFileNames(itemData.files)
+            changeName(itemData.name)
+            changeViewByRole()
             toggleLigth(true)
         })
     }
+
+    /** EDIT ***********************************/
+
+    const changeViewByRole = () => {
+        const userRole = localStorage.getItem('userRole')
+        if (userRole === 'animator') {
+            changeViewMode(VIEW_MODES['edit'])
+        } else {
+            changeViewMode(VIEW_MODES['view'])
+        }
+        toggleLigth(true)
+    }
+
+
+    /** change name */
+
+    const changeNameFromInput = data => {
+        changeName(data.val)
+        toggleLigth(true)
+        sendResponse('edit-item', Object.assign(itemData, { 'name': data.val }), changeViewByRole)
+    }
+
+    /** load files */
+
+    const onLoadMultFiles = files => prepareDragonFilesToSend(itemData.id, files, () =>  {
+        getItemDataById(props.item.id, res => {
+            setFileNames(res.item.files)
+            setItemData(res.item)
+            changeViewByRole()
+            getResourcesItem()
+            toggleLigth(true)
+        })
+    })
 
 
     return (
@@ -78,10 +114,8 @@ export function ViewItem(props) {
         {viewMode > 0 &&
             <AppButton
                 classNameCustom={`long ${isLight && 'current'}`}
-                val={itemData.name}
-                callBackClick = {() => {
-                    getResourcesItem()
-                }}
+                val={name}
+                callBackClick = {getResourcesItem}
             />
         }
 
@@ -128,7 +162,7 @@ export function ViewItem(props) {
 
                 {viewMode > 2 &&
                     <div>
-                        {createArrFromObj(props.item.files).map((n, i) =>
+                        {createArrFromObj(fileNames).map((n, i) =>
                             <div
                                 key={i}
                                 className='content-stroke'>
@@ -138,11 +172,25 @@ export function ViewItem(props) {
                                 </span>
                             </div>)}
                         <hr/>
-                        <div className="row-space-between">
-                            <AppButton
-                                val='edit'
-                                classNameCustom=''
-                                //callBackClick={() => props.changeMainTab('edit-item')}
+                        <AppInput
+                            val={itemData.name}
+                            type={"name"}
+                            callback={changeNameFromInput}
+                        />
+
+                        <AppLoadMultFiles callback={onLoadMultFiles}/>
+
+                        <div className="contrnt-right">
+                            <AppButtonAlertDoneOrNot
+                                val='delete'
+                                classNameCustom='color-alert'
+                                // callBackClick = {() => {
+                                //     console.log('delete')
+                                //     sendResponse(
+                                //         'remove-item',
+                                //         { id: itemData.id },
+                                //         () => changeViewMode(VIEW_MODES['none']))
+                                // }}
                             />
                         </div>
                     </div>

@@ -54,7 +54,7 @@ export function AppLoadMultFiles (props) {
     return (
         <div>
             <div
-                className="bg-green height-min-5"
+                className="bg-green height-min-30"
                 onDragLeave={onDragLeave} >
                 {filesNames 
                     ? filesNames.map(item => <div key={item}>{item}</div>)

@@ -166,7 +166,7 @@ export function RedactDragonResources(props) {
                                     { id: dataItem.id },
                                     () => props.changeMainTab("items-list")) }}/>
                     }
-            </div>
+                </div>
         </div>
     )
 }

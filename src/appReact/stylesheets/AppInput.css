@@ -1,5 +1,4 @@
 .AppInput {
-    margin-top: 5px;
 }
 
 .AppInput input {
@@ -8,4 +7,5 @@
     color: #92c29e;
     border: 1px solid #1d6332;
     padding-left: 2px;
+    min-height: 18px;
 }

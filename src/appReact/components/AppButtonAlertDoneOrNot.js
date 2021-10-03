@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { AppButton } from "./AppButton";
-import {sendResponse} from "../../toServerApi/requests";
 
 export function AppButtonAlertDoneOrNot(props) {
     const [showMode, changeShowMode] = useState('button')
