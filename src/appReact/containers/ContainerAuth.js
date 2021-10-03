@@ -3,79 +3,46 @@ import { AppInput } from "../components/AppInput";
 import { AppButton } from '../components/AppButton'
 
 
-const ROLES_BY_WORLD = {
-    'kitten':'user',
-    '@animator': 'animator',
-    '@superAdmin': 'superAdmin',
+const getRole = pass => { 
+    const ROLES_BY_WORLD = {
+        'kitten':'user',
+        '@animator': 'animator',
+        '@superAdmin': 'superAdmin',
+    }
+    return ROLES_BY_WORLD[pass] || null 
 }
-
-
-const getRole = pass => ROLES_BY_WORLD[pass] || null
 
 
 export function ContainerAuth(props) {
     const userRole = localStorage.getItem('userRole')
 
     const [role, changeRole] = useState(userRole)
-    const [isShowSendButton, toggleSendButton] = useState(false)
-    const [value, changeValueFromInput] = useState('')
     const [alertMess, changeAlertMess] = useState(null)
 
-    setTimeout(() => {
-        props.callback(role)
-    })
+    setTimeout(() => props.callback(role))
 
-    const changeViewSendButton = e => {
-        changeAlertMess(null) 
-        changeValueFromInput(e.val)
-        toggleSendButton(e.val !== '')
-    }
-
-    const checkInputValue = () => {
-        const role = getRole(value)
+    const checkInputValue = ({ val }) => {
+        const role = getRole(val)
 
         if (role) {
             localStorage.setItem('userRole', role)
             changeRole(role)
             props.callback(role)
         } else {
-            toggleSendButton(false)
             changeAlertMess('denied')
+            setTimeout(() => changeAlertMess(''), 2000)
         }
     }
 
-    /**
-     * create timeout to reset messages after time  
-     * remove timeout of reset messages if component unmounted 
-     */
-    useEffect(() => {
-        let timeout = null
-        if (alertMess !== null) {
-            timeout = setTimeout(() => changeAlertMess(null), 3000)
-        } 
-        return () => { 
-            timeout && clearTimeout(timeout)
-        }
-    })
-
-
     return (
         <div className='fixed left top'>
-            { !role
-                ?   <div className='content-stroke'>
-                        <AppInput
-                            val={''}
-                            type={''}
-                            callBackClick={changeViewSendButton} />
-
-                        {alertMess}
-
-                        {isShowSendButton &&
-                            <AppButton
-                                val="send"
-                                classNameCustom=''
-                                callBackClick={checkInputValue} />}
-                    </div>
+            {!role
+                ?   <AppInput
+                        val=''
+                        type='enter code:'
+                        buttonVal='send'
+                        alertMess={alertMess}
+                        callback={checkInputValue} />
 
                 :  <div className='contrnt-right'>
                         <AppButton

@@ -2,18 +2,35 @@ import React, { useState } from 'react'
 import { AppButton } from "./AppButton";
 
 export function AppButtonAlertDoneOrNot(props) {
-    const [showMode, changeShowMode] = useState('button')
+    const [showMode, changeShowMode] = useState(null)
     return (
-        <> {
-            showMode === 'button'
-                ?   (<AppButton
-                        val='delete'
-                        classNameCustom='color-alert'
-                        callBackClick = {() => {
-                            changeShowMode('popup')
-                        }}
-                    />)
-                :   (<div className='black-wrapper'>
+        <div> 
+            {showMode === 'popup' && 
+                <div className="contrnt-right">
+                    Are you sure: {props.val}
+                    <AppButton
+                        val='cancel'
+                        callBackClick = {() => changeShowMode(null)}
+                    />
+                </div>}
+
+            <div className="contrnt-right">
+            <AppButton
+                val='delete'
+                classNameCustom='color-alert'
+                callBackClick = {() => {
+                    console.log('delete')
+                    changeShowMode('popup')
+                }}
+            />
+            </div>
+        </div>
+    )
+}
+
+
+/*
+                (<div className='black-wrapper'>
                         <div className='alert-cont'>
                             <div className='message-cont'>
                                 Are you sure: {props.val}
@@ -31,7 +48,5 @@ export function AppButtonAlertDoneOrNot(props) {
                             </div>
                         </div>
                     </div>)
-        }
-        </>
-    )
-}
+ 
+ */

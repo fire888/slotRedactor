@@ -7,7 +7,9 @@ import {AppInput} from "../components/AppInput";
 import {sendResponse} from "../../toServerApi/requests";
 import {AppButtonAlertDoneOrNot} from "../components/AppButtonAlertDoneOrNot";
 
+
 const startAnimate = (animationName, count) => playAnimation({ animationName, count })
+
 
 const createArrFromObj = obj => {
     const arr = []
@@ -18,6 +20,7 @@ const createArrFromObj = obj => {
 }
 
 
+
 const VIEW_MODES = {
     'none': 0,
     'preview': 1,
@@ -26,14 +29,16 @@ const VIEW_MODES = {
 }
 
 
+
+
 export function ViewItem(props) {
     const [isLight, toggleLigth] = useState(false)
     const viewElem = useRef(null)
     const [viewMode, changeViewMode] = useState(VIEW_MODES['none'])
 
+    const [name, setName] = useState(null)
     const [animations, setAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
-    const [name, changeName] = useState(null)
     const [itemData, setItemData] = useState(null)
 
 
@@ -48,7 +53,7 @@ export function ViewItem(props) {
 
 
         getItemDataById(props.item.id, res => {
-            changeName(props.item.name)
+            setName(props.item.name)
             setItemData(res.item)
             changeViewMode(VIEW_MODES['preview'])
         })
@@ -64,7 +69,6 @@ export function ViewItem(props) {
         showDragonSpr(itemData, animations => {
             setAnimations(animations)
             setFileNames(itemData.files)
-            changeName(itemData.name)
             changeViewByRole()
             toggleLigth(true)
         })
@@ -86,20 +90,17 @@ export function ViewItem(props) {
     /** change name */
 
     const changeNameFromInput = data => {
-        changeName(data.val)
-        toggleLigth(true)
+        setName(data.val)
         sendResponse('edit-item', Object.assign(itemData, { 'name': data.val }), changeViewByRole)
     }
 
     /** load files */
 
-    const onLoadMultFiles = files => prepareDragonFilesToSend(itemData.id, files, () =>  {
+    const onLoadMultFiles = files => prepareDragonFilesToSend(itemData.id, files, () => {
         getItemDataById(props.item.id, res => {
             setFileNames(res.item.files)
             setItemData(res.item)
-            changeViewByRole()
             getResourcesItem()
-            toggleLigth(true)
         })
     })
 
@@ -174,23 +175,25 @@ export function ViewItem(props) {
                         <hr/>
                         <AppInput
                             val={itemData.name}
-                            type={"name"}
+                            type="name:"
+                            buttonVal='save'
                             callback={changeNameFromInput}
                         />
 
                         <AppLoadMultFiles callback={onLoadMultFiles}/>
 
-                        <div className="contrnt-right">
+                        <div>
                             <AppButtonAlertDoneOrNot
                                 val='delete'
                                 classNameCustom='color-alert'
-                                // callBackClick = {() => {
-                                //     console.log('delete')
+                                callBackClick = {() => {
+
+                                    console.log('---delete')
                                 //     sendResponse(
                                 //         'remove-item',
                                 //         { id: itemData.id },
                                 //         () => changeViewMode(VIEW_MODES['none']))
-                                // }}
+                                }}
                             />
                         </div>
                     </div>
