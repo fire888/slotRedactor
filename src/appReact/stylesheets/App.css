@@ -17,7 +17,7 @@ hr {
   height: 1px;
   border: 0;
   border-top: 1px solid #1d4c35;
-  margin: 1em 0;
+  margin: 1px 5px;
   padding: 0;
 }
 
@@ -28,7 +28,7 @@ hr {
 }
 
 .content-tab {
-  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .offset-top {

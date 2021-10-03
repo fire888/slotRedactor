@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
 import { RedactDragonResources } from './RedactDragonResources'
 import { ListDragonResources } from './ListDragonResourses'
-import { ListSets } from './ListSets'
+//import { ListSets } from './ListSets'
+import { List } from './List'
 import { ViewItem } from './ViewItem'
 
 
@@ -41,20 +42,17 @@ export function ContainerMainTabs() {
 
             {/** TABS  *******************************/}
 
-            {currentTab==="sets-list" &&
-            <div>
-                <ListSets
-                    type="sets-list"
-                    callBackClick={setToViewItem}
-                    changeMainTab={changeMainTab}/>
-            </div>}
+            {/*{currentTab==="sets-list" &&*/}
+            {/*<div>*/}
+            {/*    <List*/}
+            {/*        type="sets-list"*/}
+            {/*        callBackClick={setToViewItem}*/}
+            {/*        changeMainTab={changeMainTab}/>*/}
+            {/*</div>}*/}
 
 
             {currentTab==="items-list" &&
-                <ListDragonResources
-                    type="items-list"
-                    callBackClick={setToViewItem}
-                    changeMainTab={changeMainTab}/>}
+                <List />}
 
             {currentTab==="view-item" &&
                 <ViewItem

@@ -35,19 +35,19 @@ export function RedactDragonResources(props) {
 
     /** set changes from inputs to state */
     const changeDataFile = (key, data) => {
-        if (key === "name" || key === "armatureName") {
-            dataItem[key] = data
-        }
-        if (
-            key === "animationName_0" ||
-            key === "animationName_1" ||
-            key === "animationName_2" ||
-            key === "animationName_3"
-        ) {
-            dataItem['animationsNames'][+key.split('_')[1]] = data
-        }
-        setToStateData(dataItem)
-        toggleShowSaveButton(true)
+        // if (key === "name" || key === "armatureName") {
+        //     dataItem[key] = data
+        // }
+        // if (
+        //     key === "animationName_0" ||
+        //     key === "animationName_1" ||
+        //     key === "animationName_2" ||
+        //     key === "animationName_3"
+        // ) {
+        //     dataItem['animationsNames'][+key.split('_')[1]] = data
+        // }
+        // setToStateData(dataItem)
+        // toggleShowSaveButton(true)
     }
 
 
@@ -143,9 +143,6 @@ export function RedactDragonResources(props) {
                     <AppButton
                         val='save'
                         callBackClick={sendDataToServer} />}
-
-
-
                 <hr />            
 
 
