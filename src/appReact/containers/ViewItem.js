@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { AppButton } from "../components/AppButton";
-import { showDragonSpr, playAnimation } from '../../appPixi/AppPixi'
+import {
+    showDragonSpr,
+    playAnimation,
+    removeSpr,
+} from '../../appPixi/AppPixi'
 import {getItemDataById, prepareDragonFilesToSend} from '../helpers/prepareFilesToSend'
 import {AppLoadMultFiles} from "../components/AppLoadMultFiles";
 import {AppInput} from "../components/AppInput";
@@ -187,12 +191,18 @@ export function ViewItem(props) {
                                 val='delete'
                                 classNameCustom='color-alert'
                                 callBackClick = {() => {
-
-                                    console.log('---delete')
-                                //     sendResponse(
-                                //         'remove-item',
-                                //         { id: itemData.id },
-                                //         () => changeViewMode(VIEW_MODES['none']))
+                                    sendResponse(
+                                        'remove-item',
+                                        { id: itemData.id },
+                                        res => {
+                                            console.log(res)
+                                            if (res.mess[0] === 'removed') {
+                                                changeViewMode(VIEW_MODES['none'])
+                                                removeSpr()
+                                            } else {
+                                                console.log('delete mistake')
+                                            }
+                                        })
                                 }}
                             />
                         </div>

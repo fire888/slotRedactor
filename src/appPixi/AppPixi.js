@@ -116,6 +116,12 @@ const playAnimation = ({ animationName, count }) => {
     }
 }
 
+const removeSpr = () => {
+    if (!currentArmature) return;
+    app.gameScene.removeChild(currentArmature)
+    currentArmature.destroy()
+}
+
 
 
 /************************************************************ */
@@ -200,6 +206,7 @@ const showDragonSpr = (filesData, callback) => {
 export {
     showDragonSpr,
     playAnimation,
+    removeSpr,
 }
 //
 // window.emitter.subscribe('dragonBonesFiles', fileData => {

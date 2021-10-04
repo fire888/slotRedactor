@@ -5,12 +5,16 @@ export function AppButtonAlertDoneOrNot(props) {
     const [showMode, changeShowMode] = useState(null)
     return (
         <div> 
-            {showMode === 'popup' && 
+            {showMode &&
                 <div className="contrnt-right">
                     Are you sure: {props.val}
                     <AppButton
                         val='cancel'
-                        callBackClick = {() => changeShowMode(null)}
+                        callBackClick={e=>{
+                            e.preventDefault()
+                            e.stopPropagation()
+                            changeShowMode(null)
+                        }}
                     />
                 </div>}
 
@@ -19,8 +23,9 @@ export function AppButtonAlertDoneOrNot(props) {
                 val='delete'
                 classNameCustom='color-alert'
                 callBackClick = {() => {
-                    console.log('delete')
-                    changeShowMode('popup')
+                    showMode === 'alert'
+                        ? props.callBackClick()
+                        : changeShowMode('alert')
                 }}
             />
             </div>

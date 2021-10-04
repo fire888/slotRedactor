@@ -9,12 +9,11 @@ a.AppButton,
     color: #379962;
     display: inline-block;
     padding: 2px 5px;
-    /*min-width: 40px;*/
     border: 1px solid #1d4c35;
     border-radius: 5px;
     cursor: pointer;
     margin: 1px 1px 1px 1px;
-    background-color: rgba(20, 41, 31, 0.795);
+    background-color: rgba(20, 41, 31, 0.79);
 }
 
 .AppButton.long {
