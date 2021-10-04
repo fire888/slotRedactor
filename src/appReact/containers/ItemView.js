@@ -35,7 +35,7 @@ const VIEW_MODES = {
 
 
 
-export function ViewItem(props) {
+export function ItemView(props) {
     const [isLight, toggleLigth] = useState(false)
     const viewElem = useRef(null)
     const [viewMode, changeViewMode] = useState(VIEW_MODES['none'])

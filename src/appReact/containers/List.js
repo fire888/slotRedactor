@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { AppButton } from "../components/AppButton";
 import { sendResponse } from "../../toServerApi/requests";
-import { ViewItem } from "./ViewItem";
+import { ItemView } from "./ItemView";
+import { ItemViewCreate } from "./ItemViewCreate";
 
 
 export function List(props) {
     const [loadedRes, showList] = useState(null)
     const [currentId, changeCurrentItem] = useState(null)
+    const [isCreateFormItem, toggleCreateFormItem] = useState(null)
 
     const userRole = localStorage.getItem('userRole')
 
-
-
-
     const prepareList = data => {
         const arr = data.list.map(item =>
-            <ViewItem
+            <ItemView
                 isOpened={currentId === item.id}
                 key={item.id}
                 item={item}
@@ -34,11 +33,13 @@ export function List(props) {
     return (
         <div>
             {loadedRes && loadedRes.length !== 0 && loadedRes}
-            {userRole && userRole==='animator'&&
-            <AppButton
-                val="add item"
-                callBackClick = {() => {
-                    props.changeMainTab('add-item')}}/>}
+            {userRole && userRole==='animator' && 
+                (!isCreateFormItem 
+                    ?   <AppButton
+                            val="create item"
+                            callBackClick = {() => { toggleCreateFormItem(true)}}/>
+                    :   <ItemViewCreate />)         
+            }
         </div>
     )
 }

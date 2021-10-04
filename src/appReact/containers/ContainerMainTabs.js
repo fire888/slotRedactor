@@ -4,7 +4,7 @@ import { RedactDragonResources } from './RedactDragonResources'
 import { ListDragonResources } from './ListDragonResourses'
 //import { ListSets } from './ListSets'
 import { List } from './List'
-import { ViewItem } from './ViewItem'
+//import { ViewItem } from './ViewItem'
 
 
 
@@ -54,11 +54,11 @@ export function ContainerMainTabs() {
             {currentTab==="items-list" &&
                 <List />}
 
-            {currentTab==="view-item" &&
+            {/* {currentTab==="view-item" &&
                 <ViewItem
                     mode="view-item"
                     currentDataItem={currentDataItem}
-                    changeMainTab={changeMainTab}/>}
+                    changeMainTab={changeMainTab}/>} */}
 
             {currentTab==="add-item" && 
                 <RedactDragonResources
