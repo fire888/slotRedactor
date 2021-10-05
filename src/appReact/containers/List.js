@@ -12,7 +12,11 @@ export function List(props) {
 
     const userRole = localStorage.getItem('userRole')
 
+
+    console.log( props.reguest,  props.requestParams )
+
     const prepareList = data => {
+        console.log(data)
         const arr = data.list.map(item =>
             <ItemView
                 isOpened={currentId === item.id}
@@ -26,7 +30,8 @@ export function List(props) {
     }
 
     useEffect(() => {
-        sendResponse('get-list', {}, prepareList)
+        console.log( props.reguest,  props.requestParams )
+        sendResponse(props.request, props.requestParams, prepareList)
     })
 
 
