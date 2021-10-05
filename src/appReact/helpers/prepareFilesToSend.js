@@ -12,11 +12,12 @@ const TYPES = [
 export const prepareDragonFilesToSend = (id, files, callback) => {
     const preparedFiles = prepareFiles(id, files)
     removeFilesFromSever(id, () => {
-        sendFiles(preparedFiles, () => {
-            getItemDataById(id, data => {
-                showDragonSpr(data.item, callback)
-            })
-        })
+        sendFiles(preparedFiles, callback)
+        //() => {
+            //getItemDataById(id, data => {
+            //    showDragonSpr(data.item, callback)
+            //})
+        //})
     })
 }
 

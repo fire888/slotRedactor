@@ -26,7 +26,7 @@ export function List(props) {
     }
 
     useEffect(() => {
-        !loadedRes && sendResponse('get-list', {}, prepareList)
+        sendResponse('get-list', {}, prepareList)
     })
 
 
@@ -38,7 +38,7 @@ export function List(props) {
                     ?   <AppButton
                             val="create item"
                             callBackClick = {() => { toggleCreateFormItem(true)}}/>
-                    :   <ItemViewCreate />)         
+                    :   <ItemViewCreate changeMainTab={props.changeMainTab}/>)
             }
         </div>
     )

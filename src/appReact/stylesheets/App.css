@@ -27,6 +27,10 @@ hr {
   height: calc(100vh - 100px);
 }
 
+.inline {
+  display: inline-block;
+}
+
 .content-tab {
   margin-bottom: 15px;
 }
@@ -56,9 +60,19 @@ hr {
   min-height: 30px;
 }
 
+.w-200 {
+  min-width: 200px;
+  margin: 0 0 0 auto;
+}
+
 .w-250 {
   max-width: 250px;
   margin: 0 0 0 auto;
+}
+
+.w-long {
+  flex: 1 0 auto;
+  margin: 0 0 0 0;
 }
 
 /** SCROLL BAR *********************/

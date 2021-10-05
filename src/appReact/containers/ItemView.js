@@ -40,6 +40,9 @@ export function ItemView(props) {
     const viewElem = useRef(null)
     const [viewMode, changeViewMode] = useState(VIEW_MODES['none'])
 
+
+    const [currentUserRole, setUserRole] = useState(null)
+
     const [name, setName] = useState(null)
     const [animations, setAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
@@ -55,13 +58,13 @@ export function ItemView(props) {
         }
         window.addEventListener('click', onWindowClick)
 
-
         getItemDataById(props.item.id, res => {
+            const userRole = localStorage.getItem('userRole')
+            setUserRole(userRole)
             setName(props.item.name)
             setItemData(res.item)
             changeViewMode(VIEW_MODES['preview'])
         })
-
 
         return () => {
             window.removeEventListener('click', onWindowClick)
@@ -70,43 +73,41 @@ export function ItemView(props) {
 
 
     const getResourcesItem = () => {
-        showDragonSpr(itemData, animations => {
-            setAnimations(animations)
-            setFileNames(itemData.files)
-            changeViewByRole()
+        getItemDataById(props.item.id, res => {
+            setFileNames(res.item.files)
+            setItemData(res.item)
             toggleLigth(true)
+            changeViewByRole()
+            showDragonSpr(res.item, animations => {
+                setFileNames(res.item.files)
+                setAnimations(animations)
+                changeViewByRole()
+            })
         })
     }
 
     /** EDIT ***********************************/
 
     const changeViewByRole = () => {
-        const userRole = localStorage.getItem('userRole')
-        if (userRole === 'animator') {
+        if (currentUserRole === 'animator') {
             changeViewMode(VIEW_MODES['edit'])
+            setUserRole('animator')
         } else {
             changeViewMode(VIEW_MODES['view'])
+            //setUserRole(null)
         }
         toggleLigth(true)
     }
 
 
     /** change name */
-
     const changeNameFromInput = data => {
         setName(data.val)
         sendResponse('edit-item', Object.assign(itemData, { 'name': data.val }), changeViewByRole)
     }
 
     /** load files */
-
-    const onLoadMultFiles = files => prepareDragonFilesToSend(itemData.id, files, () => {
-        getItemDataById(props.item.id, res => {
-            setFileNames(res.item.files)
-            setItemData(res.item)
-            getResourcesItem()
-        })
-    })
+    const onLoadMultFiles = files => prepareDragonFilesToSend(itemData.id, files, getResourcesItem)
 
 
     return (
@@ -117,11 +118,32 @@ export function ItemView(props) {
         {/** PREVIEW ********************************************/}
 
         {viewMode > 0 &&
-            <AppButton
-                classNameCustom={`long ${isLight && 'current'}`}
-                val={name}
-                callBackClick = {getResourcesItem}
-            />
+            <div className='content-stroke'>
+                <AppButton
+                    classNameCustom={`w-long ${isLight && 'current'}`}
+                    val={name}
+                    callBackClick = {getResourcesItem}
+                />
+                {currentUserRole === 'animator' &&
+                    <AppButtonAlertDoneOrNot
+                        val='del'
+                        classNameCustom='color-alert'
+                        callBackClick = {() => {
+                            sendResponse(
+                                'remove-item',
+                                { id: itemData.id },
+                                res => {
+                                    if (res.mess[0] === 'removed') {
+                                        changeViewMode(VIEW_MODES['none'])
+                                        removeSpr()
+                                    } else {
+                                        console.log('delete mistake')
+                                    }
+                                })
+                        }}
+                    />
+                }
+            </div>
         }
 
 
@@ -186,26 +208,25 @@ export function ItemView(props) {
 
                         <AppLoadMultFiles callback={onLoadMultFiles}/>
 
-                        <div>
-                            <AppButtonAlertDoneOrNot
-                                val='delete'
-                                classNameCustom='color-alert'
-                                callBackClick = {() => {
-                                    sendResponse(
-                                        'remove-item',
-                                        { id: itemData.id },
-                                        res => {
-                                            console.log(res)
-                                            if (res.mess[0] === 'removed') {
-                                                changeViewMode(VIEW_MODES['none'])
-                                                removeSpr()
-                                            } else {
-                                                console.log('delete mistake')
-                                            }
-                                        })
-                                }}
-                            />
-                        </div>
+                        {/*<div>*/}
+                        {/*    <AppButtonAlertDoneOrNot*/}
+                        {/*        val='delete'*/}
+                        {/*        classNameCustom='color-alert'*/}
+                        {/*        callBackClick = {() => {*/}
+                        {/*            sendResponse(*/}
+                        {/*                'remove-item',*/}
+                        {/*                { id: itemData.id },*/}
+                        {/*                res => {*/}
+                        {/*                    if (res.mess[0] === 'removed') {*/}
+                        {/*                        changeViewMode(VIEW_MODES['none'])*/}
+                        {/*                        removeSpr()*/}
+                        {/*                    } else {*/}
+                        {/*                        console.log('delete mistake')*/}
+                        {/*                    }*/}
+                        {/*                })*/}
+                        {/*        }}*/}
+                        {/*    />*/}
+                        {/*</div>*/}
                     </div>
                 }
             </div>)

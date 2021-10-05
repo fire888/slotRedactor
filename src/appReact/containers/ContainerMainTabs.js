@@ -52,7 +52,10 @@ export function ContainerMainTabs() {
 
 
             {currentTab==="items-list" &&
-                <List />}
+                <List changeMainTab={() => {
+                    changeMainTab(null)
+                    setTimeout(() => changeMainTab('items-list'))}
+                }/>}
 
             {/* {currentTab==="view-item" &&
                 <ViewItem

@@ -198,7 +198,6 @@ const showDragonSpr = (filesData, callback) => {
     loadDragonResources(filesData.files, res => {
         createFactory(res)
         showS()
-        console.log('!!!!', animationNames)
         callback(animationNames)
     })
 }

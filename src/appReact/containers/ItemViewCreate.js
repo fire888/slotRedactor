@@ -13,28 +13,25 @@ const prepareInitSpriteData = () => ({
 })
 
 
-const addNewItemToServer = (dataItem, callback) => sendResponse('add-item', dataItem, callback)
 
 
 export function ItemViewCreate(props) {
-    const [dataItem, setToStateData] = useState(props.dataItem || prepareInitSpriteData())
 
-    const sendDataToServer = () => {
-        addNewItemToServer(dataItem, ()=>props.changeMainTab("items-list"))
+    const sendDataToServer = (data) => {
+        const newItem = prepareInitSpriteData()
+        sendResponse('add-item', Object.assign(newItem, { name: data.val }), res=>{
+            console.log(res)
+            props.changeMainTab("items-list")
+        })
     } 
-
 
     return (
         <div>
-            <div className='content-stroke'>
-                <span>id: {dataItem.id}</span>
-            </div>
-            <hr />
-
             <AppInput
-                val={dataItem.name}
-                type={"name"}
-                callBackClick = {e => changeDataFile('name', e.val)} />
+                val=''
+                type="name"
+                buttonVal="create"
+                callback={sendDataToServer} />
         </div>
     )
 }
