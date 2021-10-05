@@ -37,8 +37,13 @@ export function List(props) {
                 (!isCreateFormItem 
                     ?   <AppButton
                             val="create item"
-                            callBackClick = {() => { toggleCreateFormItem(true)}}/>
-                    :   <ItemViewCreate changeMainTab={props.changeMainTab}/>)
+                            callBackClick = {() => {toggleCreateFormItem(true)}}/>
+                    :   <div>
+                            <ItemViewCreate changeMainTab={props.changeMainTab}/>
+                            <AppButton
+                                val="cancel create"
+                                callBackClick = {() => {toggleCreateFormItem(false)}}/>
+                        </div>)
             }
         </div>
     )

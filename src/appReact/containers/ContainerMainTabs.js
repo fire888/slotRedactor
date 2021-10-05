@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
-import { RedactDragonResources } from './RedactDragonResources'
-import { ListDragonResources } from './ListDragonResourses'
 //import { ListSets } from './ListSets'
 import { List } from './List'
-//import { ViewItem } from './ViewItem'
+
 
 
 
