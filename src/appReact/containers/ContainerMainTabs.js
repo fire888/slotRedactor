@@ -9,29 +9,18 @@ import { List } from './List'
 
 
 export function ContainerMainTabs() {
-    const [ currentTab, changeMainTab ] = useState('sets-list')
-    const [ currentDataItem, setDataItemToCurrent ] = useState(null)
+    const [ currentTab, changeMainTab ] = useState('items-list')
 
-
-    const setToViewItem = (type, data) => {
-        if (type === 'sets-list') {
-            console.log('111111')
-        }
-        if (type === 'items-list') {
-            setDataItemToCurrent(data)
-            changeMainTab('view-item')
-        }
-    }
     
 
     return (
         <div
             className='ui-content'>
 
-            <AppButton
-                val="sets-list"
-                classNameCustom = {currentTab === 'sets-list' && "current"}
-                callBackClick = {() => changeMainTab('sets-list')}/>
+            {/*<AppButton*/}
+            {/*    val="sets-list"*/}
+            {/*    classNameCustom = {currentTab === 'sets-list' && "current"}*/}
+            {/*    callBackClick = {() => changeMainTab('sets-list')}/>*/}
 
 
             <AppButton
@@ -57,23 +46,7 @@ export function ContainerMainTabs() {
                     setTimeout(() => changeMainTab('items-list'))}
                 }/>}
 
-            {/* {currentTab==="view-item" &&
-                <ViewItem
-                    mode="view-item"
-                    currentDataItem={currentDataItem}
-                    changeMainTab={changeMainTab}/>} */}
 
-            {currentTab==="add-item" && 
-                <RedactDragonResources
-                    mode="add-item"
-                    dataItem={null}
-                    changeMainTab={changeMainTab}/>}
-
-            {currentTab==="edit-item" &&
-                <RedactDragonResources
-                    mode="edit-item"
-                    dataItem={currentDataItem}
-                    changeMainTab={changeMainTab}/>}
         </div>
     )
 }
