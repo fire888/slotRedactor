@@ -4,46 +4,65 @@ import { AppButton } from "../components/AppButton";
 import { List } from './List'
 
 
+const LISTS = [
+    {
+        tabName: "spells",
+        request: 'get-list',
+        requestParams: { tag: 'spells' },
+    },
+    {
+        tabName: "eagles",
+        request: 'get-list',
+        requestParams: { tag: 'eagles' },
+    },
+    {
+        tabName: "cleo",
+        request: 'get-list',
+        requestParams: { tag: 'cleo' },
+    },
+    {
+        tabName: "all",
+        request: 'get-list',
+        requestParams: {},
+    },
+]
 
 
 export function ContainerMainTabs() {
-    const [ currentTab, changeMainTab ] = useState('items-list')
+    const [ currentTabIndex, changeTabIndex ] = useState(0)
 
-    
 
     return (
         <div
             className='ui-content'>
 
-            {/*<AppButton*/}
-            {/*    val="sets-list"*/}
-            {/*    classNameCustom = {currentTab === 'sets-list' && "current"}*/}
-            {/*    callBackClick = {() => changeMainTab('sets-list')}/>*/}
-
-
-            <AppButton
-                val="all-items"
-                classNameCustom = {currentTab === 'items-list' && "current"}
-                callBackClick = {() => changeMainTab('items-list')}/>
+            {LISTS.map(item => {
+                let listTabIndex
+                for (let i = 0; i < LISTS.length; i++) {
+                    LISTS[i].tabName === item.tabName && (listTabIndex = i)
+                }
+                return (
+                    <AppButton
+                        key={listTabIndex}
+                        val={item.tabName}
+                        classNameCustom={currentTabIndex === listTabIndex && "current"}
+                        callBackClick={() => changeTabIndex(listTabIndex)}/>
+                )}
+            )}
 
 
             {/** TABS  *******************************/}
 
-            {/*{currentTab==="sets-list" &&*/}
-            {/*<div>*/}
-            {/*    <List*/}
-            {/*        type="sets-list"*/}
-            {/*        callBackClick={setToViewItem}*/}
-            {/*        changeMainTab={changeMainTab}/>*/}
-            {/*</div>}*/}
 
-
-            {currentTab==="items-list" &&
-                <List changeMainTab={() => {
-                    changeMainTab(null)
-                    setTimeout(() => changeMainTab('items-list'))}
+            {LISTS[currentTabIndex] &&
+                <List
+                    request = {LISTS[currentTabIndex]['request']}
+                    requestParams = {LISTS[currentTabIndex]['requestParams']}
+                    changeMainTab = {() => {
+                        const savedTab = currentTabIndex
+                        //changeTabIndex(null)
+                        changeTabIndex(savedTab)}
                 }/>}
-
 
         </div>
     )

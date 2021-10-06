@@ -26,7 +26,7 @@ export function List(props) {
     }
 
     useEffect(() => {
-        sendResponse('get-list', {}, prepareList)
+        sendResponse(props.request, props.requestParams, prepareList)
     })
 
 

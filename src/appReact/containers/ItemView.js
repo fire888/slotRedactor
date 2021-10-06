@@ -23,6 +23,7 @@ const createArrFromObj = obj => {
     return arr
 }
 
+const TAGS = ['spells', 'eagles', 'cleo', 'none']
 
 
 const VIEW_MODES = {
@@ -31,7 +32,6 @@ const VIEW_MODES = {
     'view': 2,
     'edit': 3,
 }
-
 
 
 
