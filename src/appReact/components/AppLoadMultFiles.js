@@ -5,8 +5,6 @@ import '../stylesheets/AppLoadFile.css'
 export function AppLoadMultFiles (props) {
     const [filesNames, setFilesNames] = useState(false)
 
-    const files = null
-
     const onDragEnter = useCallback((e) => {
         e.stopPropagation()
         e.preventDefault()

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { AppButton } from "../components/AppButton";
-//import { ListSets } from './ListSets'
 import { List } from './List'
 
 
@@ -17,7 +16,7 @@ const LISTS = [
     },
     {
         tabName: "cleo",
-        request: 'get-list',
+        request: '',
         requestParams: { tag: 'cleo' },
     },
     {
@@ -32,38 +31,28 @@ export function ContainerMainTabs() {
     const [ currentTabIndex, changeTabIndex ] = useState(0)
 
 
+    const arrButtons = LISTS.map((item, i) =>
+        <AppButton
+            key = {i}
+            val = {LISTS[i].tabName}
+            classNameCustom = {currentTabIndex === i && "current"}
+            callBackClick = {() => changeTabIndex(i)}/>)
+
+
     return (
         <div
             className='ui-content'>
-
-            {LISTS.map(item => {
-                let listTabIndex
-                for (let i = 0; i < LISTS.length; i++) {
-                    LISTS[i].tabName === item.tabName && (listTabIndex = i)
-                }
-                return (
-                    <AppButton
-                        key={listTabIndex}
-                        val={item.tabName}
-                        classNameCustom={currentTabIndex === listTabIndex && "current"}
-                        callBackClick={() => changeTabIndex(listTabIndex)}/>
-                )}
-            )}
-
-
-            {/** TABS  *******************************/}
-
-
-            {LISTS[currentTabIndex] &&
-                <List
-                    request = {LISTS[currentTabIndex]['request']}
-                    requestParams = {LISTS[currentTabIndex]['requestParams']}
-                    changeMainTab = {() => {
-                        const savedTab = currentTabIndex
-                        //changeTabIndex(null)
-                        changeTabIndex(savedTab)}
-                }/>}
-
+                {arrButtons}
+                {LISTS[currentTabIndex] &&
+                    <List
+                        key = {currentTabIndex}
+                        request = {LISTS[currentTabIndex]['request']}
+                        requestParams = {LISTS[currentTabIndex]['requestParams']}
+                        changeMainTab = {() => {
+                            const s = currentTabIndex
+                            changeTabIndex(null)
+                            changeTabIndex(s)}
+                    }/>}
         </div>
     )
 }
