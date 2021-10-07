@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { AppButton } from "../components/AppButton";
+import { AppButton } from "../components/AppButton"
 import {
     showDragonSpr,
     playAnimation,
     removeSpr,
 } from '../../appPixi/AppPixi'
-import {getItemDataById, prepareDragonFilesToSend} from '../helpers/prepareFilesToSend'
-import {AppLoadMultFiles} from "../components/AppLoadMultFiles";
-import {AppInput} from "../components/AppInput";
-import {sendResponse} from "../../toServerApi/requests";
-import {AppButtonAlertDoneOrNot} from "../components/AppButtonAlertDoneOrNot";
+import { getItemDataById, prepareDragonFilesToSend } from '../helpers/prepareFilesToSend'
+import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
+import { AppInput } from "../components/AppInput";
+import { AppDropDown } from "../components/AppDropDown";
+import { sendResponse } from "../../toServerApi/requests";
+import { AppButtonAlertDoneOrNot } from "../components/AppButtonAlertDoneOrNot";
 
 
 const startAnimate = (animationName, count) => playAnimation({ animationName, count })
@@ -23,6 +24,7 @@ const createArrFromObj = obj => {
     return arr
 }
 
+const TAGS = ['spells', 'eagles', 'cleo', 'none']
 
 
 const VIEW_MODES = {
@@ -31,7 +33,6 @@ const VIEW_MODES = {
     'view': 2,
     'edit': 3,
 }
-
 
 
 
@@ -44,6 +45,7 @@ export function ItemView(props) {
     const [currentUserRole, setUserRole] = useState(null)
 
     const [name, setName] = useState(null)
+    const [gameTag, setGameTag] = useState(null)
     const [animations, setAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
     const [itemData, setItemData] = useState(null)
@@ -94,7 +96,6 @@ export function ItemView(props) {
             setUserRole('animator')
         } else {
             changeViewMode(VIEW_MODES['view'])
-            //setUserRole(null)
         }
         toggleLigth(true)
     }
@@ -102,9 +103,18 @@ export function ItemView(props) {
 
     /** change name */
     const changeNameFromInput = data => {
-        setName(data.val)
-        sendResponse('edit-item', Object.assign(itemData, { 'name': data.val }), changeViewByRole)
+        console.log(data)
+        if (data.type === 'name') {
+            setName(data.val)
+            sendResponse('edit-item', Object.assign(itemData, {'name': data.val}), changeViewByRole)
+        }
+        if (data.type === 'gameTag') {
+            console.log(data.val)
+            setGameTag(data.val)
+            //sendResponse('edit-item', Object.assign(itemData, {'name': data.val}), changeViewByRole)
+        }
     }
+
 
     /** load files */
     const onLoadMultFiles = files => prepareDragonFilesToSend(itemData.id, files, getResourcesItem)
@@ -161,7 +171,9 @@ export function ItemView(props) {
                         }}/>
                     <div>id: {props.item.id}</div>
                 </div>
+
                 <hr/>
+
                 <div>
                     {animations.map((n, i) => n &&
                         <div
@@ -199,34 +211,26 @@ export function ItemView(props) {
                                 </span>
                             </div>)}
                         <hr/>
+
                         <AppInput
-                            val={itemData.name}
-                            type="name:"
-                            buttonVal='save'
-                            callback={changeNameFromInput}
+                            val = {itemData.name}
+                            type = "name"
+                            buttonVal = 'save'
+                            callback = {changeNameFromInput}
                         />
 
-                        <AppLoadMultFiles callback={onLoadMultFiles}/>
+                        <AppDropDown
+                            val = {gameTag}
+                            type = 'gameTag'
+                            buttonVal = 'save'
+                            arrOptions = {TAGS}
+                            callback = {changeNameFromInput}
+                        />
 
-                        {/*<div>*/}
-                        {/*    <AppButtonAlertDoneOrNot*/}
-                        {/*        val='delete'*/}
-                        {/*        classNameCustom='color-alert'*/}
-                        {/*        callBackClick = {() => {*/}
-                        {/*            sendResponse(*/}
-                        {/*                'remove-item',*/}
-                        {/*                { id: itemData.id },*/}
-                        {/*                res => {*/}
-                        {/*                    if (res.mess[0] === 'removed') {*/}
-                        {/*                        changeViewMode(VIEW_MODES['none'])*/}
-                        {/*                        removeSpr()*/}
-                        {/*                    } else {*/}
-                        {/*                        console.log('delete mistake')*/}
-                        {/*                    }*/}
-                        {/*                })*/}
-                        {/*        }}*/}
-                        {/*    />*/}
-                        {/*</div>*/}
+                        <AppLoadMultFiles
+                            callback={onLoadMultFiles}
+                        />
+
                     </div>
                 }
             </div>)

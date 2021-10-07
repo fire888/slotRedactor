@@ -2,6 +2,7 @@ import React, { useState, useEffect, } from 'react'
 import { AppInput } from "../components/AppInput";
 import uniqid from 'uniqid'
 import { sendResponse } from "../../toServerApi/requests";
+import {AppButton} from "../components/AppButton";
 
  
 const prepareInitSpriteData = () => ({
@@ -14,26 +15,30 @@ const prepareInitSpriteData = () => ({
 
 
 
-
 export function ItemViewCreate(props) {
+    const [isClosed, toggleClosed] = useState(true)
 
-    const sendDataToServer = (data) => {
+    const sendDataToServer = data => {
         const newItem = prepareInitSpriteData()
-        sendResponse('add-item', Object.assign(newItem, { name: data.val }), res=>{
-            console.log(res)
-            props.changeMainTab("items-list")
-        })
+
+        sendResponse(
+            'add-item',
+            Object.assign(newItem, { name: data.val }),
+            res => {props.changeMainTab("items-list")}
+        )
     } 
 
     return (
         <div>
-            <AppInput
+            {!isClosed && <AppInput
                 val=''
                 type="name"
                 buttonVal="create"
-                callback={sendDataToServer} />
+                callback={sendDataToServer}/>}
+
+            <AppButton
+                val={isClosed ? "create item" : 'cancel create item'}
+                callBackClick={() => toggleClosed(!isClosed)}/>
         </div>
     )
 }
-
-
