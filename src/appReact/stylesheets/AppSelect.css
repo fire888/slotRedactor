@@ -1,0 +1,12 @@
+select {
+    background-color: #1d4c35;
+    border: 1px solid #1d6332;
+    padding-left: 2px;
+    margin: 0;
+    min-height: 18px;
+    margin: 1px;
+    color: #92c29e;
+    min-width: 175px;
+    min-height: 18px;
+    border-radius: 3px;
+  }
