@@ -72,7 +72,7 @@ const doFetch = (path, params, onSuccess, onDenied) => {
 
             if (response.status === 200) {
 
-                response.json().then(r => onSuccess(r))
+                response.json().then(onSuccess)
 
             } else if (response.status === 404) {
 

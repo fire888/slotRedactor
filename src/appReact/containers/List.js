@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { sendResponse } from '../../toServerApi/requests'
-import { ItemView } from './ItemView'
+//import { ItemView } from './ItemView'
+import { ItemPreView } from './ItemPreView'
 import { ItemViewCreate } from './ItemViewCreate'
 
 
 
 
 export function List(props) {
+    console.log(props)
     const [key, changeKey] = useState(null)
     const [list, updateList] = useState(null)
     const [currentId, setIdToCurrent] = useState(null)
@@ -16,10 +18,23 @@ export function List(props) {
 
 
     const prepareList = data => {
-        const arr = !data.list
-            ? []
-            : data.list.map(item =>
-                <ItemView
+        if (!data.list) {
+            updateList([])
+            return;
+        }
+
+        const arrItems = data.list.filter(item => {
+            if (props.tabName === 'all') {
+                return true;
+            }
+            return item.gameTag === props.tabName;
+        })
+
+        console.log(arrItems)
+
+
+        const arrElems = arrItems.map(item =>
+                <ItemPreView
                     isOpened = {currentId === item.id}
                     key = {item.id}
                     item = {item}
@@ -29,7 +44,7 @@ export function List(props) {
                     }}/>)
 
         changeKey(props.key)
-        updateList(arr)
+        updateList(arrElems)
     }
 
 

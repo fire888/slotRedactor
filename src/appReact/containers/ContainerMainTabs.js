@@ -14,11 +14,11 @@ const LISTS = [
         request: 'get-list',
         requestParams: { tag: 'eagles' },
     },
-    {
-        tabName: "cleo",
-        request: '',
-        requestParams: { tag: 'cleo' },
-    },
+    // {
+    //     tabName: "cleo",
+    //     request: '',
+    //     requestParams: { tag: 'cleo' },
+    // },
     {
         tabName: "all",
         request: 'get-list',
@@ -46,6 +46,7 @@ export function ContainerMainTabs() {
                 {LISTS[currentTabIndex] &&
                     <List
                         key = {currentTabIndex}
+                        tabName={LISTS[currentTabIndex]['tabName']}
                         request = {LISTS[currentTabIndex]['request']}
                         requestParams = {LISTS[currentTabIndex]['requestParams']}
                         changeMainTab = {() => {
