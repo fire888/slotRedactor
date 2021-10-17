@@ -1,4 +1,4 @@
-import { ItemView } from '../containers/ItemView'
+import { ItemViewAnimations } from '../containers/ItemViewAnimations'
 import { ItemViewCreate } from "../containers/ItemViewCreate";
 
 export const ALL_LIST = {

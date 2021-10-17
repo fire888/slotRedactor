@@ -5,13 +5,12 @@ import {
     playAnimation,
     removeSpr,
 } from '../../appPixi/AppPixi'
-import { getItemDataById, prepareDragonFilesToSend } from '../helpers/prepareFilesToSend'
-import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
 import { AppInput } from "../components/AppInput";
 import { AppDropDown } from "../components/AppDropDown";
 import { sendResponse } from "../../toServerApi/requests";
 import { AppButtonAlertDoneOrNot } from "../components/AppButtonAlertDoneOrNot";
 import { connect } from 'react-redux'
+import ItemViewAnimations from './ItemViewAnimations'
 
 
 
@@ -124,6 +123,8 @@ function ItemPreView(props) {
                         />
                     )}
                     gameTag: {props.item.gameTag}, typeView: {typeView}
+
+                    <ItemViewAnimations />
                 </div>
             )}
         </div>)

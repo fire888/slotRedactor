@@ -1,59 +1,40 @@
-// import React, { useState } from 'react'
-// import { sendResponse } from '../../toServerApi/requests'
-// //import { ItemView } from './ItemView'
-// import { ItemPreView } from './ItemPreView'
-// import { ItemViewCreate } from './ItemViewCreate'
-//
-//
-//
-//
-// export function List(props) {
-//     console.log(props)
-//     const [key, changeKey] = useState(null)
-//     const [list, updateList] = useState(null)
-//     const [currentId, setIdToCurrent] = useState(null)
-//
-//
-//     const userRole = localStorage.getItem('userRole')
-//
-//
-//     const prepareList = data => {
-//         if (!data.list) {
-//             updateList([])
-//             return;
-//         }
-//
-//         const arrItems = data.list.filter(item => {
-//             return item.gameTag === props.tabName;
-//         })
-//
-//         console.log(arrItems)
-//
-//
-//         const arrElems = arrItems.map(item =>
-//                 <ItemPreView
-//                     isOpened = {currentId === item.id}
-//                     key = {item.id}
-//                     item = {item}
-//                     callBackClick = {id => {
-//                         setIdToCurrent(id)
-//                         updateList(list)
-//                     }}/>)
-//
-//         changeKey(props.key)
-//         updateList(arrElems)
-//     }
-//
-//
-//     props.key !== key &&
-//         sendResponse(props.request, props.requestParams, prepareList, prepareList)
-//
-//
-//     return (
-//         <div>
-//             {list}
-//             {userRole === 'animator' && <ItemViewCreate changeMainTab = {props.changeMainTab}/>}
-//         </div>
-//     )
-// }
+import React from 'react'
+import { connect } from 'react-redux'
+import ItemPreView from "./ItemPreView";
+import ItemViewCreate from "./ItemViewCreate";
 
+
+
+const mapStateToProps = state => {
+    return ({
+        currentGameTag: state.app.currentGameTag,
+        currentList: state.app.currentList,
+        currentItemId: state.app.currentItemId,
+        authRole: state.app.authRole,
+    })
+}
+
+
+
+function List (props) {
+    return (
+        <div
+            className='ui-content'>
+                {props.currentGameTag}
+                {props.currentList && props.currentList.map(item =>
+                    <ItemPreView
+                        isOpened = {props.currentItemId === item.id}
+                        key = {item.id}
+                        item = {item}
+                        callBackClick = {id => {
+                            props.dispatch('SET_CURRENT_ITEM_ID', { id })
+                        }}
+                    />)}
+                {props.authRole === 'animator' && props.currentGameTag && <ItemViewCreate />}
+        </div>
+    )
+}
+
+
+
+export default connect(mapStateToProps)(List)

@@ -11,14 +11,7 @@ const TYPES = [
 
 export const prepareDragonFilesToSend = (id, files, callback) => {
     const preparedFiles = prepareFiles(id, files)
-    removeFilesFromSever(id, () => {
-        sendFiles(preparedFiles, callback)
-        //() => {
-            //getItemDataById(id, data => {
-            //    showDragonSpr(data.item, callback)
-            //})
-        //})
-    })
+    sendFiles(preparedFiles, callback)
 }
 
 
@@ -68,10 +61,10 @@ const sendFiles = (arr, callback) => {
     iterator(0)
 }
 
-
-export const getItemDataById = (id, callback) => {
-    sendResponse('get-item', { id }, res => {
-        callback(res)
-    })
-}
+//
+// export const getItemDataById = (id, callback) => {
+//     sendResponse('get-item', { id }, res => {
+//         callback(res)
+//     })
+// }
 

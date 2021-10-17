@@ -8,7 +8,7 @@ import { store } from './store/createStore'
 import { connect } from 'react-redux'
 
 
-import ContainerMainTabs from "./containers/ContainerMainTabs";
+import List from "./containers/List";
 import ContainerAuth from './containers/ContainerAuth'
 import ContainerGamesNames from './containers/ContainerGamesNames'
 
@@ -23,7 +23,7 @@ const App = connect(mapStateToProps)(function (props) {
             <div>
                 <div className="App">
                     <ContainerAuth />
-                    {props.authRole && <ContainerMainTabs />}
+                    {props.authRole && <List />}
                 </div>
                 {props.authRole && <ContainerGamesNames />}
             </div>    
