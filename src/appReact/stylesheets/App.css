@@ -39,6 +39,10 @@ hr {
     margin-top: 15px;
 }
 
+.offset-bottom {
+  margin-bottom: 15px;
+}
+
 .content-stroke {
   display: flex;
   justify-content: space-between;

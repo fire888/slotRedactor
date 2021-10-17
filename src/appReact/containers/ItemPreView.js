@@ -11,6 +11,8 @@ import { AppInput } from "../components/AppInput";
 import { AppDropDown } from "../components/AppDropDown";
 import { sendResponse } from "../../toServerApi/requests";
 import { AppButtonAlertDoneOrNot } from "../components/AppButtonAlertDoneOrNot";
+import { connect } from 'react-redux'
+
 
 
 
@@ -21,65 +23,43 @@ const VIEW_MODES = {
 }
 
 
+const mapStateToProps = state => ({
+    authRole: state.app.authRole,
+    currentGameTag: state.app.currentGameTag,
+    currentItemId: state.app.currentItemId,
+})
 
-export function ItemPreView(props) {
-    const [gameTag, changeGameTag] = useState(props.item.gameTag)
+
+function ItemPreView(props) {
     const [name, changeName] = useState(props.item.name)
     const [typeView, changeTypeView] = useState(props.item.typeView)
 
 
     const changeMainParams = inputData => {
-        console.log(inputData)
         const objToSend = {
             'id': props.item.id,
-            'gameTag': inputData.type === 'gameTag' ? inputData.val : gameTag,
+            'gameTag': inputData.val,
             'name': inputData.type === 'name' ? inputData.val : name,
             'typeView': inputData.type === 'typeView' ? inputData.val : typeView,
         }
         sendResponse('edit-item', objToSend, respData => {
-            console.log('done', respData)
-            changeGameTag(respData.newData.gameTag)
-            changeName(respData.newData.name)
-            changeTypeView(respData.newData.typeView)
+            sendResponse('get-list', {gameTag: props.currentGameTag }, res => {
+                props.dispatch({ type:  'CHANGE_CURRENT_GAME_TAG', gameTag: props.currentGameTag, currentList: res.list, })
+            })
         })
     }
 
 
-
-
-
-    const [isLight, toggleLigth] = useState(false)
-
-    const previewRef = useRef(props.item)
-    const [viewMode, changeViewMode] = useState(VIEW_MODES['preview'])
-    const currentUserRole = localStorage.getItem('userRole')
-
-    const onWindowClickToClose = e => {
-        if (previewRef && previewRef.current && !previewRef.current.contains(e.target)) {
-            changeViewMode(VIEW_MODES['preview'])
-            toggleLigth(false)
-        }
-    }
-
-
-    useEffect(() => {
-        window.addEventListener('click', onWindowClickToClose)
-        return () => window.removeEventListener('click', onWindowClickToClose)
-    }, [])
-
-    console.log(viewMode)
-
     return (
-        <div
-            ref={previewRef}>
+        <div>
 
             <div className='content-stroke'>
                 <AppButton
-                    classNameCustom={`w-long ${isLight && 'current'}`}
+                    classNameCustom={`w-long ${props.item.id === props.currentItemId && 'current'}`}
                     val={name}
-                    callBackClick = {() => changeViewMode(VIEW_MODES['view'])}
+                    callBackClick = {() => props.dispatch({ type: 'SET_CURRENT_ITEM_ID', id: props.item.id })}
                 />
-                {currentUserRole === 'animator' &&
+                {props.authRole === 'animator' &&
                 <AppButtonAlertDoneOrNot
                     val='del'
                     classNameCustom='color-alert'
@@ -88,8 +68,10 @@ export function ItemPreView(props) {
                             'remove-item',
                             { id: props.item.id },
                             res => {
-                                    changeViewMode(VIEW_MODES['none'])
                                     removeSpr()
+                                    sendResponse('get-list', {gameTag: props.currentGameTag }, res => {
+                                        props.dispatch({type:  'CHANGE_CURRENT_GAME_TAG', gameTag: props.currentGameTag, currentList: res.list, })
+                                    })
                             })
                     }}
                 />
@@ -98,13 +80,13 @@ export function ItemPreView(props) {
 
             {/** EDIT MAIN PARAMS *****************************************/}
 
-            {viewMode > 1 && (
+            {props.currentItemId === props.item.id && (
                 <div className='content-tab'>
                     <div className="content-stroke">
                         <AppButton
                             val="close"
                             callBackClick={e => {
-                                changeViewMode(VIEW_MODES['preview'])
+                                props.dispatch({ type: 'SET_CURRENT_ITEM_ID', id: null })
                                 e.stopPropagation()
                                 e.preventDefault()
                             }}/>
@@ -113,9 +95,9 @@ export function ItemPreView(props) {
                 </div>
             )}
 
-            {viewMode > 1 && (
-                <div>
-                    {currentUserRole === "animator" && (
+            {props.currentItemId === props.item.id && (
+                <div className='offset-bottom'>
+                    {props.authRole === "animator" && (
                         <AppInput
                             val = {name}
                             type = "name"
@@ -123,16 +105,16 @@ export function ItemPreView(props) {
                             callback = {changeMainParams}
                         />
                     )}
-                    {currentUserRole === "animator" && (
+                    {props.authRole === "animator" && (
                         <AppDropDown
-                            val = {gameTag}
+                            val = {props.item.gameTag}
                             type = "gameTag"
                             buttonVal = 'save'
                             arrOptions = {['spells', 'cleo', 'eagles', 'none']}
                             callback = {changeMainParams}
                         />
                     )}
-                    {currentUserRole === "animator" && (
+                    {props.authRole === "animator" && (
                         <AppDropDown
                             val = {typeView}
                             type = "typeView"
@@ -141,10 +123,11 @@ export function ItemPreView(props) {
                             callback = {changeMainParams}
                         />
                     )}
-                    gameTag: {gameTag}, typeView: {typeView}
+                    gameTag: {props.item.gameTag}, typeView: {typeView}
                 </div>
             )}
         </div>)
 }
 
 
+export default connect(mapStateToProps)(ItemPreView)

@@ -1,67 +1,37 @@
-import React, { useState } from 'react'
-import { AppButton } from "../components/AppButton";
-import { List } from './List'
+import React from 'react'
+import { connect } from 'react-redux'
+import ItemPreView from "./ItemPreView";
+import ItemViewCreate from "./ItemViewCreate";
 
-import { ALL_LIST } from "../constants/constants";
-
-
-const LISTS = [
-    {
-        tabName: "spells",
-        request: 'get-list',
-        requestParams: { gameTag: 'spells' },
-    },
-    {
-        tabName: "eagles",
-        request: 'get-list',
-        requestParams: { gameTag: 'eagles' },
-    },
-    {
-        tabName: "cleo",
-        request: 'get-list',
-        requestParams: { gameTag: 'cleo' },
-    },
-    {
-        tabName: "all",
-        request: 'get-list',
-        requestParams: {},
-    },
-    {
-        tabName: "none",
-        request: 'get-list',
-        requestParams: { gameTag: 'none' },
-    },
-]
+const mapStateToProps = state => {
+    return ({
+        currentGameTag: state.app.currentGameTag,
+        currentList: state.app.currentList,
+        currentItemId: state.app.currentItemId,
+        authRole: state.app.authRole,
+    })
+}
 
 
-export function ContainerMainTabs() {
-    const [ currentTabIndex, changeTabIndex ] = useState(0)
-
-
-    const arrButtons = LISTS.map((item, i) =>
-        <AppButton
-            key = {i}
-            val = {LISTS[i].tabName}
-            classNameCustom = {currentTabIndex === i && "current"}
-            callBackClick = {() => changeTabIndex(i)}/>)
-
+function ContainerMainTabs (props) {
 
     return (
         <div
             className='ui-content'>
-                {arrButtons}
-                {LISTS[currentTabIndex] &&
-                    <List
-                        key = {currentTabIndex}
-                        tabName={LISTS[currentTabIndex]['tabName']}
-                        request = {LISTS[currentTabIndex]['request']}
-                        requestParams = {LISTS[currentTabIndex]['requestParams']}
-                        changeMainTab = {() => {
-                            const s = currentTabIndex
-                            changeTabIndex(null)
-                            changeTabIndex(s)}
-                    }/>}
+                {props.currentGameTag}
+                {props.currentList && props.currentList.map(item =>
+                    <ItemPreView
+                        isOpened = {props.currentItemId === item.id}
+                        key = {item.id}
+                        item = {item}
+                        callBackClick = {id => {
+                            props.dispatch('SET_CURRENT_ITEM_ID', { id })
+                        }}
+                    />)}
+                {props.authRole === 'animator' && props.currentGameTag && <ItemViewCreate />}
         </div>
     )
 }
+
+export default connect(mapStateToProps)(ContainerMainTabs)
 

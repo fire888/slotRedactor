@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { AppInput } from "../components/AppInput";
 import { AppButton } from '../components/AppButton'
+import { connect } from 'react-redux'
+
+
+const mapStateToProps = state => ({
+    authRole: state.app.authRole,
+})
 
 
 const getRole = pass => { 
@@ -13,21 +19,23 @@ const getRole = pass => {
 }
 
 
-export function ContainerAuth(props) {
-    const userRole = localStorage.getItem('userRole')
 
-    const [role, changeRole] = useState(userRole)
+function ContainerAuth(props) {
+
+
     const [alertMess, changeAlertMess] = useState(null)
 
-    setTimeout(() => props.callback(role))
+    useEffect(() => {
+        const role = localStorage.getItem('userRole')
+        props.dispatch({ type: 'CHANGE_AUTH_ROLE', authRole: role })
+    })
 
     const checkInputValue = ({ val }) => {
         const role = getRole(val)
 
         if (role) {
             localStorage.setItem('userRole', role)
-            changeRole(role)
-            props.callback(role)
+            props.dispatch({ type: 'CHANGE_AUTH_ROLE', authRole: role })
         } else {
             changeAlertMess('denied')
             setTimeout(() => changeAlertMess(''), 2000)
@@ -36,7 +44,7 @@ export function ContainerAuth(props) {
 
     return (
         <div className='fixed left top'>
-            {!role
+            {!props.authRole
                 ?   <AppInput
                         val=''
                         type='enter code:'
@@ -49,8 +57,7 @@ export function ContainerAuth(props) {
                             val='exit'
                             callBackClick={() => {
                                 localStorage.removeItem('userRole');
-                                changeRole(false)
-                                props.callback(false)
+                                props.dispatch({ type: 'CHANGE_AUTH_ROLE', authRole: null })
                             }}/>
                     </div>}
 
@@ -58,4 +65,7 @@ export function ContainerAuth(props) {
         </div>
     )
 }
+
+
+export default connect(mapStateToProps)(ContainerAuth)
 

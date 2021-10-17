@@ -3,19 +3,23 @@ import { AppInput } from "../components/AppInput";
 import uniqid from 'uniqid'
 import { sendResponse } from "../../toServerApi/requests";
 import {AppButton} from "../components/AppButton";
+import { connect } from "react-redux";
 
- 
+
 const prepareInitSpriteData = () => ({
     'id': uniqid(),
     'name': '',
-    'typeExec': 'dragonBones',
     'typeView': 'slot-item',
-    'files': {}
+    'gameTag': 'none',
 })
 
 
+const mapStateToProps = state => ({
+    currentGameTag: state.app.currentGameTag
+})
 
-export function ItemViewCreate(props) {
+
+function ItemViewCreate(props) {
     const [isClosed, toggleClosed] = useState(true)
 
     const sendDataToServer = data => {
@@ -23,13 +27,17 @@ export function ItemViewCreate(props) {
 
         sendResponse(
             'add-item',
-            Object.assign(newItem, { name: data.val }),
-            res => {props.changeMainTab("items-list")}
+            Object.assign(newItem, { name: data.val, gameTag: props.currentGameTag }),
+            () => { sendResponse('get-list', { gameTag: props.currentGameTag }, res => {
+                    toggleClosed(true)
+                    props.dispatch({type:  'CHANGE_CURRENT_GAME_TAG', gameTag: props.currentGameTag, currentList: res.list, })
+            })}
         )
     } 
 
     return (
         <div>
+            <div className='offset-top' />
             {!isClosed && <AppInput
                 val=''
                 type="name"
@@ -42,3 +50,6 @@ export function ItemViewCreate(props) {
         </div>
     )
 }
+
+
+export default connect(mapStateToProps)(ItemViewCreate)
