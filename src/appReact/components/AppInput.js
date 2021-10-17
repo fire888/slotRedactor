@@ -5,6 +5,7 @@ import {AppButton} from "./AppButton";
 
 export function AppInput (props) {
     const [inputValue, changeInputValue] = useState(props.val)
+    const [alertMess, changeAlertMess] = useState(null)
     
     const changeHandler = event => changeInputValue(event.target.value)
 
@@ -15,11 +16,17 @@ export function AppInput (props) {
             <div className='content-stroke'>
                 <input type="text" name="name" defaultValue={inputValue} onChange={changeHandler} />
                 {inputValue !== "" && inputValue !== props.val &&
-                    (props.alertMess 
-                        ? props.alertMess   
+                    (alertMess
+                        ? alertMess
                         : <AppButton
                             val={props.buttonVal}
-                            callBackClick={() => props.callback({ type: props.type, val: inputValue })}/>
+                            callBackClick={e => {
+                                e.stopPropagation()
+                                e.preventDefault()
+                                props.callback({ type: props.type, val: inputValue })
+                                changeAlertMess('done')
+                                setTimeout(() => {changeAlertMess(null)}, 2000)
+                            }}/>
                     )
                 }    
             </div>

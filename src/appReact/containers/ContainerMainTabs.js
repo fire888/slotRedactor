@@ -9,22 +9,27 @@ const LISTS = [
     {
         tabName: "spells",
         request: 'get-list',
-        requestParams: { tag: 'spells' },
+        requestParams: { gameTag: 'spells' },
     },
     {
         tabName: "eagles",
         request: 'get-list',
-        requestParams: { tag: 'eagles' },
+        requestParams: { gameTag: 'eagles' },
     },
-    // {
-    //     tabName: "cleo",
-    //     request: '',
-    //     requestParams: { tag: 'cleo' },
-    // },
+    {
+        tabName: "cleo",
+        request: 'get-list',
+        requestParams: { gameTag: 'cleo' },
+    },
     {
         tabName: "all",
         request: 'get-list',
         requestParams: {},
+    },
+    {
+        tabName: "none",
+        request: 'get-list',
+        requestParams: { gameTag: 'none' },
     },
 ]
 
