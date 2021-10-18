@@ -8,10 +8,12 @@ const PATHS = {
     "remove-item": "/api/remove-item",
     "get-list": "/api/get-list",
     "get-item-data": "/api/get-item-data",
+    
     "upload-file": "/api/upload-file",
     "remove-files": "/api/remove-files",
 
-    "get-sets-list": "/api/get-sets-list",
+    'get-games-tags': '/api/get-games-tags',
+    //"get-sets-list": "/api/get-sets-list",
 }
 
 

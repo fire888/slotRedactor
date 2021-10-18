@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 const appData = {
     authRole: null,
     currentGameTag: null,
-    gameTags: ['spells', 'cleo', 'eagles', 'none'],
+    gameTags: null, //['spells', 'cleo', 'eagles', 'none'],
     listTypes: ['slot-item', 'background', 'element', 'none'],
     currentList: null,
     currentItemId: null,
@@ -23,6 +23,14 @@ const app = function (state = appData, action) {
             authRole: action.authRole,
         })
     }
+
+    if (action.type === 'ADD_GAMES_TAGS') {
+        return ({
+            ...state,
+            gameTags: action.arrTags,
+        })
+    } 
+
 
     if (action.type === 'CHANGE_CURRENT_GAME_TAG') {
         return ({
