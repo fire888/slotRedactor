@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import '../stylesheets/AppLoadFile.css'
 
 
 export function AppLoadMultFiles (props) {
     const [filesNames, setFilesNames] = useState(false)
+    const ref = useRef(null)
 
     const onDragEnter = useCallback((e) => {
         e.stopPropagation()
@@ -25,6 +26,8 @@ export function AppLoadMultFiles (props) {
 
     const onDrop = useCallback((e) => {
         e.preventDefault()
+        if (e.target !== ref.current) return;
+
         const files = e.dataTransfer.files
         console.log('Files dropped: ', files.length)
         const names = []
@@ -52,11 +55,12 @@ export function AppLoadMultFiles (props) {
     return (
         <div>
             <div
+                ref={ref}
                 className="bg-green height-min-30"
                 onDragLeave={onDragLeave} >
                 {filesNames 
                     ? filesNames.map(item => <div key={item}>{item}</div>)
-                    : 'Drop files to upload'}
+                    : props.val}
             </div>
         </div>
     )

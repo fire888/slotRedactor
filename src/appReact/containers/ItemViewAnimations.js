@@ -33,6 +33,9 @@ const mapStateToProps = state => ({
 function ItemViewAnimations(props) {
     const [animations, setAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
+
+    const [imagesNames, setImagesNames] = useState([])
+
     const [itemData, setItemData] = useState(null)
 
 
@@ -57,6 +60,11 @@ function ItemViewAnimations(props) {
 
     /** load files */
     const onLoadMultFiles = files => prepareDragonFilesToSend(props.currentItemId, files, getResourcesItem)
+    const onLoadMultImages = files => {
+        console.log(files)
+        //prepareImagesToSend()
+    }
+
 
     return (
     <div>
@@ -85,7 +93,7 @@ function ItemViewAnimations(props) {
                 </div>
 
 
-                {/** EDIT ********************************************/}
+                {/** DREAGON_BONES EDIT ********************************************/}
 
                 {props.authRole === 'animator' &&
                     <div>
@@ -100,12 +108,43 @@ function ItemViewAnimations(props) {
                             </div>)}
                         <hr/>
 
-
+                        <div>upload DragonBones files</div>
                         <AppLoadMultFiles
+                            val='upload DragonBones files'
                             callback={onLoadMultFiles}
                         />
 
                     </div>
+                }
+
+
+                {/** IMAGES EDIT **************************************************/}
+
+                {props.authRole === 'animator' &&
+                <div>
+                    {createArrFromObj(imagesNames).map((n, i) =>
+                        <div
+                            key={i}
+                            className='content-stroke'>
+                            <span>{n.name}</span>
+                            <span>
+                                <a className='AppButton' href={`/${n.path}/${n.name}`} download={n.name}>download</a>
+                            </span>
+                        </div>)}
+                    <hr/>
+
+                    <div>upload image static</div>
+                    <AppLoadMultFiles
+                        val='upload static image file'
+                        callback={onLoadMultImages}
+                    />
+                    <div>upload image blure</div>
+                    <AppLoadMultFiles
+                        val='upload blur image file'
+                        callback={onLoadMultImages}
+                    />
+
+                </div>
                 }
             </div>)
         }
