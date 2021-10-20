@@ -25,6 +25,7 @@ const VIEW_MODES = {
 const mapStateToProps = state => ({
     authRole: state.app.authRole,
     currentGameTag: state.app.currentGameTag,
+    gameTags: state.app.gameTags,
     currentItemId: state.app.currentItemId,
 })
 
@@ -109,7 +110,7 @@ function ItemPreView(props) {
                             val = {props.item.gameTag}
                             type = "gameTag"
                             buttonVal = 'save'
-                            arrOptions = {['spells', 'cleo', 'eagles', 'none']}
+                            arrOptions = {props.gameTags}
                             callback = {changeMainParams}
                         />
                     )}
