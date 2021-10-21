@@ -1,5 +1,6 @@
 import { sendResponse, uploadFile } from "../../toServerApi/requests";
 import { showDragonSpr, playAnimation } from "../../appPixi/AppPixi"
+import {useCallback} from "react";
 
 
 const TYPES = [
@@ -61,10 +62,18 @@ const sendFiles = (arr, callback) => {
     iterator(0)
 }
 
-//
-// export const getItemDataById = (id, callback) => {
-//     sendResponse('get-item', { id }, res => {
-//         callback(res)
-//     })
-// }
+
+/***************************************************************/
+
+
+export const sendFileData = (id, imageViewType, files, callback) => {
+    const dataToSend = { id, type: imageViewType, file: files[0], }
+    uploadFile('upload-image', dataToSend, resp => {
+        if (resp.mess[0] === 'loaded') {
+            console.log(`loaded ${resp.mess[1]}`)
+            callback()
+        }
+    })
+}
+
 

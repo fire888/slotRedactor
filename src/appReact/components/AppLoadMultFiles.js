@@ -35,7 +35,7 @@ export function AppLoadMultFiles (props) {
             names.push(files[i].name)
         }
         setFilesNames(names)
-        props.callback(files)
+        props.callback(props.inputKey, files)
         return false
     }, []);
 

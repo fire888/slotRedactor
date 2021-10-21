@@ -5,7 +5,7 @@ import {
     playAnimation,
     removeSpr,
 } from '../../appPixi/AppPixi'
-import { prepareDragonFilesToSend } from '../helpers/prepareFilesToSend'
+import { prepareDragonFilesToSend, sendFileData } from '../helpers/prepareFilesToSend'
 import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
 import { sendResponse } from "../../toServerApi/requests";
 import { connect } from 'react-redux'
@@ -33,9 +33,6 @@ const mapStateToProps = state => ({
 function ItemViewAnimations(props) {
     const [animations, setAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
-
-    const [imagesNames, setImagesNames] = useState([])
-
     const [itemData, setItemData] = useState(null)
 
 
@@ -59,38 +56,44 @@ function ItemViewAnimations(props) {
 
 
     /** load files */
-    const onLoadMultFiles = files => prepareDragonFilesToSend(props.currentItemId, files, getResourcesItem)
-    const onLoadMultImages = files => {
-        console.log(files)
-        //prepareImagesToSend()
-    }
+    const onLoadMultFiles = (inputKey, files) => prepareDragonFilesToSend(props.currentItemId, files, getResourcesItem)
+    const onLoadStaticImage = (inputKey, files) => sendFileData(props.currentItemId, inputKey, files, getResourcesItem)
+
 
 
     return (
     <div>
+
+        <div className='offset-top' />
+        <hr />
+
         {(props.authRole === 'user' || props.authRole === 'animator') && (
             <div>
-                <div>
-                    {animations && animations.map((n, i) => n &&
-                        <div
-                            className="content-stroke"
-                            key={i}>
-                            <span>{n}</span>
-                            <div className="contrnt-right">
-                                <AppButton
-                                    val='once'
-                                    callBackClick={() => startAnimate(n, 1)}/>
-                                <AppButton
-                                    val='repeat'
-                                    callBackClick={() => startAnimate(n, 1000)}/>
-                                <AppButton
-                                    val='stop'
-                                    callBackClick={() => startAnimate(n, false)}/>
 
-                            </div>
+                <AppButton
+                    val='dragonBones-view'
+                    callBackClick={() => {console.log('dragonBones-view')}}/>
+
+                {animations && animations.map((n, i) => n &&
+                    <div
+                        className="content-stroke"
+                        key={i}>
+                        <span>{n}</span>
+                        <div className="contrnt-right">
+                            <AppButton
+                                val='once'
+                                callBackClick={() => startAnimate(n, 1)}/>
+                            <AppButton
+                                val='repeat'
+                                callBackClick={() => startAnimate(n, 1000)}/>
+                            <AppButton
+                                val='stop'
+                                callBackClick={() => startAnimate(n, false)}/>
+
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
+
 
 
                 {/** DREAGON_BONES EDIT ********************************************/}
@@ -106,11 +109,10 @@ function ItemViewAnimations(props) {
                                     <a className='AppButton' href={`/${n.path}/${n.name}`} download={n.name}>download</a>
                                 </span>
                             </div>)}
-                        <hr/>
 
-                        <div>upload DragonBones files</div>
                         <AppLoadMultFiles
                             val='upload DragonBones files'
+                            inputKey='dragon-bones-files'
                             callback={onLoadMultFiles}
                         />
 
@@ -120,31 +122,63 @@ function ItemViewAnimations(props) {
 
                 {/** IMAGES EDIT **************************************************/}
 
-                {props.authRole === 'animator' &&
-                <div>
-                    {createArrFromObj(imagesNames).map((n, i) =>
-                        <div
-                            key={i}
-                            className='content-stroke'>
-                            <span>{n.name}</span>
-                            <span>
-                                <a className='AppButton' href={`/${n.path}/${n.name}`} download={n.name}>download</a>
-                            </span>
-                        </div>)}
-                    <hr/>
 
-                    <div>upload image static</div>
+                <div className='offset-top' />
+                <hr />
+
+
+                {itemData && itemData['image-static'] && (
+                    <div>
+                        <AppButton
+                            val='image-static'
+                            callBackClick={() => {console.log('image-static')}}/>
+
+                        {props.authRole === 'animator' &&
+                            <div
+                                className='content-stroke'>
+                                {itemData['image-static'].name}
+                                <a className='AppButton' href={`/${itemData['image-static'].path}/${itemData['image-static'].name}`} download={itemData['image-static'].name}>download</a>
+                            </div>}
+
+                    </div>)
+                }
+
+
+                {props.authRole === 'animator' &&
                     <AppLoadMultFiles
                         val='upload static image file'
-                        callback={onLoadMultImages}
+                        inputKey='image-static'
+                        callback={onLoadStaticImage}
                     />
-                    <div>upload image blure</div>
+                }
+
+
+
+                <div className='offset-top' />
+                <hr />
+
+                {itemData && itemData['image-blur'] && (
+                    <div>
+                        <AppButton
+                            val='image-blur'
+                            callBackClick={() => {console.log('image-blur')}}/>
+
+
+                        {props.authRole === 'animator' &&
+                        <div
+                            className='content-stroke'>
+                            {itemData['image-blur'].name}
+                            <a className='AppButton' href={`/${itemData['image-blur'].path}/${itemData['image-blur'].name}`} download={itemData['image-blur'].name}>download</a>
+                        </div>}
+                    </div>)
+                }
+
+                {props.authRole === 'animator' &&
                     <AppLoadMultFiles
                         val='upload blur image file'
-                        callback={onLoadMultImages}
+                        inputKey='image-blur'
+                        callback={onLoadStaticImage}
                     />
-
-                </div>
                 }
             </div>)
         }
