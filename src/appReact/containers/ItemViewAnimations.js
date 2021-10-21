@@ -3,12 +3,16 @@ import { AppButton } from "../components/AppButton"
 import {
     showDragonSpr,
     playAnimation,
+    showImage,
+    hideImage,
     removeSpr,
 } from '../../appPixi/AppPixi'
 import { prepareDragonFilesToSend, sendFileData } from '../helpers/prepareFilesToSend'
 import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
 import { sendResponse } from "../../toServerApi/requests";
 import { connect } from 'react-redux'
+
+import { HOST } from '../../globals'
 
 
 const startAnimate = (animationName, count) => playAnimation({ animationName, count })
@@ -60,6 +64,10 @@ function ItemViewAnimations(props) {
     const onLoadStaticImage = (inputKey, files) => sendFileData(props.currentItemId, inputKey, files, getResourcesItem)
 
 
+    const prepareToShowImage = (keyImage) => {
+        showImage(itemData[keyImage], () => {})
+    }
+
 
     return (
     <div>
@@ -72,7 +80,7 @@ function ItemViewAnimations(props) {
 
                 <AppButton
                     val='dragonBones-view'
-                    callBackClick={() => {console.log('dragonBones-view')}}/>
+                    callBackClick={hideImage}/>
 
                 {animations && animations.map((n, i) => n &&
                     <div
@@ -106,7 +114,7 @@ function ItemViewAnimations(props) {
                                 className='content-stroke'>
                                 <span>{n.name}</span>
                                 <span>
-                                    <a className='AppButton' href={`/${n.path}/${n.name}`} download={n.name}>download</a>
+                                    <a className='AppButton' target="_blank" href={`${HOST}/${n.path}/${n.name}`} download={n.name} rel="noopener noreferrer" download>download</a>
                                 </span>
                             </div>)}
 
@@ -131,13 +139,13 @@ function ItemViewAnimations(props) {
                     <div>
                         <AppButton
                             val='image-static'
-                            callBackClick={() => {console.log('image-static')}}/>
+                            callBackClick={() => {prepareToShowImage('image-static')}}/>
 
                         {props.authRole === 'animator' &&
                             <div
                                 className='content-stroke'>
                                 {itemData['image-static'].name}
-                                <a className='AppButton' href={`/${itemData['image-static'].path}/${itemData['image-static'].name}`} download={itemData['image-static'].name}>download</a>
+                                <a className='AppButton' target="_blank" href={`${HOST}/${itemData['image-static'].path}/${itemData['image-static'].name}`} rel="noopener noreferrer" download>download</a>
                             </div>}
 
                     </div>)
@@ -161,14 +169,14 @@ function ItemViewAnimations(props) {
                     <div>
                         <AppButton
                             val='image-blur'
-                            callBackClick={() => {console.log('image-blur')}}/>
+                            callBackClick={() => {prepareToShowImage('image-blur')}}/>
 
 
                         {props.authRole === 'animator' &&
                         <div
                             className='content-stroke'>
                             {itemData['image-blur'].name}
-                            <a className='AppButton' href={`/${itemData['image-blur'].path}/${itemData['image-blur'].name}`} download={itemData['image-blur'].name}>download</a>
+                            <a className='AppButton' target="_blank" href={`${HOST}/${itemData['image-blur'].path}/${itemData['image-blur'].name}`} rel="noopener noreferrer" download>download</a>
                         </div>}
                     </div>)
                 }

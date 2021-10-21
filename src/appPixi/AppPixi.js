@@ -52,11 +52,39 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
 
 /************************************************************ */
 
-let app = null
+let app = new Application(root)
 let currentArmature = null 
 const factory = DragonBones.PixiFactory.factory
 let armatureNames = null
 let animationNames = null
+
+
+let currentSprite = new window.PIXI.Sprite()
+currentSprite.anchor.set(.5)
+
+
+
+/** STATIC IMAGES ************************************************************* */
+
+const showImage = (fileData, callback) => {
+    const texture = PIXI.Texture.from(`${HOST}/${fileData.path}/${fileData.name}`);
+    if (!currentSprite) {
+        currentSprite = new window.PIXI.Sprite()
+        currentSprite.anchor.set(.5)
+    }
+    currentSprite.texture = texture;
+    currentSprite.renderable = true
+    app && app.gameScene && app.gameScene.addChild(currentSprite)
+    callback()
+}
+
+const hideImage = () => {
+    currentSprite.renderable = false
+}
+
+
+/** DRAGON BONES ************************************************************* */
+
 
 
 
@@ -159,8 +187,6 @@ const loadDragonResources = (files, callback) => {
 
 
 
-/*************************************************************** */
-
 let isLoading = false
 
 
@@ -192,9 +218,10 @@ const showDragonSpr = (filesData, callback) => {
     }
     PIXI.utils.destroyTextureCache()
 
-    app && app.destroy()
+    //app && app.destroy()
+    //currentSprite = null
 
-    app = new Application(root)
+    //app = new Application(root)
     loadDragonResources(filesData.files, res => {
         createFactory(res)
         showS()
@@ -205,44 +232,10 @@ const showDragonSpr = (filesData, callback) => {
 export {
     showDragonSpr,
     playAnimation,
+    showImage,
+    hideImage,
     removeSpr,
 }
-//
-// window.emitter.subscribe('dragonBonesFiles', fileData => {
-//     if (isLoading) return
-//     isLoading = true
-//     setTimeout(() => isLoading = false, 1000)
-//
-//     currentArmature && currentArmature.destroy({ children: true, texture: true, baseTexture: true })
-//     currentArmature && currentArmature.dispose()
-//     currentArmature = null
-//
-//     factory.clear(true)
-//     DragonBones.TextureData.clearPool()
-//     DragonBones.TextureAtlasData.clearPool()
-//     DragonBones.PixiTextureAtlasData.clearPool()
-//     DragonBones.BaseFactory && DragonBones.BaseFactory.clear && DragonBones.BaseFactory.clear()
-//
-//
-//
-//     for (var textureUrl in window.PIXI.utils.BaseTextureCache) {
-//         delete PIXI.utils.BaseTextureCache[textureUrl]
-//     }
-//     for (var textureUrl in window.PIXI.utils.TextureCache) {
-//         delete PIXI.utils.TextureCache[textureUrl]
-//     }
-//     for (var url in window.PIXI.Loader.shared.resources) {
-//         delete window.PIXI.Loader.shared.resources[url]
-//     }
-//     PIXI.utils.destroyTextureCache()
-//
-//     app && app.destroy()
-//
-//     app = new Application(root)
-//     loadDragonResources(fileData.files, res => {
-//         createFactory(res)
-//         showS()
-//     })
-// })
+
 
 
