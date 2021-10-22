@@ -13,8 +13,8 @@ module.exports = env => {
 
 
     const config = merge.merge(appCommonConfig(environment), {
-        mode: 'development',
-        devtool: 'inline-source-map',
+        //mode: 'development',
+        //devtool: 'inline-source-map',
         
         mode: 'production',
         output: {

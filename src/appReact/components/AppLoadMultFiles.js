@@ -26,17 +26,19 @@ export function AppLoadMultFiles (props) {
 
     const onDrop = useCallback((e) => {
         e.preventDefault()
-        if (e.target !== ref.current) return;
 
-        const files = e.dataTransfer.files
-        console.log('Files dropped: ', files.length)
-        const names = []
-        for (let i = 0; i < files.length; i++) {
-            names.push(files[i].name)
+        if (e.target === ref.current || isDescendant(ref.current, e.target)) {
+            const files = e.dataTransfer.files
+            console.log('Files dropped: ', files.length)
+            const names = []
+            for (let i = 0; i < files.length; i++) {
+                names.push(files[i].name)
+            }
+            setFilesNames(names)
+            props.callback(props.inputKey, files)
         }
-        setFilesNames(names)
-        props.callback(props.inputKey, files)
-        return false
+
+        return false;
     }, []);
 
     useEffect(() => {
@@ -58,10 +60,22 @@ export function AppLoadMultFiles (props) {
                 ref={ref}
                 className="bg-green height-min-30"
                 onDragLeave={onDragLeave} >
-                {filesNames 
+                {filesNames
                     ? filesNames.map(item => <div key={item}>{item}</div>)
                     : props.val}
             </div>
         </div>
     )
+}
+
+
+function isDescendant(parent, child) {
+    var node = child.parentNode;
+    while (node != null) {
+        if (node == parent) {
+            return true;
+        }
+        node = node.parentNode;
+    }
+    return false;
 }

@@ -3,7 +3,8 @@ import { EventEmitter } from './SlotMachineLibModified/src/helpers/EventEmitter'
 import { DeviceResizer } from './SlotMachineLibModified/src/helpers/DeviceResizerFixedRatio'
 import { HOST } from "../globals";
 import DragonBones from './SlotMachineLibModified/src/libs/dragonBones'
-import './SlotMachineLibModified/src/libs/pixi-spine'
+//import './SlotMachineLibModified/src/libs/pixi-spine'
+import { Spine } from 'pixi-spine'
 
 
 
@@ -64,7 +65,7 @@ export const canvasShow = (mode, id, data, callback) => {
     clearPIXICache()
 
 
-    if (mode === 'dragonBones-view') {
+    if (mode === 'dragon-bones-files') {
         const currentFiles = {
             'dragon-ske': data.files['dragon-ske'],
             'dragon-tex': data.files['dragon-tex'],
@@ -83,7 +84,7 @@ export const canvasShow = (mode, id, data, callback) => {
 
 
 
-    if (mode === 'spine-view') {
+    if (mode === 'spines-files') {
         const currentFiles = {
             'spine-ske': data.files['spine-ske'],
             'spine-atlas': data.files['spine-atlas'],
@@ -91,7 +92,7 @@ export const canvasShow = (mode, id, data, callback) => {
         }
 
         loadSpineFiles(currentFiles, res => {
-            const sp = new window.PIXI.spine.Spine(res['spine-ske_' + id].spineData)
+            const sp = new Spine(res['spine-ske_' + id].spineData)
             const animationsNames = []
             const arrAnims = sp.spineData.animations
 
@@ -125,16 +126,14 @@ export const playAnimation = ({ animationName, count }) => {
     if (!currentItem) return;
 
 
+    /** start spine animation */
     if (currentItem.spineData) {
-        console.log(animationName)
-
         if (!count) {
             currentItem.state.setEmptyAnimation(0, 0)
             return;
         }
 
         if (count === 1) {
-
             currentItem.state.setAnimation(0, animationName, false)
         } else {
             currentItem.state.setAnimation(0, animationName, true)
@@ -143,7 +142,7 @@ export const playAnimation = ({ animationName, count }) => {
         return;
     }
 
-
+    /** start dragon animation */
     if (count) {
         currentItem.animation.play(animationName, count)
     } else {

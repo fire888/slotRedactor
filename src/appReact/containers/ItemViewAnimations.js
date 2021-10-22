@@ -2,11 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { AppButton } from "../components/AppButton"
 import {
     canvasShow,
-    // showDragonSpr,
     playAnimation,
-    // showImage,
-    // hideImage,
-    // removeSpr,
 } from '../../appPixi/AppPixi'
 import { sendFilesToServer } from '../helpers/prepareFilesToSend'
 import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
@@ -16,8 +12,9 @@ import { connect } from 'react-redux'
 import { HOST } from '../../globals'
 
 
+
+
 const startAnimate = (animationName, count) => {
-    console.log('!!!!!')
     playAnimation({animationName, count})
 }
 
@@ -43,18 +40,24 @@ function ItemViewAnimations(props) {
     const [spineAnimations, setSpineAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
     const [itemData, setItemData] = useState(null)
+    const [currentFilesView, changeCurrentFilesView] = useState(null)
+    const [currentAnimationPlay, changeCurrentAnimationPlay] = useState(null)
 
 
-    const getResourcesItem = () => {
+    const getResourcesItem = (inputKey) => {
         sendResponse('get-item-data', { id: props.currentItemId }, res => {
-            console.log(res.item)
             setItemData(res.item)
             setFileNames(res.item.files)
-            //showDragonSpr(res.item, animations => {
-            //    setFileNames(res.item.files)
-            //    setAnimations(null)
-            //    setAnimations(animations)
-            //})
+            canvasShow(inputKey, props.currentItemId, res.item, (animatinsNames) => {
+                if (inputKey === 'spines-files') {
+                    setSpineAnimations(animatinsNames)
+                }
+                if (inputKey === 'dragon-bone-files') {
+                    setAnimations(animatinsNames)
+                }
+
+                changeCurrentFilesView(inputKey)
+            })
         })
     }
 
@@ -66,7 +69,9 @@ function ItemViewAnimations(props) {
 
 
     /** send files */
-    const onLoadMultFiles = (inputKey, files) => sendFilesToServer(inputKey, props.currentItemId, files, getResourcesItem)
+    const onLoadMultFiles = (inputKey, files) => {
+        sendFilesToServer(inputKey, props.currentItemId, files, () => getResourcesItem(inputKey))
+    }
 
 
 
@@ -83,13 +88,15 @@ function ItemViewAnimations(props) {
 
                 {itemData && itemData['files'] && itemData['files']['dragon-ske'] &&
                     <AppButton
-                        val='dragonBones-view'
-                        callBackClick={() => canvasShow('dragonBones-view', props.currentItemId, itemData, animationsNames => {
+                        val='dragon bones view'
+                        classNameCustom={currentFilesView === 'dragon-bones-files' && 'current'}
+                        callBackClick={() => canvasShow('dragon-bones-files', props.currentItemId, itemData, animationsNames => {
+                            changeCurrentFilesView('dragon-bones-files')
                             setAnimations(animationsNames)
                         })}/>
                 }
 
-                {animations && animations.map((n, i) => n &&
+                {currentFilesView === 'dragon-bones-files' && animations && animations.map((n, i) => n &&
                     <div
                         className="content-stroke"
                         key={i}>
@@ -97,13 +104,25 @@ function ItemViewAnimations(props) {
                         <div className="contrnt-right">
                             <AppButton
                                 val='once'
-                                callBackClick={() => startAnimate(n, 1)}/>
+                                classNameCustom={currentAnimationPlay === n + '_once' && 'current'}
+                                callBackClick={() => {
+                                    startAnimate(n, 1)
+                                    changeCurrentAnimationPlay(n + '_once')
+                                }}/>
                             <AppButton
                                 val='repeat'
-                                callBackClick={() => startAnimate(n, 1000)}/>
+                                classNameCustom={currentAnimationPlay === n + '_repeat' && 'current'}
+                                callBackClick={() => {
+                                    changeCurrentAnimationPlay(n + '_repeat')
+                                    startAnimate(n, 1000)
+                                }}/>
                             <AppButton
                                 val='stop'
-                                callBackClick={() => startAnimate(n, false)}/>
+                                classNameCustom={currentAnimationPlay === n + '_stop' && 'current'}
+                                callBackClick={() => {
+                                    changeCurrentAnimationPlay(n + '_stop')
+                                    startAnimate(n, false)
+                                }}/>
 
                         </div>
                     </div>
@@ -127,7 +146,17 @@ function ItemViewAnimations(props) {
                 <div className='offset-top' />
                 <hr />
 
-                {spineAnimations && spineAnimations.map((n, i) => n &&
+                {itemData && itemData['files'] && itemData['files']['spine-ske'] &&
+                <AppButton
+                    val='spine view'
+                    classNameCustom={currentFilesView === 'spines-files' && 'current'}
+                    callBackClick={() => canvasShow('spines-files', props.currentItemId, itemData, (animationsNames) => {
+                        changeCurrentFilesView('spines-files')
+                        setSpineAnimations(animationsNames)
+                    })}/>
+                }
+
+                {currentFilesView === 'spines-files' && spineAnimations && spineAnimations.map((n, i) => n &&
                     <div
                         className="content-stroke"
                         key={i}>
@@ -135,26 +164,29 @@ function ItemViewAnimations(props) {
                         <div className="contrnt-right">
                             <AppButton
                                 val='once'
-                                callBackClick={() => startAnimate(n, 1)}/>
+                                classNameCustom={currentAnimationPlay === n + '_once' && 'current'}
+                                callBackClick={() => {
+                                    changeCurrentAnimationPlay(n + '_once')
+                                    startAnimate(n, 1)
+                                }}/>
                             <AppButton
                                 val='repeat'
-                                callBackClick={() => startAnimate(n, 1000)}/>
+                                classNameCustom={currentAnimationPlay === n + '_repeat' && 'current'}
+                                callBackClick={() => {
+                                    changeCurrentAnimationPlay(n + '_repeat')
+                                    startAnimate(n, 1000)
+                                }}/>
                             <AppButton
                                 val='stop'
-                                callBackClick={() => startAnimate(n, false)}/>
+                                classNameCustom={currentAnimationPlay === n + '_stop' && 'current'}
+                                callBackClick={() => {
+                                    changeCurrentAnimationPlay(n + '_stop')
+                                    startAnimate(n, false)
+                                }}/>
 
                         </div>
                     </div>
                 )}
-
-                {itemData && itemData['files'] && itemData['files']['spine-ske'] &&
-                    <AppButton
-                        val='spine-view'
-                        callBackClick={() => canvasShow('spine-view', props.currentItemId, itemData, (animationsNames) => {
-                            setSpineAnimations(animationsNames)
-                        })}/>
-                }
-
 
                 {props.authRole === 'animator' &&
                     <div>
@@ -179,15 +211,19 @@ function ItemViewAnimations(props) {
                 {itemData && itemData['files'] && itemData['files']['image-static'] && (
                     <div>
                         <AppButton
-                            val='image-static'
-                            callBackClick={() => {canvasShow('image-static', props.currentItemId, itemData, () => {})}}/>
+                            val='image static view'
+                            classNameCustom={currentFilesView === 'image-static' && 'current'}
+                            callBackClick={() => {
+                                canvasShow('image-static', props.currentItemId, itemData, () => {})
+                                changeCurrentFilesView('image-static')
+                            }}/>
                     </div>)
                 }
 
 
                 {props.authRole === 'animator' &&
                     <AppLoadMultFiles
-                        val='upload static image file'
+                        val='upload static image file(.png)'
                         inputKey='image-static'
                         callback={onLoadMultFiles}
                     />
@@ -202,15 +238,19 @@ function ItemViewAnimations(props) {
                 {itemData && itemData['files'] && itemData['files']['image-blur'] && (
                     <div>
                         <AppButton
-                            val='image-blur-view'
-                            callBackClick={() => {canvasShow('image-blur', props.currentItemId, itemData, () => {})}}/>
+                            val='image blur view'
+                            classNameCustom={currentFilesView === 'image-blur' && 'current'}
+                            callBackClick={() => {
+                                canvasShow('image-blur', props.currentItemId, itemData, () => {})
+                                changeCurrentFilesView('image-blur')
+                            }}/>
 
                     </div>)
                 }
 
                 {props.authRole === 'animator' &&
                     <AppLoadMultFiles
-                        val='upload blur image file'
+                        val='upload blur image file(.png)'
                         inputKey='image-blur'
                         callback={onLoadMultFiles}
                     />
