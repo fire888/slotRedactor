@@ -3,7 +3,7 @@ import { AppButton } from "../components/AppButton"
 import {
     canvasShow,
     // showDragonSpr,
-    // playAnimation,
+    playAnimation,
     // showImage,
     // hideImage,
     // removeSpr,
@@ -85,7 +85,9 @@ function ItemViewAnimations(props) {
                 {itemData && itemData['files'] && itemData['files']['dragon-ske'] &&
                     <AppButton
                         val='dragonBones-view'
-                        callBackClick={() => canvasShow('dragonBones-view', itemData)}/>
+                        callBackClick={() => canvasShow('dragonBones-view', props.currentItemId, itemData, animationsNames => {
+                            setAnimations(animationsNames)
+                        })}/>
                 }
 
                 {animations && animations.map((n, i) => n &&
@@ -129,7 +131,9 @@ function ItemViewAnimations(props) {
                 {itemData && itemData['files'] && itemData['files']['spine-ske'] &&
                     <AppButton
                         val='spine-view'
-                        callBackClick={() => canvasShow('spine-view', itemData)}/>
+                        callBackClick={() => canvasShow('spine-view', props.currentItemId, itemData, () => {
+
+                        })}/>
                 }
 
 
@@ -157,7 +161,7 @@ function ItemViewAnimations(props) {
                     <div>
                         <AppButton
                             val='image-static'
-                            callBackClick={() => {canvasShow('image-static', itemData)}}/>
+                            callBackClick={() => {canvasShow('image-static', props.currentItemId, itemData, () => {})}}/>
                     </div>)
                 }
 
@@ -180,7 +184,7 @@ function ItemViewAnimations(props) {
                     <div>
                         <AppButton
                             val='image-blur-view'
-                            callBackClick={() => {canvasShow('image-blur', itemData)}}/>
+                            callBackClick={() => {canvasShow('image-blur', props.currentItemId, itemData, () => {})}}/>
 
                     </div>)
                 }
