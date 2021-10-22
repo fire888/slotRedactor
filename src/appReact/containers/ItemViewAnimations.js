@@ -7,7 +7,7 @@ import {
     hideImage,
     removeSpr,
 } from '../../appPixi/AppPixi'
-import { prepareDragonFilesToSend, sendFileData } from '../helpers/prepareFilesToSend'
+import { sendFilesToServer } from '../helpers/prepareFilesToSend'
 import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
 import { sendResponse } from "../../toServerApi/requests";
 import { connect } from 'react-redux'
@@ -21,7 +21,7 @@ const startAnimate = (animationName, count) => playAnimation({ animationName, co
 const createArrFromObj = obj => {
     const arr = []
     for (let key in obj) {
-        arr.push({ ...obj[key] })
+        arr.push({ key: key, ...obj[key] })
     }
     return arr
 }
@@ -42,6 +42,7 @@ function ItemViewAnimations(props) {
 
     const getResourcesItem = () => {
         sendResponse('get-item-data', { id: props.currentItemId }, res => {
+            console.log(res.item)
             setItemData(res.item)
             setFileNames(res.item.files)
             showDragonSpr(res.item, animations => {
@@ -59,11 +60,11 @@ function ItemViewAnimations(props) {
     })
 
 
-    /** load files */
-    const onLoadMultFiles = (inputKey, files) => prepareDragonFilesToSend(props.currentItemId, files, getResourcesItem)
-    const onLoadStaticImage = (inputKey, files) => sendFileData(props.currentItemId, inputKey, files, getResourcesItem)
+    /** send files */
+    const onLoadMultFiles = (inputKey, files) => sendFilesToServer(inputKey, props.currentItemId, files, getResourcesItem)
 
 
+    /** show image */
     const prepareToShowImage = (keyImage) => {
         showImage(itemData[keyImage], () => {})
     }
@@ -72,11 +73,13 @@ function ItemViewAnimations(props) {
     return (
     <div>
 
-        <div className='offset-top' />
+        <div className='offset-top offset-bottom' />
         <hr />
 
         {(props.authRole === 'user' || props.authRole === 'animator') && (
             <div>
+
+                {/** DRAGON_BONES VIEW ********************************************/}
 
                 <AppButton
                     val='dragonBones-view'
@@ -104,23 +107,33 @@ function ItemViewAnimations(props) {
 
 
 
-                {/** DREAGON_BONES EDIT ********************************************/}
-
                 {props.authRole === 'animator' &&
                     <div>
-                        {createArrFromObj(fileNames).map((n, i) =>
-                            <div
-                                key={i}
-                                className='content-stroke'>
-                                <span>{n.name}</span>
-                                <span>
-                                    <a className='AppButton' target="_blank" href={`${HOST}/${n.path}/${n.name}`} download={n.name} rel="noopener noreferrer" download>download</a>
-                                </span>
-                            </div>)}
-
                         <AppLoadMultFiles
                             val='upload DragonBones files'
                             inputKey='dragon-bones-files'
+                            callback={onLoadMultFiles}
+                        />
+
+                    </div>
+                }
+
+                {/** SPINE VIEW ********************************************/}
+
+                <div className='offset-top' />
+                <hr />
+
+                <AppButton
+                    val='spine-view'
+                    callBackClick={hideImage}/>
+
+
+                {props.authRole === 'animator' &&
+                    <div>
+
+                        <AppLoadMultFiles
+                            val='upload spine files'
+                            inputKey='spines-files'
                             callback={onLoadMultFiles}
                         />
 
@@ -135,19 +148,11 @@ function ItemViewAnimations(props) {
                 <hr />
 
 
-                {itemData && itemData['image-static'] && (
+                {itemData && itemData['files'] && itemData['files']['image-static'] && (
                     <div>
                         <AppButton
                             val='image-static'
                             callBackClick={() => {prepareToShowImage('image-static')}}/>
-
-                        {props.authRole === 'animator' &&
-                            <div
-                                className='content-stroke'>
-                                {itemData['image-static'].name}
-                                <a className='AppButton' target="_blank" href={`${HOST}/${itemData['image-static'].path}/${itemData['image-static'].name}`} rel="noopener noreferrer" download>download</a>
-                            </div>}
-
                     </div>)
                 }
 
@@ -156,7 +161,7 @@ function ItemViewAnimations(props) {
                     <AppLoadMultFiles
                         val='upload static image file'
                         inputKey='image-static'
-                        callback={onLoadStaticImage}
+                        callback={onLoadMultFiles}
                     />
                 }
 
@@ -165,19 +170,12 @@ function ItemViewAnimations(props) {
                 <div className='offset-top' />
                 <hr />
 
-                {itemData && itemData['image-blur'] && (
+                {itemData && itemData['files'] && itemData['files']['image-blur'] && (
                     <div>
                         <AppButton
                             val='image-blur'
                             callBackClick={() => {prepareToShowImage('image-blur')}}/>
 
-
-                        {props.authRole === 'animator' &&
-                        <div
-                            className='content-stroke'>
-                            {itemData['image-blur'].name}
-                            <a className='AppButton' target="_blank" href={`${HOST}/${itemData['image-blur'].path}/${itemData['image-blur'].name}`} rel="noopener noreferrer" download>download</a>
-                        </div>}
                     </div>)
                 }
 
@@ -185,9 +183,37 @@ function ItemViewAnimations(props) {
                     <AppLoadMultFiles
                         val='upload blur image file'
                         inputKey='image-blur'
-                        callback={onLoadStaticImage}
+                        callback={onLoadMultFiles}
                     />
                 }
+
+                {props.authRole === 'animator' && (
+                    <div>
+
+                        <div className='offset-top' />
+                        <hr />
+
+                        all files:
+                        {createArrFromObj(fileNames).map((n, i) =>
+                            <div
+                                key={i}
+                                className='content-stroke'>
+                                <span>{n.key}:</span>
+                                <span>{n.name}</span>
+                                <span>
+                                    <a
+                                        className='AppButton'
+                                        target="_blank"
+                                        href={`${HOST}/${n.path}/${n.name}`}
+                                        rel="noopener noreferrer"
+                                        download>
+                                        download
+                                    </a>
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>)
         }
     </div>)

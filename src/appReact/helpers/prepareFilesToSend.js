@@ -3,20 +3,56 @@ import { showDragonSpr, playAnimation } from "../../appPixi/AppPixi"
 import {useCallback} from "react";
 
 
-const TYPES = [
+const TYPES_DRAGONS = [
     { include: '_ske.json', type: 'dragon-ske' },
     { include: '_tex.json', type: 'dragon-tex' },
     { include: '_tex.png', type: 'dragon-img' },
 ]
 
+const TYPES_SPINE = [
+    { include: '.json', type: 'spine-ske' },
+    { include: '.atlas', type: 'spine-atlas' },
+    { include: '.png', type: 'spine-img' },
+]
 
-export const prepareDragonFilesToSend = (id, files, callback) => {
-    const preparedFiles = prepareFiles(id, files)
-    sendFiles(preparedFiles, callback)
+const TYPES_IMG_STATIC = [
+    { include: '.png', type: 'image-static' }
+]
+
+const TYPES_IMG_BLUR = [
+    { include: '.png', type: 'image-blur' }
+]
+
+
+
+
+
+export const sendFilesToServer = (inputKey, id, files, callback) => {
+    let preparedFiles = null
+
+    if (inputKey === 'dragon-bones-files') {
+        preparedFiles = prepareFiles(TYPES_DRAGONS, id, files)
+    }
+
+    if (inputKey === 'spines-files') {
+        preparedFiles = prepareFiles(TYPES_SPINE, id, files)
+    }
+
+    if (inputKey === 'image-static') {
+        preparedFiles = prepareFiles(TYPES_IMG_STATIC, id, files)
+    }
+
+    if (inputKey === 'image-blur') {
+        preparedFiles = prepareFiles(TYPES_IMG_BLUR, id, files)
+    }
+
+    preparedFiles && sendFiles(preparedFiles, callback)
 }
 
 
-const prepareFiles = (id, files) => {
+
+
+const prepareFiles = (TYPES, id, files) => {
     const filesDataToSend = []
     for (let i = 0; i < files.length; i++) {
         for (let j = 0; j < TYPES.length; j++) {
@@ -43,6 +79,7 @@ const removeFilesFromSever = (id, callback) => {
 
 
 const sendFiles = (arr, callback) => {
+
     const checkerIsUploadComplete = resp => {
         if (resp.mess[0] === 'loaded') {
             console.log(`loaded ${resp.mess[1]}`)
@@ -62,8 +99,6 @@ const sendFiles = (arr, callback) => {
     iterator(0)
 }
 
-
-/***************************************************************/
 
 
 export const sendFileData = (id, imageViewType, files, callback) => {
