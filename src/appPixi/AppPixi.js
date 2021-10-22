@@ -3,7 +3,6 @@ import { EventEmitter } from './SlotMachineLibModified/src/helpers/EventEmitter'
 import { DeviceResizer } from './SlotMachineLibModified/src/helpers/DeviceResizerFixedRatio'
 import { HOST } from "../globals";
 import DragonBones from './SlotMachineLibModified/src/libs/dragonBones'
-//import './SlotMachineLibModified/src/libs/pixi-spine'
 import { Spine } from 'pixi-spine'
 
 
@@ -59,7 +58,7 @@ let currentItem = null
 const factory = DragonBones.PixiFactory.factory
 
 
-export const canvasShow = (mode, id, data, callback) => {
+export const createItemViewByResources = (mode, id, data, callback) => {
     destroyCurrentItem()
     resetApp()
     clearPIXICache()
@@ -93,14 +92,14 @@ export const canvasShow = (mode, id, data, callback) => {
 
         loadSpineFiles(currentFiles, res => {
             const sp = new Spine(res['spine-ske_' + id].spineData)
+            app.gameScene.addChild(sp)
+            currentItem = sp
+
             const animationsNames = []
             const arrAnims = sp.spineData.animations
-
             for (let i = 0; i < arrAnims.length; i++) {
                 animationsNames.push(arrAnims[i].name)
             }
-            app.gameScene.addChild(sp)
-            currentItem = sp
             callback(animationsNames)
         })
     }
@@ -114,7 +113,7 @@ export const canvasShow = (mode, id, data, callback) => {
         currentItem = new window.PIXI.Sprite()
         currentItem.anchor.set(.5)
         currentItem.texture = texture;
-        app && app.gameScene && app.gameScene.addChild(currentItem)
+        app.gameScene.addChild(currentItem)
         callback()
     }
 }
@@ -253,5 +252,4 @@ const clearPIXICache = () => {
     }
     PIXI.utils.destroyTextureCache()
 }
-/** ******************************************/
 

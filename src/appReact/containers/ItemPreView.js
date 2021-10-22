@@ -1,25 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+
 import { AppButton } from "../components/AppButton"
-import {
-    //showDragonSpr,
-    //playAnimation,
-    removeSpr,
-} from '../../appPixi/AppPixi'
 import { AppInput } from "../components/AppInput";
 import { AppDropDown } from "../components/AppDropDown";
-import { sendResponse } from "../../toServerApi/requests";
 import { AppButtonAlertDoneOrNot } from "../components/AppButtonAlertDoneOrNot";
-import { connect } from 'react-redux'
-import ItemViewAnimations from './ItemViewAnimations'
+import ItemViewResources from './ItemViewResources'
 
+import { removeSpr } from '../../appPixi/AppPixi'
+import { sendResponse } from "../../toServerApi/requests";
 
-
-
-const VIEW_MODES = {
-    'none': 0,
-    'preview': 1,
-    'view': 2,
-}
 
 
 const mapStateToProps = state => ({
@@ -125,7 +115,7 @@ function ItemPreView(props) {
                     )}
                     gameTag: {props.item.gameTag}, typeView: {typeView}
 
-                    <ItemViewAnimations />
+                    <ItemViewResources />
                 </div>
             )}
         </div>)

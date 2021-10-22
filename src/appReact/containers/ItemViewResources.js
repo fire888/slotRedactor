@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { AppButton } from "../components/AppButton"
 import {
-    canvasShow,
+    createItemViewByResources,
     playAnimation,
 } from '../../appPixi/AppPixi'
 import { sendFilesToServer } from '../helpers/prepareFilesToSend'
@@ -35,7 +35,7 @@ const mapStateToProps = state => ({
 
 
 
-function ItemViewAnimations(props) {
+function ItemViewResources(props) {
     const [animations, setAnimations] = useState([])
     const [spineAnimations, setSpineAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
@@ -48,7 +48,7 @@ function ItemViewAnimations(props) {
         sendResponse('get-item-data', { id: props.currentItemId }, res => {
             setItemData(res.item)
             setFileNames(res.item.files)
-            canvasShow(inputKey, props.currentItemId, res.item, (animatinsNames) => {
+            createItemViewByResources(inputKey, props.currentItemId, res.item, animatinsNames => {
                 if (inputKey === 'spines-files') {
                     setSpineAnimations(animatinsNames)
                 }
@@ -90,7 +90,7 @@ function ItemViewAnimations(props) {
                     <AppButton
                         val='dragon bones view'
                         classNameCustom={currentFilesView === 'dragon-bones-files' && 'current'}
-                        callBackClick={() => canvasShow('dragon-bones-files', props.currentItemId, itemData, animationsNames => {
+                        callBackClick={() => createItemViewByResources('dragon-bones-files', props.currentItemId, itemData, animationsNames => {
                             changeCurrentFilesView('dragon-bones-files')
                             setAnimations(animationsNames)
                         })}/>
@@ -150,7 +150,7 @@ function ItemViewAnimations(props) {
                 <AppButton
                     val='spine view'
                     classNameCustom={currentFilesView === 'spines-files' && 'current'}
-                    callBackClick={() => canvasShow('spines-files', props.currentItemId, itemData, (animationsNames) => {
+                    callBackClick={() => createItemViewByResources('spines-files', props.currentItemId, itemData, (animationsNames) => {
                         changeCurrentFilesView('spines-files')
                         setSpineAnimations(animationsNames)
                     })}/>
@@ -214,7 +214,7 @@ function ItemViewAnimations(props) {
                             val='image static view'
                             classNameCustom={currentFilesView === 'image-static' && 'current'}
                             callBackClick={() => {
-                                canvasShow('image-static', props.currentItemId, itemData, () => {})
+                                createItemViewByResources('image-static', props.currentItemId, itemData, () => {})
                                 changeCurrentFilesView('image-static')
                             }}/>
                     </div>)
@@ -241,7 +241,7 @@ function ItemViewAnimations(props) {
                             val='image blur view'
                             classNameCustom={currentFilesView === 'image-blur' && 'current'}
                             callBackClick={() => {
-                                canvasShow('image-blur', props.currentItemId, itemData, () => {})
+                                createItemViewByResources('image-blur', props.currentItemId, itemData, () => {})
                                 changeCurrentFilesView('image-blur')
                             }}/>
 
@@ -291,5 +291,5 @@ function ItemViewAnimations(props) {
     </div>)
 }
 
-export default connect(mapStateToProps)(ItemViewAnimations)
+export default connect(mapStateToProps)(ItemViewResources)
 
