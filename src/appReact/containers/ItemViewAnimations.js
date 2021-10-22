@@ -16,7 +16,10 @@ import { connect } from 'react-redux'
 import { HOST } from '../../globals'
 
 
-const startAnimate = (animationName, count) => playAnimation({ animationName, count })
+const startAnimate = (animationName, count) => {
+    console.log('!!!!!')
+    playAnimation({animationName, count})
+}
 
 
 const createArrFromObj = obj => {
@@ -37,6 +40,7 @@ const mapStateToProps = state => ({
 
 function ItemViewAnimations(props) {
     const [animations, setAnimations] = useState([])
+    const [spineAnimations, setSpineAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
     const [itemData, setItemData] = useState(null)
 
@@ -64,11 +68,6 @@ function ItemViewAnimations(props) {
     /** send files */
     const onLoadMultFiles = (inputKey, files) => sendFilesToServer(inputKey, props.currentItemId, files, getResourcesItem)
 
-
-    /** show image */
-    const prepareToShowImage = (keyImage) => {
-        showImage(itemData[keyImage], () => {})
-    }
 
 
     return (
@@ -128,11 +127,31 @@ function ItemViewAnimations(props) {
                 <div className='offset-top' />
                 <hr />
 
+                {spineAnimations && spineAnimations.map((n, i) => n &&
+                    <div
+                        className="content-stroke"
+                        key={i}>
+                        <span>{n}</span>
+                        <div className="contrnt-right">
+                            <AppButton
+                                val='once'
+                                callBackClick={() => startAnimate(n, 1)}/>
+                            <AppButton
+                                val='repeat'
+                                callBackClick={() => startAnimate(n, 1000)}/>
+                            <AppButton
+                                val='stop'
+                                callBackClick={() => startAnimate(n, false)}/>
+
+                        </div>
+                    </div>
+                )}
+
                 {itemData && itemData['files'] && itemData['files']['spine-ske'] &&
                     <AppButton
                         val='spine-view'
-                        callBackClick={() => canvasShow('spine-view', props.currentItemId, itemData, () => {
-
+                        callBackClick={() => canvasShow('spine-view', props.currentItemId, itemData, (animationsNames) => {
+                            setSpineAnimations(animationsNames)
                         })}/>
                 }
 
@@ -169,7 +188,7 @@ function ItemViewAnimations(props) {
                 {props.authRole === 'animator' &&
                     <AppLoadMultFiles
                         val='upload static image file'
-                        inputKey='image-static-view'
+                        inputKey='image-static'
                         callback={onLoadMultFiles}
                     />
                 }

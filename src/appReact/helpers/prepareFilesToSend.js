@@ -39,6 +39,7 @@ export const sendFilesToServer = (inputKey, id, files, callback) => {
     }
 
     if (inputKey === 'image-static') {
+        console.log('!!!!', TYPES_IMG_STATIC, id, files)
         preparedFiles = prepareFiles(TYPES_IMG_STATIC, id, files)
     }
 

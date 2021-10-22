@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { AppButton } from "../components/AppButton"
 import {
-    showDragonSpr,
-    playAnimation,
+    //showDragonSpr,
+    //playAnimation,
     removeSpr,
 } from '../../appPixi/AppPixi'
 import { AppInput } from "../components/AppInput";

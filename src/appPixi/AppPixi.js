@@ -3,6 +3,7 @@ import { EventEmitter } from './SlotMachineLibModified/src/helpers/EventEmitter'
 import { DeviceResizer } from './SlotMachineLibModified/src/helpers/DeviceResizerFixedRatio'
 import { HOST } from "../globals";
 import DragonBones from './SlotMachineLibModified/src/libs/dragonBones'
+import './SlotMachineLibModified/src/libs/pixi-spine'
 
 
 
@@ -55,25 +56,16 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
 let app = new Application(root)
 let currentItem = null
 const factory = DragonBones.PixiFactory.factory
-let armatureNames = null
-let animationNames = null
-
 
 
 export const canvasShow = (mode, id, data, callback) => {
-    console.log(mode, data)
-
     destroyCurrentItem()
     resetApp()
     clearPIXICache()
 
 
-    let currentFiles = {}
-
-
-
     if (mode === 'dragonBones-view') {
-        currentFiles = {
+        const currentFiles = {
             'dragon-ske': data.files['dragon-ske'],
             'dragon-tex': data.files['dragon-tex'],
             'dragon-img': data.files['dragon-img'],
@@ -92,13 +84,24 @@ export const canvasShow = (mode, id, data, callback) => {
 
 
     if (mode === 'spine-view') {
-        currentFiles = {
+        const currentFiles = {
             'spine-ske': data.files['spine-ske'],
             'spine-atlas': data.files['spine-atlas'],
             'spine-img': data.files['spine-img'],
         }
 
-        console.log('spineView', currentFiles)
+        loadSpineFiles(currentFiles, res => {
+            const sp = new window.PIXI.spine.Spine(res['spine-ske_' + id].spineData)
+            const animationsNames = []
+            const arrAnims = sp.spineData.animations
+
+            for (let i = 0; i < arrAnims.length; i++) {
+                animationsNames.push(arrAnims[i].name)
+            }
+            app.gameScene.addChild(sp)
+            currentItem = sp
+            callback(animationsNames)
+        })
     }
 
 
@@ -113,13 +116,34 @@ export const canvasShow = (mode, id, data, callback) => {
         app && app.gameScene && app.gameScene.addChild(currentItem)
         callback()
     }
-
-
 }
+
+
 
 
 export const playAnimation = ({ animationName, count }) => {
     if (!currentItem) return;
+
+
+    if (currentItem.spineData) {
+        console.log(animationName)
+
+        if (!count) {
+            currentItem.state.setEmptyAnimation(0, 0)
+            return;
+        }
+
+        if (count === 1) {
+
+            currentItem.state.setAnimation(0, animationName, false)
+        } else {
+            currentItem.state.setAnimation(0, animationName, true)
+        }
+
+        return;
+    }
+
+
     if (count) {
         currentItem.animation.play(animationName, count)
     } else {
@@ -128,13 +152,13 @@ export const playAnimation = ({ animationName, count }) => {
 }
 
 
+export const removeSpr = () => {}
+
+
 
 /** ******************************************************************/
 
 const loadDragonResources = (files, callback) => {
-    //const keysFiles = ['dragon-ske', 'dragon-tex', 'dragon-img']
-
-
     const { fileKey, path, name } = files['dragon-ske']
     window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
     window.PIXI.Loader.shared.load((loader, res) => {
@@ -176,10 +200,20 @@ const createDragonSprite = (filesByKey, id) => {
 
     const sp = factory.buildArmatureDisplay(armatureNames[0])
     return { sp, armatureNames, animationNames }
-    //app.gameScene.addChild(currentArmature)
 }
 
 
+/** *****************************************************/
+
+const loadSpineFiles = (files, callback) => {
+    const loader = new window.PIXI.Loader()
+
+    const { fileKey, path, name } = files['spine-ske']
+    loader.add(fileKey, `${HOST}/${path}/${name}`)
+    loader.load((loader, res) => {
+        callback(res)
+    })
+}
 
 
 
@@ -221,187 +255,4 @@ const clearPIXICache = () => {
     PIXI.utils.destroyTextureCache()
 }
 /** ******************************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/** STATIC IMAGES ************************************************************* */
-
-const showImage = (fileData, callback) => {
-    const texture = PIXI.Texture.from(`${HOST}/${fileData.path}/${fileData.name}`);
-    if (!currentSprite) {
-        currentSprite = new window.PIXI.Sprite()
-        currentSprite.anchor.set(.5)
-    }
-    currentSprite.texture = texture;
-    currentSprite.renderable = true
-    app && app.gameScene && app.gameScene.addChild(currentSprite)
-    callback()
-}
-
-const hideImage = () => {
-    currentSprite.renderable = false
-}
-
-
-/** DRAGON BONES ************************************************************* */
-
-
-
-
-
-const createFactory = (files) => {
-    const filesByKey = {}
-
-    for (let key in files) {
-        const k = key.split('_')[0]
-        filesByKey[k] = files[key]
-    }
-
-    if (!filesByKey['dragon-ske']) {
-        return;
-    }
-
-
-    try {
-        factory.parseDragonBonesData(filesByKey['dragon-ske'].data);
-    } catch {
-        console.log('create factory mistake')
-    }
-
-    try {
-        factory.parseTextureAtlasData(
-            filesByKey['dragon-tex'].data,
-            filesByKey['dragon-img'].texture
-        )
-    } catch {
-        console.log('parse factory mistake')
-    }
-
-
-    for (let key in factory._dragonBonesDataMap) {
-        const dataItem = factory._dragonBonesDataMap[key]
-        for (let keyArms in dataItem.armatures) {
-            console.log('animations: ', dataItem.armatures[keyArms].animationNames)
-            animationNames = dataItem.armatures[keyArms].animationNames
-        }
-        console.log('arm: ', dataItem.armatureNames[0])
-        armatureNames = dataItem.armatureNames
-    }
-} 
-
-
-const showS = () => {
-    currentArmature = factory.buildArmatureDisplay(armatureNames[0])
-    app.gameScene.addChild(currentArmature)
-}
-
-
-const removeSpr = () => {
-    if (!currentArmature) return;
-    app.gameScene.removeChild(currentArmature)
-    currentArmature.destroy()
-}
-
-
-
-/************************************************************ */
-
-
-// const loadDragonResources = (files, callback) => {
-//     const keysFiles = ['dragon-ske', 'dragon-tex', 'dragon-img']
-//
-//     let isFiles = true
-//     for (let i = 0; i < keysFiles.length; i++) {
-//         if (!files[keysFiles[i]]) isFiles = false
-//     }
-//     if (!isFiles) return;
-//
-//     let currentKey = keysFiles[2]
-//     const { fileKey, path, name } = files[currentKey]
-//     window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
-//     window.PIXI.Loader.shared.load((loader, res) => {
-//
-//         currentKey = keysFiles[1]
-//         const { fileKey, path, name } = files[currentKey]
-//         window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
-//         window.PIXI.Loader.shared.load((loader, res) => {
-//
-//             currentKey = keysFiles[0]
-//             const { fileKey, path, name } = files[currentKey]
-//             window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
-//             window.PIXI.Loader.shared.load((loader, res) => {
-//                 callback(res)
-//             })
-//         })
-//
-//     })
-// }
-
-
-
-let isLoading = false
-
-
-const showDragonSpr = (filesData, callback) => {
-    if (isLoading) return
-    isLoading = true
-    setTimeout(() => isLoading = false, 1000)
-
-    currentArmature && currentArmature.destroy({ children: true, texture: true, baseTexture: true })
-    currentArmature && currentArmature.dispose()
-    currentArmature = null
-
-    factory.clear(true)
-    DragonBones.TextureData.clearPool()
-    DragonBones.TextureAtlasData.clearPool()
-    DragonBones.PixiTextureAtlasData.clearPool()
-    DragonBones.BaseFactory && DragonBones.BaseFactory.clear && DragonBones.BaseFactory.clear()
-
-
-
-    for (var textureUrl in window.PIXI.utils.BaseTextureCache) {
-        delete PIXI.utils.BaseTextureCache[textureUrl]
-    }
-    for (var textureUrl in window.PIXI.utils.TextureCache) {
-        delete PIXI.utils.TextureCache[textureUrl]
-    }
-    for (var url in window.PIXI.Loader.shared.resources) {
-        delete window.PIXI.Loader.shared.resources[url]
-    }
-    PIXI.utils.destroyTextureCache()
-
-    //app && app.destroy()
-    //currentSprite = null
-
-    //app = new Application(root)
-    loadDragonResources(filesData.files, res => {
-        createFactory(res)
-        showS()
-        callback(animationNames)
-    })
-}
-
-export {
-    showDragonSpr,
-    showImage,
-    hideImage,
-    removeSpr,
-}
-
-
 
