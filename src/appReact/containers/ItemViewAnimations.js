@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { AppButton } from "../components/AppButton"
 import {
-    showDragonSpr,
-    playAnimation,
-    showImage,
-    hideImage,
-    removeSpr,
+    canvasShow,
+    // showDragonSpr,
+    // playAnimation,
+    // showImage,
+    // hideImage,
+    // removeSpr,
 } from '../../appPixi/AppPixi'
 import { sendFilesToServer } from '../helpers/prepareFilesToSend'
 import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
@@ -45,11 +46,11 @@ function ItemViewAnimations(props) {
             console.log(res.item)
             setItemData(res.item)
             setFileNames(res.item.files)
-            showDragonSpr(res.item, animations => {
-                setFileNames(res.item.files)
-                setAnimations(null)
-                setAnimations(animations)
-            })
+            //showDragonSpr(res.item, animations => {
+            //    setFileNames(res.item.files)
+            //    setAnimations(null)
+            //    setAnimations(animations)
+            //})
         })
     }
 
@@ -81,9 +82,11 @@ function ItemViewAnimations(props) {
 
                 {/** DRAGON_BONES VIEW ********************************************/}
 
-                <AppButton
-                    val='dragonBones-view'
-                    callBackClick={hideImage}/>
+                {itemData && itemData['files'] && itemData['files']['dragon-ske'] &&
+                    <AppButton
+                        val='dragonBones-view'
+                        callBackClick={() => canvasShow('dragonBones-view', itemData)}/>
+                }
 
                 {animations && animations.map((n, i) => n &&
                     <div
@@ -123,9 +126,11 @@ function ItemViewAnimations(props) {
                 <div className='offset-top' />
                 <hr />
 
-                <AppButton
-                    val='spine-view'
-                    callBackClick={hideImage}/>
+                {itemData && itemData['files'] && itemData['files']['spine-ske'] &&
+                    <AppButton
+                        val='spine-view'
+                        callBackClick={() => canvasShow('spine-view', itemData)}/>
+                }
 
 
                 {props.authRole === 'animator' &&
@@ -141,7 +146,7 @@ function ItemViewAnimations(props) {
                 }
 
 
-                {/** IMAGES EDIT **************************************************/}
+                {/** IMAGE STATIC **************************************************/}
 
 
                 <div className='offset-top' />
@@ -152,7 +157,7 @@ function ItemViewAnimations(props) {
                     <div>
                         <AppButton
                             val='image-static'
-                            callBackClick={() => {prepareToShowImage('image-static')}}/>
+                            callBackClick={() => {canvasShow('image-static', itemData)}}/>
                     </div>)
                 }
 
@@ -160,12 +165,13 @@ function ItemViewAnimations(props) {
                 {props.authRole === 'animator' &&
                     <AppLoadMultFiles
                         val='upload static image file'
-                        inputKey='image-static'
+                        inputKey='image-static-view'
                         callback={onLoadMultFiles}
                     />
                 }
 
 
+                {/** IMAGE BLUR **************************************************/}
 
                 <div className='offset-top' />
                 <hr />
@@ -173,8 +179,8 @@ function ItemViewAnimations(props) {
                 {itemData && itemData['files'] && itemData['files']['image-blur'] && (
                     <div>
                         <AppButton
-                            val='image-blur'
-                            callBackClick={() => {prepareToShowImage('image-blur')}}/>
+                            val='image-blur-view'
+                            callBackClick={() => {canvasShow('image-blur', itemData)}}/>
 
                     </div>)
                 }
@@ -186,6 +192,9 @@ function ItemViewAnimations(props) {
                         callback={onLoadMultFiles}
                     />
                 }
+
+
+                {/** DOWNLOAD FILES *****************************/}
 
                 {props.authRole === 'animator' && (
                     <div>

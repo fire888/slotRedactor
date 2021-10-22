@@ -62,7 +62,9 @@ let animationNames = null
 let currentSprite = new window.PIXI.Sprite()
 currentSprite.anchor.set(.5)
 
-
+export const canvasShow = (mode, data, callback) => {
+    console.log(mode, data)
+}
 
 /** STATIC IMAGES ************************************************************* */
 
