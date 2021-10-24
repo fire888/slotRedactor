@@ -27,23 +27,36 @@ const TYPES_IMG_BLUR = [
 
 
 
-export const sendFilesToServer = (inputKey, id, files, callback) => {
+export const sendFilesToServer = (inputKey, id, oldItemData, files, callback) => {
+    // const dataRemoveOldFile = {
+    //     id,
+    //     name: fileData.file.name,
+    //     type: fileData.type,
+    // }
+    // sendResponse('remove-file', dataRemoveOldFile, () => {
+    //
+    //
+    //
+    // }
+
+    //console.log('AAAA',itemData)
+
     let preparedFiles = null
 
     if (inputKey === 'dragon-bones-files') {
-        preparedFiles = prepareFiles(TYPES_DRAGONS, id, files)
+        preparedFiles = prepareFiles(TYPES_DRAGONS, id, oldItemData, files)
     }
 
     if (inputKey === 'spines-files') {
-        preparedFiles = prepareFiles(TYPES_SPINE, id, files)
+        preparedFiles = prepareFiles(TYPES_SPINE, id, oldItemData, files)
     }
 
     if (inputKey === 'image-static') {
-        preparedFiles = prepareFiles(TYPES_IMG_STATIC, id, files)
+        preparedFiles = prepareFiles(TYPES_IMG_STATIC, id, oldItemData, files)
     }
 
     if (inputKey === 'image-blur') {
-        preparedFiles = prepareFiles(TYPES_IMG_BLUR, id, files)
+        preparedFiles = prepareFiles(TYPES_IMG_BLUR, id, oldItemData, files)
     }
 
     preparedFiles && sendFiles(preparedFiles, callback)
@@ -52,13 +65,14 @@ export const sendFilesToServer = (inputKey, id, files, callback) => {
 
 
 
-const prepareFiles = (TYPES, id, files) => {
+const prepareFiles = (TYPES, id, oldItemData, files) => {
     const filesDataToSend = []
     for (let i = 0; i < files.length; i++) {
         for (let j = 0; j < TYPES.length; j++) {
             if (files[i].name.includes(TYPES[j].include)) {
                 filesDataToSend.push({
                     id,
+                    oldFileName: (oldItemData.files[TYPES[j].type] && oldItemData.files[TYPES[j].type].name) ? oldItemData.files[TYPES[j].type].name : null,
                     type: TYPES[j].type,
                     file: files[i],
                 })
@@ -69,20 +83,12 @@ const prepareFiles = (TYPES, id, files) => {
 }
 
 
-const removeFilesFromSever = (id, callback) => {
-    sendResponse("remove-files", { id }, res => {
-        if (res.mess[0] === 'files removed') {
-            callback()
-        }
-    })
-}
 
 
 const sendFiles = (arr, callback) => {
 
     const checkerIsUploadComplete = resp => {
         if (resp.mess[0] === 'loaded') {
-            console.log(`loaded ${resp.mess[1]}`)
             return true
         }
         console.log('mistake')
@@ -93,7 +99,12 @@ const sendFiles = (arr, callback) => {
     const iterator = i => {
         if (i === arr.length) return void callback()
 
-        uploadFile('upload-file', arr[i], resp => checkerIsUploadComplete(resp) && iterator(++i))
+        arr[i].oldFileName
+            ? sendResponse('remove-file', { id: arr[i].id, type:arr[i].type, name: arr[i].oldFileName }, () => {
+                    uploadFile('upload-file', arr[i], resp => checkerIsUploadComplete(resp) && iterator(++i))
+                })
+            :  uploadFile('upload-file', arr[i], resp => checkerIsUploadComplete(resp) && iterator(++i))
+
     }
 
     iterator(0)

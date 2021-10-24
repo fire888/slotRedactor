@@ -34,19 +34,23 @@ const mapStateToProps = state => ({
 })
 
 
+//** TODO VERY BAD **************/
+let itemDataGlobal = null
+
 
 function ItemViewResources(props) {
     const [animations, setAnimations] = useState([])
     const [spineAnimations, setSpineAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
-    const [itemData, setItemData] = useState(null)
+    const [itemData, setItemData] = useState({})
     const [currentFilesView, changeCurrentFilesView] = useState(null)
     const [currentAnimationPlay, changeCurrentAnimationPlay] = useState(null)
 
 
     const getResourcesItem = (inputKey) => {
         sendResponse('get-item-data', { id: props.currentItemId }, res => {
-            setItemData(res.item)
+            setItemData((prev) => ({...res.item}))
+            itemDataGlobal = res.item
             setFileNames(res.item.files)
             createItemViewByResources(inputKey, props.currentItemId, res.item, animatinsNames => {
                 if (inputKey === 'spines-files') {
@@ -62,15 +66,15 @@ function ItemViewResources(props) {
     }
 
     useEffect(() => {
-        if (itemData === null) {
+        if (!itemData.files) {
             getResourcesItem()
         }
     })
 
 
     /** send files */
-    const onLoadMultFiles = (inputKey, files) => {
-        sendFilesToServer(inputKey, props.currentItemId, files, () => getResourcesItem(inputKey))
+    const onLoadMultFiles = (inputKey, itemData, files) => {
+        sendFilesToServer(inputKey, props.currentItemId, itemDataGlobal, files, () => getResourcesItem(inputKey))
     }
 
 
@@ -135,7 +139,9 @@ function ItemViewResources(props) {
                         <AppLoadMultFiles
                             val='upload DragonBones files'
                             inputKey='dragon-bones-files'
-                            callback={onLoadMultFiles}
+                            callback={(inputKey, files) => {
+                                onLoadMultFiles(inputKey, itemData, files)
+                            }}
                         />
 
                     </div>
@@ -194,7 +200,7 @@ function ItemViewResources(props) {
                         <AppLoadMultFiles
                             val='upload spine files'
                             inputKey='spines-files'
-                            callback={onLoadMultFiles}
+                            callback={(inputKey, files) => onLoadMultFiles(inputKey, itemData, files)}
                         />
 
                     </div>
@@ -225,7 +231,7 @@ function ItemViewResources(props) {
                     <AppLoadMultFiles
                         val='upload static image file(.png)'
                         inputKey='image-static'
-                        callback={onLoadMultFiles}
+                        callback={(inputKey, files) => onLoadMultFiles(inputKey, itemData, files)}
                     />
                 }
 
@@ -252,7 +258,7 @@ function ItemViewResources(props) {
                     <AppLoadMultFiles
                         val='upload blur image file(.png)'
                         inputKey='image-blur'
-                        callback={onLoadMultFiles}
+                        callback={(inputKey, files) => onLoadMultFiles(inputKey, itemData, files)}
                     />
                 }
 
