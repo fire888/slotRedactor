@@ -28,19 +28,6 @@ const TYPES_IMG_BLUR = [
 
 
 export const sendFilesToServer = (inputKey, id, oldItemData, files, callback) => {
-    // const dataRemoveOldFile = {
-    //     id,
-    //     name: fileData.file.name,
-    //     type: fileData.type,
-    // }
-    // sendResponse('remove-file', dataRemoveOldFile, () => {
-    //
-    //
-    //
-    // }
-
-    //console.log('AAAA',itemData)
-
     let preparedFiles = null
 
     if (inputKey === 'dragon-bones-files') {
@@ -109,17 +96,4 @@ const sendFiles = (arr, callback) => {
 
     iterator(0)
 }
-
-
-
-export const sendFileData = (id, imageViewType, files, callback) => {
-    const dataToSend = { id, type: imageViewType, file: files[0], }
-    uploadFile('upload-image', dataToSend, resp => {
-        if (resp.mess[0] === 'loaded') {
-            console.log(`loaded ${resp.mess[1]}`)
-            callback()
-        }
-    })
-}
-
 
