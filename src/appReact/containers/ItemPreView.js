@@ -21,19 +21,17 @@ const mapStateToProps = state => ({
 
 
 function ItemPreView(props) {
-    const [name, changeName] = useState(props.item.name)
-    const [typeView, changeTypeView] = useState(props.item.typeView)
-
 
     const changeMainParams = inputData => {
         const objToSend = {
             'id': props.item.id,
-            'gameTag': inputData.val,
-            'name': inputData.type === 'name' ? inputData.val : name,
-            'typeView': inputData.type === 'typeView' ? inputData.val : typeView,
+            'gameTag': inputData.type === 'gameTag' ? inputData.val : props.item.gameTag,
+            'name': inputData.type === 'name' ? inputData.val : props.item.name,
+            'typeView': inputData.type === 'typeView' ? inputData.val : props.item.typeView,
         }
         sendResponse('edit-item', objToSend, respData => {
-            sendResponse('get-list', {gameTag: props.currentGameTag }, res => {
+            props.dispatch({ type:  'CHANGE_CURRENT_GAME_TAG', gameTag: '------', currentList: [], })
+            sendResponse('get-list', { gameTag: props.currentGameTag }, res => {
                 props.dispatch({ type:  'CHANGE_CURRENT_GAME_TAG', gameTag: props.currentGameTag, currentList: res.list, })
             })
         })
@@ -46,7 +44,7 @@ function ItemPreView(props) {
             <div className='content-stroke'>
                 <AppButton
                     classNameCustom={`w-long ${props.item.id === props.currentItemId && 'current'}`}
-                    val={name}
+                    val={props.item.name}
                     callBackClick = {() => props.dispatch({ type: 'SET_CURRENT_ITEM_ID', id: props.item.id })}
                 />
                 {props.authRole === 'animator' &&
@@ -89,31 +87,31 @@ function ItemPreView(props) {
                 <div className='offset-bottom'>
                     {props.authRole === "animator" && (
                         <AppInput
-                            val = {name}
-                            type = "name"
-                            buttonVal = 'save'
+                            val={props.item.name}
+                            type="name"
+                            buttonVal='save'
                             callback = {changeMainParams}
                         />
                     )}
                     {props.authRole === "animator" && (
                         <AppDropDown
-                            val = {props.item.gameTag}
-                            type = "gameTag"
-                            buttonVal = 'save'
-                            arrOptions = {props.gameTags}
-                            callback = {changeMainParams}
+                            val={props.item.gameTag}
+                            type="gameTag"
+                            buttonVal='save'
+                            arrOptions={props.gameTags}
+                            callback={changeMainParams}
                         />
                     )}
                     {props.authRole === "animator" && (
                         <AppDropDown
-                            val = {typeView}
-                            type = "typeView"
-                            buttonVal = 'save'
-                            arrOptions = {['slot-item', 'background', 'element', 'none']}
-                            callback = {changeMainParams}
+                            val={props.item.typeView}
+                            type="typeView"
+                            buttonVal='save'
+                            arrOptions={['slot-item', 'background', 'element', 'none']}
+                            callback={changeMainParams}
                         />
                     )}
-                    gameTag: {props.item.gameTag}, typeView: {typeView}
+                    gameTag: {props.item.gameTag}, typeView: {props.item.typeView}
 
                     <ItemViewResources />
                 </div>
