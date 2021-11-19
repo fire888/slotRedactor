@@ -185,12 +185,18 @@ const createDragonSprite = (filesByKey, id) => {
     let armatureNames = null
     let animationNames = null
 
+    const animationsData = []
+
     for (let key in factory._dragonBonesDataMap) {
         const dataItem = factory._dragonBonesDataMap[key]
         for (let keyArms in dataItem.armatures) {
-            console.log('animations: ', dataItem.armatures[keyArms].animationNames)
+            for (let animKey in dataItem.armatures[keyArms].animations) {
+                animationsData.push([animKey, dataItem.armatures[keyArms].animations[animKey].duration])
+            }
+
             animationNames = dataItem.armatures[keyArms].animationNames
         }
+        console.log('animations: ', animationsData)
         console.log('arm: ', dataItem.armatureNames[0])
         armatureNames = dataItem.armatureNames
     }

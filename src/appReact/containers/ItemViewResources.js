@@ -34,7 +34,11 @@ const mapStateToProps = state => ({
 })
 
 
-//** TODO VERY BAD **************/
+/** TODO VERY BAD ******************************/
+/** TODO VERY BAD ******************************/
+/** TODO VERY BAD ******************************/
+/** TODO VERY BAD ******************************/
+/** TODO VERY BAD ******************************/
 let itemDataGlobal = null
 
 
