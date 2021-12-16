@@ -26,8 +26,8 @@ const App = connect(mapStateToProps)(function (props) {
         return (
             <div>
                 <div className="App">
-                    {props.authRole && <ItemView />}
-                    {props.authRole && props.currentItemId && props.currentItemId && props.currentGameTag && <ItemViewResources />}
+                    {props.authRole && props.currentItemId && props.currentGameTag && <ItemView />}
+                    {props.authRole && props.currentItemId && props.currentGameTag && <ItemViewResources />}
                 </div>
                 <div className="main-panel-left">
                     <ContainerAuth />

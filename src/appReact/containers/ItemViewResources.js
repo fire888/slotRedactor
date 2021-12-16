@@ -160,7 +160,7 @@ function ItemViewResources(props) {
 
 
 
-                {props.authRole === 'animator' && props.currentItemId &&
+                {props.authRole === 'animator' && animations &&
                     <div>
                         <AppLoadMultFiles
                             val='upload DragonBones files'

@@ -42,8 +42,7 @@ export function AppLoadMultFiles (props) {
     }, []);
 
     useEffect(() => {
-        console.log('useEFFECT')
-        setFilesNames(filesNames)
+        setFilesNames(false)
         window.addEventListener('mouseup', onDragLeave)
         window.addEventListener('dragenter', onDragEnter)
         window.addEventListener('dragover', onDragOver)

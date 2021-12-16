@@ -44,6 +44,7 @@ const app = function (state = appData, action) {
             currentItemProperties,
             //currentItemProperties,
             currentList,
+            currentItemId: null,
         })
     }
 
