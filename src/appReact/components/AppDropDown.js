@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import '../stylesheets/AppSelect.css'
 import { AppButton } from "./AppButton"
 
@@ -13,6 +13,10 @@ export function AppDropDown (props) {
         props.callback({ type: props.type, val: inputValue })
     }
 
+    useEffect(() => {
+        changeInputValue(props.val)
+        return () => changeInputValue('')
+    }, [props.val])
 
     return (
         <div className={`AppInput`}>

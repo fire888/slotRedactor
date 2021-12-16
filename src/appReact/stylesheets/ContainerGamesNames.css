@@ -1,9 +1,7 @@
-.left-panel {
-    position: absolute;
-    left: 0;
-    top: 0;
+.games-names {
     max-width: 100px;
     display: flex;
     flex-direction: column;
-    z-index: 10;
+    border-right: #1d4c35 2px solid;
+    padding-right: 5px;
 }

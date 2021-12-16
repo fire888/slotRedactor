@@ -27,7 +27,7 @@ function ContainerGamesNames (props) {
     })
 
     return (
-        <div className={'left-panel offset-top'}>
+        <div className={'games-names offset-top'}>
             {props.gameTags && props.gameTags.map(item =>
                 <AppButton
                     key = {item}

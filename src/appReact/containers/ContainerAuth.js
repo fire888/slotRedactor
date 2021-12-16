@@ -43,7 +43,7 @@ function ContainerAuth(props) {
     }
 
     return (
-        <div className='fixed left top'>
+        <div className='fixed left top w-min-200'>
             {!props.authRole
                 ?   <AppInput
                         val=''

@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import '../stylesheets/AppInput.css'
 import {AppButton} from "./AppButton";
 
 
 export function AppInput (props) {
     const [inputValue, changeInputValue] = useState(props.val)
+
+    useEffect(() => {
+        changeInputValue(props.val)
+        return () => changeInputValue('')
+    }, [props.val])
+
     const [alertMess, changeAlertMess] = useState(null)
+
     
     const changeHandler = event => changeInputValue(event.target.value)
 
@@ -14,7 +21,7 @@ export function AppInput (props) {
             {props.type}
             <br/>
             <div className='content-stroke'>
-                <input type="text" name="name" defaultValue={inputValue} onChange={changeHandler} />
+                <input type="text" name="name" value={inputValue} onChange={changeHandler} />
                 {inputValue !== "" && inputValue !== props.val &&
                     (alertMess
                         ? alertMess

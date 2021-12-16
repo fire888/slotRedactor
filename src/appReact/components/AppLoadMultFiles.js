@@ -42,17 +42,20 @@ export function AppLoadMultFiles (props) {
     }, []);
 
     useEffect(() => {
+        console.log('useEFFECT')
+        setFilesNames(filesNames)
         window.addEventListener('mouseup', onDragLeave)
         window.addEventListener('dragenter', onDragEnter)
         window.addEventListener('dragover', onDragOver)
         window.addEventListener('drop', onDrop)
         return () => {
+            setFilesNames(false)
             window.removeEventListener('mouseup', onDragLeave)
             window.removeEventListener('dragenter', onDragEnter)
             window.removeEventListener('dragover', onDragOver)
             window.removeEventListener('drop', onDrop)
         };
-    }, [onDragEnter, onDragLeave, onDragOver, onDrop])
+    }, [onDragEnter, onDragLeave, onDragOver, onDrop, filesNames])
 
     return (
         <div>

@@ -20,7 +20,7 @@ function List (props) {
     return (
         <div
             className='ui-content'>
-                {props.currentGameTag}
+                <h3>{props.currentGameTag}</h3>
                 {props.currentList && props.currentList.map(item =>
                     <ItemPreView
                         isOpened = {props.currentItemId === item.id}

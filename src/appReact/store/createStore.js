@@ -12,6 +12,8 @@ const appData = {
     listTypes: ['slot-item', 'background', 'element', 'none'],
     currentList: null,
     currentItemId: null,
+    currentItemProperties: null,
+    currentItemResources: null,
 }
 
 
@@ -33,17 +35,34 @@ const app = function (state = appData, action) {
 
 
     if (action.type === 'CHANGE_CURRENT_GAME_TAG') {
+        const currentList = [...action.currentList]
+        const currentItemProperties = (currentList && currentList.filter(item => item.id === state.currentItemId)[0]) || null
+
         return ({
             ...state,
             currentGameTag: action.gameTag,
-            currentList: [...action.currentList],
+            currentItemProperties,
+            //currentItemProperties,
+            currentList,
         })
     }
 
     if (action.type === 'SET_CURRENT_ITEM_ID') {
+        const currentItemProperties = (state.currentList && state.currentList.filter(item => item.id === action.id)[0]) || null
+
         return ({
             ...state,
-            currentItemId: action.id
+            currentItemId: action.id,
+            currentItemProperties,
+        })
+    }
+
+    if (action.type === 'CHANGE_CURRENT_ITEM_PROPERTIES') {
+        //const currentItemProperties = (state.currentList && state.currentList.filter(item => item.id === action.id)[0]) || null
+
+        return ({
+            ...state,
+            currentItemProperties: action.currentItemProperties,
         })
     }
 

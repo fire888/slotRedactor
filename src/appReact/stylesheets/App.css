@@ -22,9 +22,12 @@ hr {
 }
 
 .ui-content {
-  margin-top: 20px;
+  color: #1c9358;
+  margin-top: 2px;
   overflow: auto;
   height: calc(100vh - 100px);
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .inline {
@@ -77,6 +80,25 @@ hr {
 .w-long {
   flex: 1 0 auto;
   margin: 0 0 0 0;
+}
+
+.w-min-200 {
+  min-width: 200px;
+}
+
+
+.main-panel-left {
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.choose-item-sector {
+  display: flex;
+  flex-direction: row;
 }
 
 /** SCROLL BAR *********************/

@@ -28,10 +28,17 @@ const createArrFromObj = obj => {
 }
 
 
-const mapStateToProps = state => ({
-    authRole: state.app.authRole,
-    currentItemId: state.app.currentItemId,
-})
+const mapStateToProps = state => {
+    let item = null
+    if (state.app.currentList) {
+        item = state.app.currentList.filter(item => item.id === state.app.currentItemId)
+    }
+    return ({
+        authRole: state.app.authRole,
+        currentItemId: state.app.currentItemId,
+        item: (item && item[0]) || null
+    })
+}
 
 
 /** TODO VERY BAD ******************************/
@@ -51,11 +58,16 @@ function ItemViewResources(props) {
     const [currentAnimationPlay, changeCurrentAnimationPlay] = useState(null)
 
 
+
     const getResourcesItem = (inputKey) => {
         sendResponse('get-item-data', { id: props.currentItemId }, res => {
+
             setItemData((prev) => ({...res.item}))
             itemDataGlobal = res.item
             setFileNames(res.item.files)
+
+
+
             createItemViewByResources(inputKey, props.currentItemId, res.item, animatinsNames => {
                 if (inputKey === 'spines-files') {
                     setSpineAnimations(animatinsNames)
@@ -70,10 +82,16 @@ function ItemViewResources(props) {
     }
 
     useEffect(() => {
-        if (!itemData.files) {
-            getResourcesItem()
+        getResourcesItem()
+        return () => {
+            setAnimations([])
+            setSpineAnimations([])
+            setFileNames([])
+            setItemData({})
+            changeCurrentFilesView(null)
+            changeCurrentAnimationPlay(null)
         }
-    })
+    }, [props.currentItemId])
 
 
     /** send files */
@@ -81,6 +99,10 @@ function ItemViewResources(props) {
         sendFilesToServer(inputKey, props.currentItemId, itemDataGlobal, files, () => getResourcesItem(inputKey))
     }
 
+
+    if (!props.item || (props.currentItemId !== props.item.id)) {
+        return (<div></div>)
+    }
 
 
     return (
@@ -94,11 +116,11 @@ function ItemViewResources(props) {
 
                 {/** DRAGON_BONES VIEW ********************************************/}
 
-                {itemData && itemData['files'] && itemData['files']['dragon-ske'] &&
+                {itemDataGlobal && itemDataGlobal['files'] && itemDataGlobal['files']['dragon-ske'] &&
                     <AppButton
                         val='dragon bones view'
                         classNameCustom={currentFilesView === 'dragon-bones-files' && 'current'}
-                        callBackClick={() => createItemViewByResources('dragon-bones-files', props.currentItemId, itemData, animationsNames => {
+                        callBackClick={() => createItemViewByResources('dragon-bones-files', props.currentItemId, itemDataGlobal, animationsNames => {
                             changeCurrentFilesView('dragon-bones-files')
                             setAnimations(animationsNames)
                         })}/>
@@ -138,13 +160,13 @@ function ItemViewResources(props) {
 
 
 
-                {props.authRole === 'animator' &&
+                {props.authRole === 'animator' && props.currentItemId &&
                     <div>
                         <AppLoadMultFiles
                             val='upload DragonBones files'
                             inputKey='dragon-bones-files'
                             callback={(inputKey, files) => {
-                                onLoadMultFiles(inputKey, itemData, files)
+                                onLoadMultFiles(inputKey, itemDataGlobal, files)
                             }}
                         />
 
@@ -156,11 +178,11 @@ function ItemViewResources(props) {
                 <div className='offset-top' />
                 <hr />
 
-                {itemData && itemData['files'] && itemData['files']['spine-ske'] &&
+                {itemDataGlobal && itemDataGlobal['files'] && itemDataGlobal['files']['spine-ske'] &&
                 <AppButton
                     val='spine view'
                     classNameCustom={currentFilesView === 'spines-files' && 'current'}
-                    callBackClick={() => createItemViewByResources('spines-files', props.currentItemId, itemData, (animationsNames) => {
+                    callBackClick={() => createItemViewByResources('spines-files', props.currentItemId, itemDataGlobal, (animationsNames) => {
                         changeCurrentFilesView('spines-files')
                         setSpineAnimations(animationsNames)
                     })}/>
@@ -204,7 +226,7 @@ function ItemViewResources(props) {
                         <AppLoadMultFiles
                             val='upload spine files'
                             inputKey='spines-files'
-                            callback={(inputKey, files) => onLoadMultFiles(inputKey, itemData, files)}
+                            callback={(inputKey, files) => onLoadMultFiles(inputKey, itemDataGlobal, files)}
                         />
 
                     </div>
@@ -218,13 +240,13 @@ function ItemViewResources(props) {
                 <hr />
 
 
-                {itemData && itemData['files'] && itemData['files']['image-static'] && (
+                {itemDataGlobal && itemDataGlobal['files'] && itemDataGlobal['files']['image-static'] && (
                     <div>
                         <AppButton
                             val='image static view'
                             classNameCustom={currentFilesView === 'image-static' && 'current'}
                             callBackClick={() => {
-                                createItemViewByResources('image-static', props.currentItemId, itemData, () => {})
+                                createItemViewByResources('image-static', props.currentItemId, itemDataGlobal, () => {})
                                 changeCurrentFilesView('image-static')
                             }}/>
                     </div>)
@@ -235,7 +257,7 @@ function ItemViewResources(props) {
                     <AppLoadMultFiles
                         val='upload static image file(.png)'
                         inputKey='image-static'
-                        callback={(inputKey, files) => onLoadMultFiles(inputKey, itemData, files)}
+                        callback={(inputKey, files) => onLoadMultFiles(inputKey, itemDataGlobal, files)}
                     />
                 }
 
@@ -245,13 +267,13 @@ function ItemViewResources(props) {
                 <div className='offset-top' />
                 <hr />
 
-                {itemData && itemData['files'] && itemData['files']['image-blur'] && (
+                {itemDataGlobal && itemDataGlobal['files'] && itemDataGlobal['files']['image-blur'] && (
                     <div>
                         <AppButton
                             val='image blur view'
                             classNameCustom={currentFilesView === 'image-blur' && 'current'}
                             callBackClick={() => {
-                                createItemViewByResources('image-blur', props.currentItemId, itemData, () => {})
+                                createItemViewByResources('image-blur', props.currentItemId, itemDataGlobal, () => {})
                                 changeCurrentFilesView('image-blur')
                             }}/>
 
@@ -262,7 +284,7 @@ function ItemViewResources(props) {
                     <AppLoadMultFiles
                         val='upload blur image file(.png)'
                         inputKey='image-blur'
-                        callback={(inputKey, files) => onLoadMultFiles(inputKey, itemData, files)}
+                        callback={(inputKey, files) => onLoadMultFiles(inputKey, itemDataGlobal, files)}
                     />
                 }
 
