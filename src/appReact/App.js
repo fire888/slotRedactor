@@ -14,6 +14,7 @@ import ContainerGamesNames from './containers/ContainerGamesNames'
 import ItemView from "./containers/ItemView";
 import ItemViewResources from "./containers/ItemViewResources";
 import { GifSpinner } from './components/GifLoading'
+import ContainerZoomScroll from './containers/ContainerZoomScroll'
 
 const mapStateToProps = state => {
     return ({
@@ -27,6 +28,7 @@ const mapStateToProps = state => {
 const App = connect(mapStateToProps)(function (props) {
         return (
             <div>
+                <ContainerZoomScroll />
                 {props.isShowLoadingSpinner && <GifSpinner />}
                 <div className="App">
                     {props.authRole && props.currentItemId && <ItemView />}

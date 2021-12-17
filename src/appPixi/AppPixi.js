@@ -7,7 +7,7 @@ import { Spine } from 'pixi-spine'
 
 
 
-
+let modifySceneValues = { x: 0, y: 0, scale: 1, isFlipX: false, isFlipY: false }
 
 
 const root = {
@@ -58,6 +58,24 @@ let currentItem = null
 const factory = DragonBones.PixiFactory.factory
 
 
+export const transformScene = (x, y, scale, isFlipX, isFlipY) => {
+    modifySceneValues = { x, y, scale, isFlipX, isFlipY }
+
+    if (!app || !app.app || !app.app.stage || !app.gameScene) {
+        return;
+    }
+
+    app.app.stage.x = x
+    app.app.stage.y = y
+    app.gameScene.scale.set(scale)
+
+    if (currentItem) {
+        currentItem.scale.set(isFlipX ? -1 : 1, isFlipY ? -1 : 1)
+    }
+}
+
+
+
 export const createItemViewByResources = (mode, id, data, callback) => {
     destroyCurrentItem()
     resetApp()
@@ -75,6 +93,9 @@ export const createItemViewByResources = (mode, id, data, callback) => {
             const { sp, animationNames, armatureNames } = createDragonSprite(res, id )
             app.gameScene.addChild(sp)
             currentItem = sp
+
+            transformScene(modifySceneValues.x, modifySceneValues.y, modifySceneValues.scale, modifySceneValues.isFlipX, modifySceneValues.isFlipY)
+
             callback(animationNames)
         })
 
@@ -100,6 +121,9 @@ export const createItemViewByResources = (mode, id, data, callback) => {
             for (let i = 0; i < arrAnims.length; i++) {
                 animationsNames.push(arrAnims[i].name)
             }
+
+            transformScene(modifySceneValues.x, modifySceneValues.y, modifySceneValues.scale, modifySceneValues.isFlipX, modifySceneValues.isFlipY)
+
             callback(animationsNames)
         })
     }
@@ -114,6 +138,9 @@ export const createItemViewByResources = (mode, id, data, callback) => {
         currentItem.anchor.set(.5)
         currentItem.texture = texture;
         app.gameScene.addChild(currentItem)
+
+        transformScene(modifySceneValues.x, modifySceneValues.y, modifySceneValues.scale, modifySceneValues.isFlipX, modifySceneValues.isFlipY)
+
         callback()
     }
 }
@@ -158,8 +185,6 @@ export const removeSpr = () => {}
 
 const loadDragonResources = (files, callback) => {
     const { fileKey, path, name } = files['dragon-ske']
-
-    console.log(window.PIXI.Loader.shared)
 
     window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
     window.PIXI.Loader.shared.load((loader, res) => {
