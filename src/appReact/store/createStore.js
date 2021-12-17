@@ -14,10 +14,19 @@ const appData = {
     currentItemId: null,
     currentItemProperties: null,
     currentItemResources: null,
+    isShowLoadingSpinner: false,
 }
 
 
 const app = function (state = appData, action) {
+    if (action.type === 'TOGGLE_WAIT_LOADING') {
+        return ({
+            ...state,
+            isShowLoadingSpinner: action.is,
+        })
+    }
+
+
     if (action.type === 'CHANGE_AUTH_ROLE') {
 
         return ({

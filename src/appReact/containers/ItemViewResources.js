@@ -57,16 +57,14 @@ function ItemViewResources(props) {
     const [currentFilesView, changeCurrentFilesView] = useState(null)
     const [currentAnimationPlay, changeCurrentAnimationPlay] = useState(null)
 
-
-
     const getResourcesItem = (inputKey) => {
+        props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
         sendResponse('get-item-data', { id: props.currentItemId }, res => {
+            props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
 
             setItemData((prev) => ({...res.item}))
             itemDataGlobal = res.item
             setFileNames(res.item.files)
-
-
 
             createItemViewByResources(inputKey, props.currentItemId, res.item, animatinsNames => {
                 if (inputKey === 'spines-files') {
@@ -120,10 +118,13 @@ function ItemViewResources(props) {
                     <AppButton
                         val='dragon bones view'
                         classNameCustom={currentFilesView === 'dragon-bones-files' && 'current'}
-                        callBackClick={() => createItemViewByResources('dragon-bones-files', props.currentItemId, itemDataGlobal, animationsNames => {
-                            changeCurrentFilesView('dragon-bones-files')
-                            setAnimations(animationsNames)
-                        })}/>
+                        callBackClick={() => {
+                            props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
+                            createItemViewByResources('dragon-bones-files', props.currentItemId, itemDataGlobal, animationsNames => {
+                                changeCurrentFilesView('dragon-bones-files')
+                                setAnimations(animationsNames)
+                                props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
+                        })}}/>
                 }
 
                 {currentFilesView === 'dragon-bones-files' && animations && animations.map((n, i) => n &&
@@ -182,10 +183,13 @@ function ItemViewResources(props) {
                 <AppButton
                     val='spine view'
                     classNameCustom={currentFilesView === 'spines-files' && 'current'}
-                    callBackClick={() => createItemViewByResources('spines-files', props.currentItemId, itemDataGlobal, (animationsNames) => {
-                        changeCurrentFilesView('spines-files')
-                        setSpineAnimations(animationsNames)
-                    })}/>
+                    callBackClick={() => {
+                        props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
+                        createItemViewByResources('spines-files', props.currentItemId, itemDataGlobal, (animationsNames) => {
+                            changeCurrentFilesView('spines-files')
+                            setSpineAnimations(animationsNames)
+                            props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
+                    })}}/>
                 }
 
                 {currentFilesView === 'spines-files' && spineAnimations && spineAnimations.map((n, i) => n &&
@@ -246,7 +250,10 @@ function ItemViewResources(props) {
                             val='image static view'
                             classNameCustom={currentFilesView === 'image-static' && 'current'}
                             callBackClick={() => {
-                                createItemViewByResources('image-static', props.currentItemId, itemDataGlobal, () => {})
+                                props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
+                                createItemViewByResources('image-static', props.currentItemId, itemDataGlobal, () => {
+                                    props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
+                                })
                                 changeCurrentFilesView('image-static')
                             }}/>
                     </div>)
@@ -273,7 +280,10 @@ function ItemViewResources(props) {
                             val='image blur view'
                             classNameCustom={currentFilesView === 'image-blur' && 'current'}
                             callBackClick={() => {
-                                createItemViewByResources('image-blur', props.currentItemId, itemDataGlobal, () => {})
+                                props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
+                                createItemViewByResources('image-blur', props.currentItemId, itemDataGlobal, () => {
+                                    props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
+                                })
                                 changeCurrentFilesView('image-blur')
                             }}/>
 

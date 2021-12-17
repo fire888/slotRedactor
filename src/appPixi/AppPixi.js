@@ -158,6 +158,9 @@ export const removeSpr = () => {}
 
 const loadDragonResources = (files, callback) => {
     const { fileKey, path, name } = files['dragon-ske']
+
+    console.log(window.PIXI.Loader.shared)
+
     window.PIXI.Loader.shared.add(fileKey, `${HOST}/${path}/${name}`)
     window.PIXI.Loader.shared.load((loader, res) => {
 
