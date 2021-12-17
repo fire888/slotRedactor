@@ -90,13 +90,13 @@ export const createItemViewByResources = (mode, id, data, callback) => {
         }
 
         loadDragonResources(currentFiles, res => {
-            const { sp, animationNames, armatureNames } = createDragonSprite(res, id )
+            const { sp, animationsData, armatureNames } = createDragonSprite(res, id )
             app.gameScene.addChild(sp)
             currentItem = sp
 
             transformScene(modifySceneValues.x, modifySceneValues.y, modifySceneValues.scale, modifySceneValues.isFlipX, modifySceneValues.isFlipY)
 
-            callback(animationNames)
+            callback(animationsData, armatureNames)
         })
 
     }
@@ -116,15 +116,15 @@ export const createItemViewByResources = (mode, id, data, callback) => {
             app.gameScene.addChild(sp)
             currentItem = sp
 
-            const animationsNames = []
+            const animationsData = []
             const arrAnims = sp.spineData.animations
             for (let i = 0; i < arrAnims.length; i++) {
-                animationsNames.push(arrAnims[i].name)
+                animationsData.push({ name: arrAnims[i].name, duration: arrAnims[i].duration})
             }
 
             transformScene(modifySceneValues.x, modifySceneValues.y, modifySceneValues.scale, modifySceneValues.isFlipX, modifySceneValues.isFlipY)
 
-            callback(animationsNames)
+            callback(animationsData)
         })
     }
 
@@ -219,19 +219,15 @@ const createDragonSprite = (filesByKey, id) => {
         const dataItem = factory._dragonBonesDataMap[key]
         for (let keyArms in dataItem.armatures) {
             for (let animKey in dataItem.armatures[keyArms].animations) {
-                animationsData.push([animKey, dataItem.armatures[keyArms].animations[animKey].duration])
+                animationsData.push({ name: animKey, duration: dataItem.armatures[keyArms].animations[animKey].duration })
             }
-
-            animationNames = dataItem.armatures[keyArms].animationNames
         }
-        console.log('animations: ', animationsData)
-        console.log('arm: ', dataItem.armatureNames[0])
         armatureNames = dataItem.armatureNames
     }
 
 
     const sp = factory.buildArmatureDisplay(armatureNames[0])
-    return { sp, armatureNames, animationNames }
+    return { sp, armatureNames, animationsData }
 }
 
 

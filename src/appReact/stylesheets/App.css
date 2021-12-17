@@ -55,6 +55,7 @@ hr {
 .contrnt-right {
   display: flex;
   justify-content: end;
+  align-items: end;
 }
 
 .bg-green {
@@ -84,6 +85,10 @@ hr {
 
 .w-min-200 {
   min-width: 200px;
+}
+
+.m-r-5 {
+  margin-right: 5px;
 }
 
 

@@ -51,6 +51,7 @@ let itemDataGlobal = null
 
 function ItemViewResources(props) {
     const [animations, setAnimations] = useState([])
+    const [dragonArmature, setDragonArmature] = useState(null)
     const [spineAnimations, setSpineAnimations] = useState([])
     const [fileNames, setFileNames] = useState([])
     const [itemData, setItemData] = useState({})
@@ -66,12 +67,12 @@ function ItemViewResources(props) {
             itemDataGlobal = res.item
             setFileNames(res.item.files)
 
-            createItemViewByResources(inputKey, props.currentItemId, res.item, animatinsNames => {
+            createItemViewByResources(inputKey, props.currentItemId, res.item, animatinsData => {
                 if (inputKey === 'spines-files') {
                     setSpineAnimations(animatinsNames)
                 }
                 if (inputKey === 'dragon-bone-files') {
-                    setAnimations(animatinsNames)
+                    setAnimations(animatinsData)
                 }
 
                 changeCurrentFilesView(inputKey)
@@ -114,47 +115,52 @@ function ItemViewResources(props) {
 
                 {/** DRAGON_BONES VIEW ********************************************/}
 
-                {itemDataGlobal && itemDataGlobal['files'] && itemDataGlobal['files']['dragon-ske'] &&
-                    <AppButton
-                        val='dragon bones view'
-                        classNameCustom={currentFilesView === 'dragon-bones-files' && 'current'}
-                        callBackClick={() => {
-                            props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
-                            createItemViewByResources('dragon-bones-files', props.currentItemId, itemDataGlobal, animationsNames => {
-                                changeCurrentFilesView('dragon-bones-files')
-                                setAnimations(animationsNames)
-                                props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
-                        })}}/>
-                }
+                <div className="content-stroke">
+                    {itemDataGlobal && itemDataGlobal['files'] && itemDataGlobal['files']['dragon-ske'] &&
+                        <AppButton
+                            val='dragon bones view'
+                            classNameCustom={currentFilesView === 'dragon-bones-files' && 'current'}
+                            callBackClick={() => {
+                                props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
+                                createItemViewByResources('dragon-bones-files', props.currentItemId, itemDataGlobal, (animationsNames, armatureName) => {
+                                    changeCurrentFilesView('dragon-bones-files')
+                                    setAnimations(animationsNames)
+                                    setDragonArmature(armatureName)
+                                    props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
+                            })}}/>
+                    }
+
+                    {currentFilesView === 'dragon-bones-files' && dragonArmature && <span>armature: <b>{dragonArmature}</b></span>}
+                </div>
 
                 {currentFilesView === 'dragon-bones-files' && animations && animations.map((n, i) => n &&
                     <div
                         className="content-stroke"
                         key={i}>
-                        <span>{n}</span>
+                        <span>{n.name}</span>
                         <div className="contrnt-right">
+                            <span className="m-r-5">{n.duration.toFixed(2)} s</span>
                             <AppButton
                                 val='once'
-                                classNameCustom={currentAnimationPlay === n + '_once' && 'current'}
+                                classNameCustom={currentAnimationPlay === n.name + '_once' && 'current'}
                                 callBackClick={() => {
-                                    startAnimate(n, 1)
-                                    changeCurrentAnimationPlay(n + '_once')
+                                    startAnimate(n.name, 1)
+                                    changeCurrentAnimationPlay(n.name + '_once')
                                 }}/>
                             <AppButton
                                 val='repeat'
-                                classNameCustom={currentAnimationPlay === n + '_repeat' && 'current'}
+                                classNameCustom={currentAnimationPlay === n.name + '_repeat' && 'current'}
                                 callBackClick={() => {
-                                    changeCurrentAnimationPlay(n + '_repeat')
-                                    startAnimate(n, 1000)
+                                    changeCurrentAnimationPlay(n.name + '_repeat')
+                                    startAnimate(n.name, 1000)
                                 }}/>
                             <AppButton
                                 val='stop'
-                                classNameCustom={currentAnimationPlay === n + '_stop' && 'current'}
+                                classNameCustom={currentAnimationPlay === n.name + '_stop' && 'current'}
                                 callBackClick={() => {
-                                    changeCurrentAnimationPlay(n + '_stop')
-                                    startAnimate(n, false)
+                                    changeCurrentAnimationPlay(n.name + '_stop')
+                                    startAnimate(n.name, false)
                                 }}/>
-
                         </div>
                     </div>
                 )}
@@ -196,28 +202,29 @@ function ItemViewResources(props) {
                     <div
                         className="content-stroke"
                         key={i}>
-                        <span>{n}</span>
+                        <span>{n.name}</span>
                         <div className="contrnt-right">
+                            <span className="m-r-5">{n.duration.toFixed(2)} s</span>
                             <AppButton
                                 val='once'
-                                classNameCustom={currentAnimationPlay === n + '_once' && 'current'}
+                                classNameCustom={currentAnimationPlay === n.name + '_once' && 'current'}
                                 callBackClick={() => {
-                                    changeCurrentAnimationPlay(n + '_once')
-                                    startAnimate(n, 1)
+                                    changeCurrentAnimationPlay(n.name + '_once')
+                                    startAnimate(n.name, 1)
                                 }}/>
                             <AppButton
                                 val='repeat'
-                                classNameCustom={currentAnimationPlay === n + '_repeat' && 'current'}
+                                classNameCustom={currentAnimationPlay === n.name + '_repeat' && 'current'}
                                 callBackClick={() => {
-                                    changeCurrentAnimationPlay(n + '_repeat')
-                                    startAnimate(n, 1000)
+                                    changeCurrentAnimationPlay(n.name + '_repeat')
+                                    startAnimate(n.name, 1000)
                                 }}/>
                             <AppButton
                                 val='stop'
-                                classNameCustom={currentAnimationPlay === n + '_stop' && 'current'}
+                                classNameCustom={currentAnimationPlay === n.name + '_stop' && 'current'}
                                 callBackClick={() => {
-                                    changeCurrentAnimationPlay(n + '_stop')
-                                    startAnimate(n, false)
+                                    changeCurrentAnimationPlay(n.name + '_stop')
+                                    startAnimate(n.name, false)
                                 }}/>
 
                         </div>
