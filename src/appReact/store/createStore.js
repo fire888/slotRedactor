@@ -68,11 +68,16 @@ const app = function (state = appData, action) {
     }
 
     if (action.type === 'CHANGE_CURRENT_ITEM_PROPERTIES') {
-        //const currentItemProperties = (state.currentList && state.currentList.filter(item => item.id === action.id)[0]) || null
-
         return ({
             ...state,
             currentItemProperties: action.currentItemProperties,
+        })
+    }
+
+    if (action.type === 'CHANGE_CURRENT_ITEM_RESOURCES') {
+        return ({
+            ...state,
+            currentItemResources: action.currentItemResources,
         })
     }
 

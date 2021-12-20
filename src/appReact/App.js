@@ -20,6 +20,7 @@ const mapStateToProps = state => {
     return ({
         authRole: state.app.authRole,
         currentItemId: state.app.currentItemId,
+        currentItemResources: state.app.currentItemResources,
         currentGameTag: state.app.currentGameTag,
         isShowLoadingSpinner: state.app.isShowLoadingSpinner,
     })

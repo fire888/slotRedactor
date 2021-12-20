@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { AppButton } from "../components/AppButton"
 import { AppButtonAlertDoneOrNot } from "../components/AppButtonAlertDoneOrNot";
-import { removeSpr } from '../../appPixi/AppPixi'
+import * as AppPixi from '../../appPixi/AppPixi'
 import { sendResponse } from "../../toServerApi/requests";
 
 
@@ -35,9 +35,9 @@ function ItemPreView(props) {
                             'remove-item',
                             { id: props.item.id },
                             res => {
-                                    removeSpr()
+                                AppPixi.removeSpr()
                                     sendResponse('get-list', {gameTag: props.currentGameTag }, res => {
-                                        props.dispatch({type:  'CHANGE_CURRENT_GAME_TAG', gameTag: props.currentGameTag, currentList: res.list, })
+                                        props.dispatch({type: 'CHANGE_CURRENT_GAME_TAG', gameTag: props.currentGameTag, currentList: res.list, })
                                     })
                             })
                     }}
