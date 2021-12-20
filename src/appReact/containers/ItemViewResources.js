@@ -61,6 +61,7 @@ function ItemViewResources(props) {
     const getResourcesItem = (inputKey) => {
         props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
         sendResponse('get-item-data', { id: props.currentItemId }, res => {
+            console.log(res)
             props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
 
             setItemData((prev) => ({...res.item}))

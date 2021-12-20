@@ -28,9 +28,9 @@ const mapStateToProps = state => {
 const App = connect(mapStateToProps)(function (props) {
         return (
             <div>
-                <ContainerZoomScroll />
+                {props.currentItemId && <ContainerZoomScroll />}
                 {props.isShowLoadingSpinner && <GifSpinner />}
-                <div className="App">
+                <div className="main-panel-right">
                     {props.authRole && props.currentItemId && <ItemView />}
                     {props.authRole && props.currentItemId && <ItemViewResources />}
                 </div>

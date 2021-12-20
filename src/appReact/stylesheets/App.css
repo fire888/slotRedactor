@@ -1,4 +1,4 @@
-.App {
+.main-panel-right {
   position: absolute;
   top: 0;
   right: 0;
@@ -9,6 +9,7 @@
   color: #379962;
   padding: 0 10px 0 10px;
   user-select: auto;
+  overflow: auto;
 }
 
 
