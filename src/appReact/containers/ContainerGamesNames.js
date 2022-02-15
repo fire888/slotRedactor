@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { AppButton } from '../components/AppButton'
 import '../stylesheets/ContainerGamesNames.css'
 import { sendResponse } from '../../toServerApi/requests'
+import ContainerGames_CreateGame from './ContainerGames_CreateGame'
 
 
 
@@ -27,20 +28,24 @@ function ContainerGamesNames (props) {
     })
 
     return (
-        <div className={'games-names offset-top'}>
-            {props.gameTags && props.gameTags.map(item =>
-                <AppButton
-                    key = {item}
-                    val = {item}
-                    classNameCustom = {props.currentGameTag === item && "current"}
-                    callBackClick = {() => {
-                        sendResponse('get-list', { gameTag: item }, data => {
-                            props.dispatch({ type: 'CHANGE_CURRENT_GAME_TAG', gameTag: item, currentList: data.list })
-                        })
-                    }}
-                />)}
+            <div className='games-names offset-top'>
+                <div className='content-column'>
+                    {props.gameTags && props.gameTags.map(item =>
+                        <AppButton
+                            key = {item + Math.random()}
+                            val = {item}
+                            classNameCustom = {props.currentGameTag === item && "current"}
+                            callBackClick = {() => {
+                                sendResponse('get-list', { gameTag: item }, data => {
+                                    props.dispatch({ type: 'CHANGE_CURRENT_GAME_TAG', gameTag: item, currentList: data.list })
+                                })
+                            }}
+                        />)}
+                </div>
 
-        </div>)
+                {props.authRole === 'animator' && <ContainerGames_CreateGame />}
+            </div>
+    )
 }
 
 export default connect(mapStateToProps)(ContainerGamesNames)

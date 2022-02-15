@@ -14,6 +14,7 @@ const PATHS = {
     "remove-file": `${ HOST }/api/remove-file`,
 
     "get-games-tags": `${ HOST }/api/get-games-tags`,
+    "add-game-tag": `${ HOST }/api/add-game-tag`
 }
 
 
