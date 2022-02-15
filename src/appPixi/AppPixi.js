@@ -1,8 +1,8 @@
-import { Application } from './SlotMachineLibModified/src/elementsCommon/Application'
-import { EventEmitter } from './SlotMachineLibModified/src/helpers/EventEmitter'
-import { DeviceResizer } from './SlotMachineLibModified/src/helpers/DeviceResizerFixedRatio'
+import { Application } from './Application'
+import { EventEmitter } from './helpers/EventEmitter'
+import { DeviceResizer } from './helpers/DeviceResizerFixedRatio'
 import { HOST } from "../globals";
-import DragonBones from './SlotMachineLibModified/src/libs/dragonBones'
+import DragonBones from './libs/dragonBones'
 import { Spine } from 'pixi-spine'
 
 

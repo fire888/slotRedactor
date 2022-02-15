@@ -30,7 +30,7 @@ function ItemViewCreate(props) {
             Object.assign(newItem, { name: data.val, gameTag: props.currentGameTag }),
             () => { sendResponse('get-list', { gameTag: props.currentGameTag }, res => {
                     toggleClosed(true)
-                    props.dispatch({type:  'CHANGE_CURRENT_GAME_TAG', gameTag: props.currentGameTag, currentList: res.list, })
+                    props.dispatch({type: 'CHANGE_CURRENT_GAME_TAG', gameTag: props.currentGameTag, currentList: res.list, })
             })}
         )
     } 

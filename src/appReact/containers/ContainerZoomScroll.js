@@ -69,9 +69,6 @@ function ContainerZoomScroll (props) {
                 return;
             }
 
-            e.preventDefault()
-            e.stopPropagation()
-
             changeDifX(e.clientX - startX)
             changeDifY(e.clientY - startY)
             transformScene(accumX + difX, accumY + difY, accumScale, isFlipX, isFlipY)

@@ -28,6 +28,7 @@ const TYPES_IMG_BLUR = [
 
 
 export const sendFilesToServer = (inputKey, id, oldItemData, files, callback) => {
+    console.log('!!!!!!!!!!!!', id)
     let preparedFiles = null
 
     if (inputKey === 'dragon-bones-files') {
@@ -59,7 +60,14 @@ const prepareFiles = (TYPES, id, oldItemData, files) => {
             if (files[i].name.includes(TYPES[j].include)) {
                 filesDataToSend.push({
                     id,
-                    oldFileName: (oldItemData.files[TYPES[j].type] && oldItemData.files[TYPES[j].type].name) ? oldItemData.files[TYPES[j].type].name : null,
+                    oldFileName: (
+                            oldItemData &&
+                            oldItemData.files &&
+                            oldItemData.files[TYPES[j].type] &&
+                            oldItemData.files[TYPES[j].type].name
+                        )
+                            ? oldItemData.files[TYPES[j].type].name
+                            : null,
                     type: TYPES[j].type,
                     file: files[i],
                 })

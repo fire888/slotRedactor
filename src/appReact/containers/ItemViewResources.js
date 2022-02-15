@@ -6,6 +6,8 @@ import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
 import { sendResponse } from "../../toServerApi/requests";
 import { connect } from 'react-redux'
 import { FilesList } from '../components/FilesList'
+import { WordsList } from '../components/WordsList'
+import { AppDropDown } from "../components/AppDropDown";
 
 
 
@@ -17,7 +19,15 @@ const startAnimate = (animationName, count) => {
 }
 
 
+const getMode = (arr, name) => {
+    for (let i = 0; i < arr.length; ++i) {
+        if (arr[i].animationName && arr[i].animationName === name) {
+            return arr[i].key
+        }
+    }
 
+    return 'none'
+}
 
 
 const mapStateToProps = state => {
@@ -35,12 +45,14 @@ const mapStateToProps = state => {
 
 
 function ItemViewResources(props) {
+    console.log(props.currentItemResources)
+
+
     const [animations, setAnimations] = useState([])
     const [dragonArmature, setDragonArmature] = useState(null)
     const [spineAnimations, setSpineAnimations] = useState([])
     const [currentFilesView, changeCurrentFilesView] = useState(null)
     const [currentAnimationPlay, changeCurrentAnimationPlay] = useState(null)
-
 
     const [fileNames, setFileNames] = useState([])
 
@@ -123,33 +135,67 @@ function ItemViewResources(props) {
 
                 {currentFilesView === 'dragon-bones-files' && animations && animations.map((n, i) => n &&
                     <div
-                        className="content-stroke"
                         key={i}>
-                        <span>{n.name}</span>
-                        <div className="contrnt-right">
-                            <span className="m-r-5">{n.duration.toFixed(2)} s</span>
-                            <AppButton
-                                val='once'
-                                classNameCustom={currentAnimationPlay === n.name + '_once' && 'current'}
-                                callBackClick={() => {
-                                    startAnimate(n.name, 1)
-                                    changeCurrentAnimationPlay(n.name + '_once')
-                                }}/>
-                            <AppButton
-                                val='repeat'
-                                classNameCustom={currentAnimationPlay === n.name + '_repeat' && 'current'}
-                                callBackClick={() => {
-                                    changeCurrentAnimationPlay(n.name + '_repeat')
-                                    startAnimate(n.name, 1000)
-                                }}/>
-                            <AppButton
-                                val='stop'
-                                classNameCustom={currentAnimationPlay === n.name + '_stop' && 'current'}
-                                callBackClick={() => {
-                                    changeCurrentAnimationPlay(n.name + '_stop')
-                                    startAnimate(n.name, false)
-                                }}/>
+                        <div className="content-stroke">
+                            <span>{n.name}</span>
+                            <div className="contrnt-right">
+                                <span className="m-r-5">{n.duration.toFixed(2)} s</span>
+                                <AppButton
+                                    val='once'
+                                    classNameCustom={currentAnimationPlay === n.name + '_once' && 'current'}
+                                    callBackClick={() => {
+                                        startAnimate(n.name, 1)
+                                        changeCurrentAnimationPlay(n.name + '_once')
+                                    }}/>
+                                <AppButton
+                                    val='repeat'
+                                    classNameCustom={currentAnimationPlay === n.name + '_repeat' && 'current'}
+                                    callBackClick={() => {
+                                        changeCurrentAnimationPlay(n.name + '_repeat')
+                                        startAnimate(n.name, 1000)
+                                    }}/>
+                                <AppButton
+                                    val='stop'
+                                    classNameCustom={currentAnimationPlay === n.name + '_stop' && 'current'}
+                                    callBackClick={() => {
+                                        changeCurrentAnimationPlay(n.name + '_stop')
+                                        startAnimate(n.name, false)
+                                    }}/>
+                            </div>
                         </div>
+                        {/** add mode to animation */}
+                        {props.currentItemResources &&
+                        props.currentItemResources['sounds-animations'] &&
+                        props.currentItemResources['sounds-animations'].length &&
+                        props.currentItemResources['sounds-animations'].length > 0 &&
+                            <AppDropDown
+                                val={getMode(props.currentItemResources['sounds-animations'], n.name)}
+                                buttonVal={"save"}
+                                arrOptions={['none', ...props.currentItemResources['sounds-animations'].map(item => item.key)]}
+                                callback={data => {
+
+                                    for (let i = 0; i < props.currentItemResources['sounds-animations'].length; ++i) {
+                                        if (data.val === props.currentItemResources['sounds-animations'][i].key) {
+                                            const { animationsNames } = props.currentItemResources['sounds-animations'][i]
+                                            let animationsNamesNew = null
+                                            if (data.val === 'none') {
+                                                animationsNamesNew = animationsNames.filter(item => item !== n.name)
+                                            } else {
+                                                const filtered = animationsNames.filter(item => item === n.name)
+                                                if (filtered.length === 0) {
+                                                    animationsNamesNew = [...animationsNames, n.name]
+                                                }
+                                            }
+                                            props.currentItemResources['sounds-animations'][i]['animationsNames'] = animationsNamesNew
+                                        }
+                                    }
+
+                                    sendResponse(
+                                        'change-item-data',
+                                        {...props.currentItemResources, 'sounds-animations': props.currentItemResources['sounds-animations'], id: props.currentItemId },
+                                        getResourcesItem)
+                                }}
+                            />}
                     </div>
                 )}
 
@@ -164,7 +210,6 @@ function ItemViewResources(props) {
                                 onLoadMultFiles(inputKey, props.currentItemResources, files)
                             }}
                         />
-
                     </div>
                 }
 
@@ -294,6 +339,29 @@ function ItemViewResources(props) {
 
                 {/** DOWNLOAD FILES *****************************/}
                 {props.authRole === 'animator' && <FilesList fileNames={fileNames}/>}
+
+                {/** ANIMATIONS MODES ***************************/}
+                {/*{props.authRole === 'animator' && props.currentItemResources &&*/}
+                {/*    <WordsList*/}
+                {/*        title="animations-sounds modes"*/}
+                {/*        list={*/}
+                {/*            (props.currentItemResources && props.currentItemResources['sounds-animations'].length && props.currentItemResources['sounds-animations'].length > 0)*/}
+                {/*                ? props.currentItemResources['sounds-animations']*/}
+                {/*                : []*/}
+                {/*        }*/}
+                {/*        callBackClick={newData => {*/}
+                {/*            const withAnimatonsArr = newData.map(item => {*/}
+                {/*                delete item.animationName*/}
+                {/*                !item['animationsNames'] && (item['animationsNames'] = [])*/}
+                {/*                return item;*/}
+                {/*            })*/}
+                {/*            sendResponse(*/}
+                {/*                'change-item-data',*/}
+                {/*                {...props.currentItemResources, 'sounds-animations': withAnimatonsArr, id: props.currentItemId },*/}
+                {/*                getResourcesItem)*/}
+                {/*        }}*/}
+                {/*    />}*/}
+
             </div>)
         }
     </div>)

@@ -3,17 +3,17 @@ import { HOST } from '../globals'
 
 
 const PATHS = {
-    "add-item": "/api/add-item",
-    "edit-item": "/api/edit-item",
-    "remove-item": "/api/remove-item",
-    "get-list": "/api/get-list",
-    "get-item-data": "/api/get-item-data",
+    "add-item": `${ HOST }/api/add-item`,
+    "edit-item": `${ HOST }/api/edit-item`,
+    "remove-item": `${ HOST }/api/remove-item`,
+    "get-list": `${ HOST }/api/get-list`,
+    "get-item-data": `${ HOST }/api/get-item-data`,
+    "change-item-data": `${ HOST }/api/change-item-data`,
     
-    "upload-file": "/api/upload-file",
-    "remove-file": "/api/remove-file",
+    "upload-file": `${ HOST }/api/upload-file`,
+    "remove-file": `${ HOST }/api/remove-file`,
 
-    'get-games-tags': '/api/get-games-tags',
-    //"get-sets-list": "/api/get-sets-list",
+    "get-games-tags": `${ HOST }/api/get-games-tags`,
 }
 
 
@@ -43,19 +43,15 @@ const defaultOnDenied = (mess, response) => console.log('denied', response)
 
 
 export function sendResponse (key, data, onDone, offDone) {
-    const path = `${ HOST }${ PATHS[key] }`
-
     const body = JSON.stringify({...data})
     const params = Object.assign({}, reqParams.post, { body })
 
-    doFetch(path, params, onDone || defaultOnSuccess, offDone || defaultOnDenied)
+    doFetch(PATHS[key], params, onDone || defaultOnSuccess, offDone || defaultOnDenied)
 }
 
 
 
 export function uploadFile (key, fileData, onDone, offDone) {
-    const path = `${ HOST }${ PATHS[key] }`
-
     const body = new FormData()
     body.append('id', fileData.id)
     body.append('type', fileData.type)
@@ -63,7 +59,7 @@ export function uploadFile (key, fileData, onDone, offDone) {
     body.append('file', fileData.file)
     const params = Object.assign({}, reqParams.postFiles, { body })
 
-    doFetch(path, params, onDone || defaultOnSuccess, offDone || defaultOnDenied)
+    doFetch(PATHS[key], params, onDone || defaultOnSuccess, offDone || defaultOnDenied)
 }
 
 
