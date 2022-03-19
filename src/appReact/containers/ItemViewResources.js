@@ -13,9 +13,7 @@ import { AppDropDown } from "../components/AppDropDown";
 let id = null
 
 
-const startAnimate = (animationName, count) => {
-    AppPixi.playAnimation({animationName, count})
-}
+const startAnimate = (animationName, count) => AppPixi.playAnimation({animationName, count})
 
 
 const getMode = (arr, name) => {
@@ -24,7 +22,6 @@ const getMode = (arr, name) => {
             return arr[i].key
         }
     }
-
     return 'none'
 }
 
