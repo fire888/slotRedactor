@@ -6,12 +6,11 @@ import { AppLoadMultFiles } from "../components/AppLoadMultFiles";
 import { sendResponse } from "../../toServerApi/requests";
 import { connect } from 'react-redux'
 import { FilesList } from '../components/FilesList'
-import { WordsList } from '../components/WordsList'
 import { AppDropDown } from "../components/AppDropDown";
 
 
 
-
+let id = null
 
 
 const startAnimate = (animationName, count) => {
@@ -37,7 +36,6 @@ const mapStateToProps = state => {
     }
     return ({
         authRole: state.app.authRole,
-        currentItemId: state.app.currentItemId,
         currentItemResources: state.app.currentItemResources,
         item: (item && item[0]) || null
     })
@@ -45,7 +43,8 @@ const mapStateToProps = state => {
 
 
 function ItemViewResources(props) {
-    console.log(props.currentItemResources)
+    console.log('ItemViewResources', props.currentItemId)
+    id = props.currentItemId
 
 
     const [animations, setAnimations] = useState([])
@@ -59,8 +58,9 @@ function ItemViewResources(props) {
 
 
     const getResourcesItem = (inputKey) => {
+        console.log('effectStart getResourcesItem', inputKey, props.currentItemId, id)
         props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
-        sendResponse('get-item-data', { id: props.currentItemId }, res => {
+        sendResponse('get-item-data', { id }, res => {
             props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
 
             props.dispatch({ type: 'CHANGE_CURRENT_ITEM_RESOURCES', currentItemResources: res.item })
@@ -82,6 +82,7 @@ function ItemViewResources(props) {
     useEffect(() => {
         getResourcesItem()
         return () => {
+            console.log('destroy', props.currentItemId)
             setAnimations([])
             setSpineAnimations([])
             setFileNames([])
@@ -95,7 +96,8 @@ function ItemViewResources(props) {
 
     /** send files */
     const onLoadMultFiles = (inputKey, itemData, files) => {
-        sendFilesToServer(inputKey, props.currentItemId, props.currentItemResources, files, () => getResourcesItem(inputKey))
+        console.log('onLoadMultFiles--', id, props.currentItemId)
+        sendFilesToServer(inputKey, id, props.currentItemResources, files, () => getResourcesItem(inputKey))
     }
 
 
@@ -298,11 +300,14 @@ function ItemViewResources(props) {
                 }
 
 
-                {props.authRole === 'animator' &&
+                {props.authRole === 'animator' && animations &&
                     <AppLoadMultFiles
                         val='upload static image file(.png)'
                         inputKey='image-static'
-                        callback={(inputKey, files) => onLoadMultFiles(inputKey, props.currentItemResources, files)}
+                        callback={(inputKey, files) => {
+                            onLoadMultFiles(inputKey, props.currentItemResources, files)
+                            }
+                        }
                     />
                 }
 
@@ -369,3 +374,30 @@ function ItemViewResources(props) {
 
 export default connect(mapStateToProps)(ItemViewResources)
 
+// let id = null // ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ
+//
+//
+// function ItemViewResources(props) {
+//     console.log(props.currentItemId) // выдает правильный ID
+//     id = props.currentItemId // ЛЕЧИТСЯ ЕСЛИ ИСПОЛЬЗОВАТЬ ГЛОБАЛЬНУЮ ПЕРЕМЕННУЮ
+//
+//
+//     useEffect(() => {
+//         return () =>
+//             props.dispatch({ ... })
+//     }, [props.currentItemId])
+//
+//
+//     /** send files */
+//     const onLoadMultFiles = (inputKey, files) => {
+//         console.log(props.currentItemId) // выдает НЕПРАВИЛЬНЫЙ ID
+//         console.log(id) // выдает ПРАВИЛЬНЫЙ ID
+//     }
+//
+//     return (
+//         <AppLoadMultFiles
+//             val='upload static image file(.png)'
+//             inputKey='image-static'
+//             callback={(inputKey, files) => onLoadMultFiles(inputKey, files)}
+//         />)
+// }

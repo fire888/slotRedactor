@@ -141,7 +141,7 @@ export const createItemViewByResources = (mode, id, data, callback) => {
 
         transformScene(modifySceneValues.x, modifySceneValues.y, modifySceneValues.scale, modifySceneValues.isFlipX, modifySceneValues.isFlipY)
 
-        callback()
+        callback(true)
     }
 }
 
@@ -211,7 +211,6 @@ const createDragonSprite = (filesByKey, id) => {
     )
 
     let armatureNames = null
-    let animationNames = null
 
     const animationsData = []
 

@@ -32,8 +32,12 @@ const App = connect(mapStateToProps)(function (props) {
                 {props.currentItemId && <ContainerZoomScroll />}
                 {props.isShowLoadingSpinner && <GifSpinner />}
                 <div className="main-panel-right">
-                    {props.authRole && props.currentItemId && <ItemView />}
-                    {props.authRole && props.currentItemId && <ItemViewResources />}
+                    {props.authRole && props.currentItemId &&
+                    <ItemView
+                        currentItemId={props.currentItemId}/>}
+                    {props.authRole && props.currentItemId &&
+                    <ItemViewResources
+                        currentItemId={props.currentItemId}/>}
                 </div>
                 <div className="main-panel-left">
                     <ContainerAuth />

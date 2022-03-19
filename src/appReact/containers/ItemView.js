@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { AppButton } from "../components/AppButton"
 import { AppInput } from "../components/AppInput";
 import { AppDropDown } from "../components/AppDropDown";
-import ItemViewResources from './ItemViewResources'
+
 
 import { sendResponse } from "../../toServerApi/requests";
 
@@ -15,7 +15,6 @@ const mapStateToProps = state => {
         authRole: state.app.authRole,
         currentGameTag: state.app.currentGameTag,
         gameTags: state.app.gameTags,
-        currentItemId: state.app.currentItemId,
         name: (state.app.currentItemProperties && state.app.currentItemProperties.name) || null,
         gameTag: (state.app.currentItemProperties && state.app.currentItemProperties.gameTag) || null,
         typeView: (state.app.currentItemProperties && state.app.currentItemProperties.typeView) || null,
