@@ -22,3 +22,11 @@
 .container-zoom-scroll > div {
     margin: 0 5px;
 }
+
+.path-value {
+    position: absolute;
+    top: 30px;
+}
+.path-item {
+    user-select: all;
+}

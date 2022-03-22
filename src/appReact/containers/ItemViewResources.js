@@ -34,28 +34,27 @@ const mapStateToProps = state => {
     return ({
         authRole: state.app.authRole,
         currentItemResources: state.app.currentItemResources,
-        item: (item && item[0]) || null
+        item: (item && item[0]) || null,
+        currentItemViewMode: state.app.currentItemViewMode,
+        currentAnimations: state.app.currentAnimations,
+        currentAnimationPlay: state.app.currentAnimationPlay,
     })
 }
 
 
 function ItemViewResources(props) {
-    console.log('ItemViewResources', props.currentItemId)
     id = props.currentItemId
 
 
-    const [animations, setAnimations] = useState([])
     const [dragonArmature, setDragonArmature] = useState(null)
     const [spineAnimations, setSpineAnimations] = useState([])
-    const [currentFilesView, changeCurrentFilesView] = useState(null)
-    const [currentAnimationPlay, changeCurrentAnimationPlay] = useState(null)
+    //const [currentAnimationPlay, changeCurrentAnimationPlay] = useState(null)
 
     const [fileNames, setFileNames] = useState([])
 
 
 
     const getResourcesItem = (inputKey) => {
-        console.log('effectStart getResourcesItem', inputKey, props.currentItemId, id)
         props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
         sendResponse('get-item-data', { id }, res => {
             props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
@@ -68,10 +67,10 @@ function ItemViewResources(props) {
                     setSpineAnimations(animationsData)
                 }
                 if (inputKey === 'dragon-bone-files') {
-                    setAnimations(animationsData)
+                    props.dispatch({ type: 'CURRENT_ANIMATIONS_LIST', currentAnimations: animationsData })
                 }
 
-                changeCurrentFilesView(inputKey)
+                props.dispatch({ type: 'CURRENT_ITEM_VIEW_MODE', currentItemViewMode: inputKey})
             })
         })
     }
@@ -80,20 +79,20 @@ function ItemViewResources(props) {
         getResourcesItem()
         return () => {
             console.log('destroy', props.currentItemId)
-            setAnimations([])
+            props.dispatch({ type: 'CURRENT_ANIMATIONS_LIST', currentAnimations: [] })
+            //setAnimations([])
             setSpineAnimations([])
             setFileNames([])
             props.dispatch({ type: 'CHANGE_CURRENT_ITEM_RESOURCES', currentItemResources: null })
-
-            changeCurrentFilesView(null)
-            changeCurrentAnimationPlay(null)
+            props.dispatch({ type: 'CURRENT_ITEM_VIEW_MODE', currentItemViewMode: null })
+            props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: null })
+            //changeCurrentAnimationPlay(null)
         }
     }, [props.currentItemId])
 
 
     /** send files */
     const onLoadMultFiles = (inputKey, itemData, files) => {
-        console.log('onLoadMultFiles--', id, props.currentItemId)
         sendFilesToServer(inputKey, id, props.currentItemResources, files, () => getResourcesItem(inputKey))
     }
 
@@ -118,21 +117,21 @@ function ItemViewResources(props) {
                     {props.currentItemResources && props.currentItemResources['files'] && props.currentItemResources['files']['dragon-ske'] &&
                         <AppButton
                             val='dragon bones view'
-                            classNameCustom={currentFilesView === 'dragon-bones-files' && 'current'}
+                            classNameCustom={props.currentItemViewMode === 'dragon-bones-files' && 'current'}
                             callBackClick={() => {
                                 props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
                                 AppPixi.createItemViewByResources('dragon-bones-files', props.currentItemId, props.currentItemResources, (animationsNames, armatureName) => {
-                                    changeCurrentFilesView('dragon-bones-files')
-                                    setAnimations(animationsNames)
+                                    props.dispatch({ type: 'CURRENT_ITEM_VIEW_MODE', currentItemViewMode: 'dragon-bones-files' })
+                                    props.dispatch({ type: 'CURRENT_ANIMATIONS_LIST', currentAnimations: animationsNames })
                                     setDragonArmature(armatureName)
                                     props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
                             })}}/>
                     }
 
-                    {currentFilesView === 'dragon-bones-files' && dragonArmature && <span>armature: <b>{dragonArmature}</b></span>}
+                    {props.currentItemViewMode === 'dragon-bones-files' && dragonArmature && <span>armature: <b>{dragonArmature}</b></span>}
                 </div>
 
-                {currentFilesView === 'dragon-bones-files' && animations && animations.map((n, i) => n &&
+                {props.currentItemViewMode === 'dragon-bones-files' && props.currentAnimations && props.currentAnimations.map((n, i) => n &&
                     <div
                         key={i}>
                         <div className="content-stroke">
@@ -141,23 +140,27 @@ function ItemViewResources(props) {
                                 <span className="m-r-5">{n.duration.toFixed(2)} s</span>
                                 <AppButton
                                     val='once'
-                                    classNameCustom={currentAnimationPlay === n.name + '_once' && 'current'}
+                                    classNameCustom={props.currentAnimationPlay === n.name + '_once' && 'current'}
                                     callBackClick={() => {
                                         startAnimate(n.name, 1)
-                                        changeCurrentAnimationPlay(n.name + '_once')
+                                        props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_once' })
+                                        console.log(n.name + '_once')
+                                        //changeCurrentAnimationPlay(n.name + '_once')
                                     }}/>
                                 <AppButton
                                     val='repeat'
-                                    classNameCustom={currentAnimationPlay === n.name + '_repeat' && 'current'}
+                                    classNameCustom={props.currentAnimationPlay === n.name + '_repeat' && 'current'}
                                     callBackClick={() => {
-                                        changeCurrentAnimationPlay(n.name + '_repeat')
+                                        //changeCurrentAnimationPlay(n.name + '_repeat')
+                                        props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_repeat' })
                                         startAnimate(n.name, 1000)
                                     }}/>
                                 <AppButton
                                     val='stop'
-                                    classNameCustom={currentAnimationPlay === n.name + '_stop' && 'current'}
+                                    classNameCustom={props.currentAnimationPlay === n.name + '_stop' && 'current'}
                                     callBackClick={() => {
-                                        changeCurrentAnimationPlay(n.name + '_stop')
+                                        props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_stop' })
+                                        //changeCurrentAnimationPlay(n.name + '_stop')
                                         startAnimate(n.name, false)
                                     }}/>
                             </div>
@@ -200,7 +203,7 @@ function ItemViewResources(props) {
 
 
 
-                {props.authRole === 'animator' && animations &&
+                {props.authRole === 'animator' && props.currentAnimations &&
                     <div>
                         <AppLoadMultFiles
                             val='upload DragonBones files'
@@ -220,17 +223,18 @@ function ItemViewResources(props) {
                 {props.currentItemResources && props.currentItemResources['files'] && props.currentItemResources['files']['spine-ske'] &&
                 <AppButton
                     val='spine view'
-                    classNameCustom={currentFilesView === 'spines-files' && 'current'}
+                    //classNameCustom={currentFilesView === 'spines-files' && 'current'}
+                    classNameCustom={props.currentItemViewMode === 'spines-files' && 'current'}
                     callBackClick={() => {
                         props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
                         AppPixi.createItemViewByResources('spines-files', props.currentItemId, props.currentItemResources, (animationsNames) => {
-                            changeCurrentFilesView('spines-files')
+                            props.dispatch({ type: 'CURRENT_ITEM_VIEW_MODE', currentItemViewMode: 'spines-files' })
                             setSpineAnimations(animationsNames)
                             props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
                     })}}/>
                 }
 
-                {currentFilesView === 'spines-files' && spineAnimations && spineAnimations.map((n, i) => n &&
+                {props.currentItemViewMode === 'spines-files' && spineAnimations && spineAnimations.map((n, i) => n &&
                     <div
                         className="content-stroke"
                         key={i}>
@@ -239,23 +243,26 @@ function ItemViewResources(props) {
                             <span className="m-r-5">{n.duration.toFixed(2)} s</span>
                             <AppButton
                                 val='once'
-                                classNameCustom={currentAnimationPlay === n.name + '_once' && 'current'}
+                                classNameCustom={props.currentAnimationPlay === n.name + '_once' && 'current'}
                                 callBackClick={() => {
-                                    changeCurrentAnimationPlay(n.name + '_once')
+                                    props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_once' })
+                                    //changeCurrentAnimationPlay(n.name + '_once')
                                     startAnimate(n.name, 1)
                                 }}/>
                             <AppButton
                                 val='repeat'
-                                classNameCustom={currentAnimationPlay === n.name + '_repeat' && 'current'}
+                                classNameCustom={props.currentAnimationPlay === n.name + '_repeat' && 'current'}
                                 callBackClick={() => {
-                                    changeCurrentAnimationPlay(n.name + '_repeat')
+                                    props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_repeat' })
+                                    //changeCurrentAnimationPlay(n.name + '_repeat')
                                     startAnimate(n.name, 1000)
                                 }}/>
                             <AppButton
                                 val='stop'
-                                classNameCustom={currentAnimationPlay === n.name + '_stop' && 'current'}
+                                classNameCustom={props.currentAnimationPlay === n.name + '_stop' && 'current'}
                                 callBackClick={() => {
-                                    changeCurrentAnimationPlay(n.name + '_stop')
+                                    props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_stop' })
+                                    //changeCurrentAnimationPlay(n.name + '_stop')
                                     startAnimate(n.name, false)
                                 }}/>
 
@@ -285,19 +292,20 @@ function ItemViewResources(props) {
                     <div>
                         <AppButton
                             val='image static view'
-                            classNameCustom={currentFilesView === 'image-static' && 'current'}
+                            classNameCustom={props.currentItemViewMode === 'image-static' && 'current'}
                             callBackClick={() => {
                                 props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
                                 AppPixi.createItemViewByResources('image-static', props.currentItemId, props.currentItemResources, () => {
                                     props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
                                 })
-                                changeCurrentFilesView('image-static')
+                                props.dispatch({ type: 'CURRENT_ITEM_VIEW_MODE', currentItemViewMode: 'image-static' })
+                                //changeCurrentFilesView('image-static')
                             }}/>
                     </div>)
                 }
 
 
-                {props.authRole === 'animator' && animations &&
+                {props.authRole === 'animator' && props.currentAnimations &&
                     <AppLoadMultFiles
                         val='upload static image file(.png)'
                         inputKey='image-static'
@@ -318,13 +326,13 @@ function ItemViewResources(props) {
                     <div>
                         <AppButton
                             val='image blur view'
-                            classNameCustom={currentFilesView === 'image-blur' && 'current'}
+                            classNameCustom={props.currentItemViewMode === 'image-blur' && 'current'}
                             callBackClick={() => {
                                 props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: true }))
                                 AppPixi.createItemViewByResources('image-blur', props.currentItemId, props.currentItemResources, () => {
                                     props.dispatch(({ type: 'TOGGLE_WAIT_LOADING', is: false }))
                                 })
-                                changeCurrentFilesView('image-blur')
+                                props.dispatch({ type: 'CURRENT_ITEM_VIEW_MODE', currentItemViewMode: 'image-blur' })
                             }}/>
 
                     </div>)
@@ -370,31 +378,3 @@ function ItemViewResources(props) {
 }
 
 export default connect(mapStateToProps)(ItemViewResources)
-
-// let id = null // ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ
-//
-//
-// function ItemViewResources(props) {
-//     console.log(props.currentItemId) // выдает правильный ID
-//     id = props.currentItemId // ЛЕЧИТСЯ ЕСЛИ ИСПОЛЬЗОВАТЬ ГЛОБАЛЬНУЮ ПЕРЕМЕННУЮ
-//
-//
-//     useEffect(() => {
-//         return () =>
-//             props.dispatch({ ... })
-//     }, [props.currentItemId])
-//
-//
-//     /** send files */
-//     const onLoadMultFiles = (inputKey, files) => {
-//         console.log(props.currentItemId) // выдает НЕПРАВИЛЬНЫЙ ID
-//         console.log(id) // выдает ПРАВИЛЬНЫЙ ID
-//     }
-//
-//     return (
-//         <AppLoadMultFiles
-//             val='upload static image file(.png)'
-//             inputKey='image-static'
-//             callback={(inputKey, files) => onLoadMultFiles(inputKey, files)}
-//         />)
-// }

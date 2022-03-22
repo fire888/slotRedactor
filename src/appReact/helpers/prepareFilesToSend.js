@@ -28,7 +28,6 @@ const TYPES_IMG_BLUR = [
 
 
 export const sendFilesToServer = (inputKey, id, oldItemData, files, callback) => {
-    console.log('!!!!!!!!!!!!', id)
     let preparedFiles = null
 
     if (inputKey === 'dragon-bones-files') {

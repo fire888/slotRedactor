@@ -141,7 +141,7 @@ export const createItemViewByResources = (mode, id, data, callback) => {
 
         transformScene(modifySceneValues.x, modifySceneValues.y, modifySceneValues.scale, modifySceneValues.isFlipX, modifySceneValues.isFlipY)
 
-        callback(true)
+        callback(false)
     }
 }
 

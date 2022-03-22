@@ -3,12 +3,14 @@ import { connect } from 'react-redux'
 import { AppButton } from '../components/AppButton'
 import '../stylesheets/ContainerZoomScroll.css'
 import { transformScene } from '../../appPixi/AppPixi'
+import { getLink } from '../helpers/restoreParamsFromPath'
 
 
 
 const mapStateToProps = state => {
     return ({
-        isShowLoadingSpinner: state.app.isShowLoadingSpinner
+        isShowLoadingSpinner: state.app.isShowLoadingSpinner,
+        state: state.app,
     })
 }
 
@@ -26,6 +28,7 @@ function ContainerZoomScroll (props) {
     const [accumScale, changeScale] = useState(1)
     const [isFlipX, changeFlipX] = useState(false)
     const [isFlipY, changeFlipY] = useState(false)
+    const [linkValue, changeLinkValue] = useState(false)
 
     const resetValues = () => {
         changeAccumX(0)
@@ -114,6 +117,31 @@ function ContainerZoomScroll (props) {
                 classNameCustom='zoom'
                 callBackClick={resetValues}
             />
+
+            {!linkValue && <AppButton
+                key='getPath'
+                val='get link'
+                classNameCustom='zoom'
+                callBackClick={() => {
+                    changeLinkValue(getLink(props.state))
+                }}
+            />}
+
+            {linkValue &&
+                <div className='path-value'>
+                    <span
+                        className={'path-item'}>
+                        {linkValue}
+                    </span>
+                    <AppButton
+                        key='close'
+                        val='close'
+                        callBackClick={() => {
+                            changeLinkValue(null)
+                        }}
+                    />
+                </div>
+            }
         </div>)
 }
 

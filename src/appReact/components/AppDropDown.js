@@ -24,7 +24,7 @@ export function AppDropDown (props) {
             <br/>
             <div className='content-stroke'>
                 <select value={inputValue} onChange={changeHandler}>
-                    {props.arrOptions.map((item, i) => <option key = {i} value = {item}>{item}</option>)}
+                    {props.arrOptions && props.arrOptions.map((item, i) => <option key = {i} value = {item}>{item}</option>)}
                 </select>
                 {inputValue !== "" && inputValue !== props.val &&
                     (props.alertMess

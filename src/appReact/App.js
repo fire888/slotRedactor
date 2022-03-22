@@ -15,6 +15,7 @@ import ItemView from "./containers/ItemView";
 import ItemViewResources from "./containers/ItemViewResources";
 import { GifSpinner } from './components/GifLoading'
 import ContainerZoomScroll from './containers/ContainerZoomScroll'
+import { restoreParamsFromPath } from "./helpers/restoreParamsFromPath"
 
 const mapStateToProps = state => {
     return ({
@@ -27,6 +28,9 @@ const mapStateToProps = state => {
 }
 
 const App = connect(mapStateToProps)(function (props) {
+
+        restoreParamsFromPath(props.dispatch)
+
         return (
             <div>
                 {props.currentItemId && <ContainerZoomScroll />}
@@ -53,7 +57,7 @@ const App = connect(mapStateToProps)(function (props) {
 
 ReactDOM.render(
     <React.StrictMode>
-        <Provider store={store}>
+        <Provider store={ store }>
         <App />
         </Provider>
     </React.StrictMode>,

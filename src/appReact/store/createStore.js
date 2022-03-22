@@ -11,9 +11,14 @@ const appData = {
     gameTags: null, //['spells', 'cleo', 'eagles', 'none'],
     listTypes: ['slot-item', 'background', 'element', 'none'],
     currentList: null,
+
     currentItemId: null,
     currentItemProperties: null,
     currentItemResources: null,
+    currentItemViewMode: null,
+    currentAnimations: [],
+    currentAnimationPlay: null,
+
     isShowLoadingSpinner: false,
 }
 
@@ -51,7 +56,6 @@ const app = function (state = appData, action) {
             ...state,
             currentGameTag: action.gameTag,
             currentItemProperties,
-            //currentItemProperties,
             currentList,
             currentItemId: null,
         })
@@ -78,6 +82,27 @@ const app = function (state = appData, action) {
         return ({
             ...state,
             currentItemResources: action.currentItemResources,
+        })
+    }
+
+    if (action.type === 'CURRENT_ITEM_VIEW_MODE') {
+        return ({
+            ...state,
+            currentItemViewMode: action.currentItemViewMode,
+        })
+    }
+
+    if (action.type === 'CURRENT_ANIMATIONS_LIST') {
+        return ({
+            ...state,
+            currentAnimations: action.currentAnimations,
+        })
+    }
+
+    if (action.type === 'CURRENT_ANIMATION') {
+        return ({
+            ...state,
+            currentAnimationPlay: action.currentAnimationPlay,
         })
     }
 
