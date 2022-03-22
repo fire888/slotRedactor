@@ -16,7 +16,6 @@ export const restoreParamsFromPath = (dispatch) => {
     const id = queryParams.get('id');
     const view = queryParams.get('view');
     const animation = queryParams.get('animation')
-    console.log(game, id, view, animation); // 55 test null
 
     window.history.replaceState(null, null, window.location.pathname);
 
@@ -54,7 +53,6 @@ export const restoreParamsFromPath = (dispatch) => {
                         return;
                     }
 
-                    console.log(animation)
                     const n = getAnimationName(animation)
 
                     dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n + '_repeat' })
@@ -66,14 +64,14 @@ export const restoreParamsFromPath = (dispatch) => {
 }
 
 export const getLink = (store) => {
-    const host = window.location.origin
+    const host = window.location.href
 
     const game = store.currentGameTag
     const id = store.currentItemId
     const view = store.currentItemViewMode
     const animationName = store.currentAnimationPlay
 
-    return `${ host }/?game=${game}&id=${id}&view=${view}&animation=${animationName}`
+    return `${ host }?game=${game}&id=${id}&view=${view}&animation=${animationName}`
 }
 
 const ANIMATIONS_PLAY_MODES = ['_once', '_repeat', '_stop']

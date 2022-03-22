@@ -11,6 +11,7 @@ const mapStateToProps = state => {
     return ({
         isShowLoadingSpinner: state.app.isShowLoadingSpinner,
         state: state.app,
+        authRole: state.app.authRole,
     })
 }
 
@@ -118,7 +119,7 @@ function ContainerZoomScroll (props) {
                 callBackClick={resetValues}
             />
 
-            {!linkValue && <AppButton
+            {!linkValue && props.authRole && <AppButton
                 key='getPath'
                 val='get link'
                 classNameCustom='zoom'
