@@ -18,6 +18,7 @@ const appData = {
     currentItemViewMode: null,
     currentAnimations: [],
     currentAnimationPlay: null,
+    animationLock: null,
 
     isShowLoadingSpinner: false,
 }
@@ -105,6 +106,14 @@ const app = function (state = appData, action) {
             currentAnimationPlay: action.currentAnimationPlay,
         })
     }
+
+    if (action.type === 'LOCK_ANIMATION') {
+        return ({
+            ...state,
+            animationLock: action.animationLock,
+        })
+    }
+
 
     return state
 }

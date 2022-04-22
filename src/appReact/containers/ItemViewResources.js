@@ -38,6 +38,7 @@ const mapStateToProps = state => {
         currentItemViewMode: state.app.currentItemViewMode,
         currentAnimations: state.app.currentAnimations,
         currentAnimationPlay: state.app.currentAnimationPlay,
+        animationLock: state.app.animationLock,
     })
 }
 
@@ -78,9 +79,7 @@ function ItemViewResources(props) {
     useEffect(() => {
         getResourcesItem()
         return () => {
-            console.log('destroy', props.currentItemId)
             props.dispatch({ type: 'CURRENT_ANIMATIONS_LIST', currentAnimations: [] })
-            //setAnimations([])
             setSpineAnimations([])
             setFileNames([])
             props.dispatch({ type: 'CHANGE_CURRENT_ITEM_RESOURCES', currentItemResources: null })
@@ -142,29 +141,37 @@ function ItemViewResources(props) {
                                     val='once'
                                     classNameCustom={props.currentAnimationPlay === n.name + '_once' && 'current'}
                                     callBackClick={() => {
-                                        startAnimate(n.name, 1)
+                                        AppPixi.playAnimation({ animationName: n.name, count: 1, isAdditional: !!props.animationLock })
                                         props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_once' })
-                                        console.log(n.name + '_once')
-                                        //changeCurrentAnimationPlay(n.name + '_once')
                                     }}/>
                                 <AppButton
                                     val='repeat'
                                     classNameCustom={props.currentAnimationPlay === n.name + '_repeat' && 'current'}
                                     callBackClick={() => {
-                                        //changeCurrentAnimationPlay(n.name + '_repeat')
                                         props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_repeat' })
-                                        startAnimate(n.name, 1000)
+                                        AppPixi.playAnimation({ animationName: n.name, count: 1000, isAdditional: !!props.animationLock })
                                     }}/>
                                 <AppButton
                                     val='stop'
                                     classNameCustom={props.currentAnimationPlay === n.name + '_stop' && 'current'}
                                     callBackClick={() => {
                                         props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_stop' })
-                                        //changeCurrentAnimationPlay(n.name + '_stop')
-                                        startAnimate(n.name, false)
+                                        AppPixi.playAnimation({ animationName: n.name, count: false, isAdditional: !!props.animationLock })
+                                    }}/>
+                                <div className='w-15' />
+                                <AppButton
+                                    val='lock'
+                                    classNameCustom={props.animationLock === n.name && 'current'}
+                                    callBackClick={() => {
+                                        const isUnLock = props.animationLock === n.name
+                                        props.dispatch({ type: 'LOCK_ANIMATION', animationLock: isUnLock ? null : n.name })
+                                        AppPixi.playAnimation({ animationName: n.name, count: isUnLock ? false : 1000, isAdditional: false })
                                     }}/>
                             </div>
                         </div>
+
+
+
                         {/** add mode to animation */}
                         {props.currentItemResources &&
                         props.currentItemResources['sounds-animations'] &&

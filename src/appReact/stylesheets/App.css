@@ -4,7 +4,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 300px;
+  /*width: 300px;*/
   height: 100vh;
   min-height: 100vh;
   z-index: 10;
@@ -76,6 +76,10 @@ hr {
   min-height: 30px;
 }
 
+.w-15 {
+  min-width: 15px;
+}
+
 .w-200 {
   min-width: 200px;
   margin: 0 0 0 auto;
@@ -98,6 +102,7 @@ hr {
 .m-r-5 {
   margin-right: 5px;
 }
+
 
 
 .main-panel-left {

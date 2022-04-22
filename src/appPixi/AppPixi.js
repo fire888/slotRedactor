@@ -55,6 +55,7 @@ root.components.deviceResizer = new DeviceResizer(root, { config: {
 
 let app = new Application(root)
 let currentItem = null
+let currentAnimationName = null
 const factory = DragonBones.PixiFactory.factory
 
 
@@ -148,7 +149,8 @@ export const createItemViewByResources = (mode, id, data, callback) => {
 
 
 
-export const playAnimation = ({ animationName, count }) => {
+export const playAnimation = ({ animationName, count, isAdditional = false }) => {
+    console.log(animationName, count)
     if (!currentItem) return;
 
 
@@ -169,10 +171,19 @@ export const playAnimation = ({ animationName, count }) => {
     }
 
     /** start dragon animation */
-    if (count) {
-        currentItem.animation.play(animationName, count)
+
+    if (!isAdditional) {
+        currentAnimationName = animationName
+        if (count) {
+            currentItem.animation.play(animationName, count)
+        } else {
+            currentItem.animation.stop()
+        }
     } else {
-        currentItem.animation.stop()
+        console.log('!!!!', animationName, currentAnimationName)
+        if (currentAnimationName && animationName) {
+            currentItem.animation.fadeIn(animationName, 0, 1, 0, currentAnimationName)//.resetToPose = true;
+        }
     }
 }
 
