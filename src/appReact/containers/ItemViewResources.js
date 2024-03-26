@@ -137,27 +137,60 @@ function ItemViewResources(props) {
                             <span>{n.name}</span>
                             <div className="contrnt-right">
                                 <span className="m-r-5">{n.duration.toFixed(2)} s</span>
-                                <AppButton
-                                    val='once'
-                                    classNameCustom={props.currentAnimationPlay === n.name + '_once' && 'current'}
-                                    callBackClick={() => {
-                                        AppPixi.playAnimation({ animationName: n.name, count: 1, isAdditional: !!props.animationLock })
-                                        props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_once' })
-                                    }}/>
-                                <AppButton
-                                    val='repeat'
-                                    classNameCustom={props.currentAnimationPlay === n.name + '_repeat' && 'current'}
-                                    callBackClick={() => {
-                                        props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_repeat' })
-                                        AppPixi.playAnimation({ animationName: n.name, count: 1000, isAdditional: !!props.animationLock })
-                                    }}/>
-                                <AppButton
-                                    val='stop'
-                                    classNameCustom={props.currentAnimationPlay === n.name + '_stop' && 'current'}
-                                    callBackClick={() => {
-                                        props.dispatch({ type: 'CURRENT_ANIMATION', currentAnimationPlay: n.name + '_stop' })
-                                        AppPixi.playAnimation({ animationName: n.name, count: false, isAdditional: !!props.animationLock })
-                                    }}/>
+                                {props.animationLock !== n.name &&
+                                    <AppButton
+                                        val='once'
+                                        classNameCustom={props.currentAnimationPlay === n.name + '_once' && 'current'}
+                                        callBackClick={() => {
+                                            AppPixi.playAnimation({
+                                                animationName: n.name,
+                                                count: 1,
+                                                isAdditional: !!props.animationLock
+                                            })
+                                            props.dispatch({
+                                                type: 'CURRENT_ANIMATION',
+                                                currentAnimationPlay: n.name + '_once'
+                                            })
+                                            setTimeout(() => {
+                                                props.dispatch({
+                                                    type: 'CURRENT_ANIMATION',
+                                                    currentAnimationPlay: null,
+                                                })
+                                            }, n.duration * 1000)
+                                        }}/>
+                                }
+                                {!props.animationLock &&
+                                    <AppButton
+                                        val='repeat'
+                                        classNameCustom={props.currentAnimationPlay === n.name + '_repeat' && 'current'}
+                                        callBackClick={() => {
+                                            props.dispatch({
+                                                type: 'CURRENT_ANIMATION',
+                                                currentAnimationPlay: n.name + '_repeat'
+                                            })
+                                            AppPixi.playAnimation({
+                                                animationName: n.name,
+                                                count: 1000,
+                                                isAdditional: !!props.animationLock
+                                            })
+                                        }}/>
+                                }
+                                {!props.animationLock &&
+                                    <AppButton
+                                        val='stop'
+                                        classNameCustom={props.currentAnimationPlay === n.name + '_stop' && 'current'}
+                                        callBackClick={() => {
+                                            props.dispatch({
+                                                type: 'CURRENT_ANIMATION',
+                                                currentAnimationPlay: n.name + '_stop'
+                                            })
+                                            AppPixi.playAnimation({
+                                                animationName: n.name,
+                                                count: false,
+                                                isAdditional: !!props.animationLock
+                                            })
+                                        }}/>
+                                }
                                 <div className='w-15' />
                                 <AppButton
                                     val='lock'

@@ -69,6 +69,7 @@ const app = function (state = appData, action) {
             ...state,
             currentItemId: action.id,
             currentItemProperties,
+            animationLock: null,
         })
     }
 
@@ -111,6 +112,7 @@ const app = function (state = appData, action) {
         return ({
             ...state,
             animationLock: action.animationLock,
+            currentAnimationPlay: null,
         })
     }
 

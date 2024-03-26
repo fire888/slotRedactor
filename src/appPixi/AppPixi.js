@@ -147,10 +147,10 @@ export const createItemViewByResources = (mode, id, data, callback) => {
 }
 
 
-
+let a
+let b
 
 export const playAnimation = ({ animationName, count, isAdditional = false }) => {
-    console.log(animationName, count)
     if (!currentItem) return;
 
 
@@ -171,18 +171,17 @@ export const playAnimation = ({ animationName, count, isAdditional = false }) =>
     }
 
     /** start dragon animation */
-
     if (!isAdditional) {
         currentAnimationName = animationName
         if (count) {
-            currentItem.animation.play(animationName, count)
+            a = currentItem.animation.play(animationName, count)
         } else {
             currentItem.animation.stop()
         }
     } else {
-        console.log('!!!!', animationName, currentAnimationName)
         if (currentAnimationName && animationName) {
-            currentItem.animation.fadeIn(animationName, 0, 1, 0, currentAnimationName)//.resetToPose = true;
+            a.weight = 1
+            const b = currentItem.animation.fadeIn(animationName, 0, 1, 0, currentAnimationName)
         }
     }
 }
