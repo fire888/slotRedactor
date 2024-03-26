@@ -42,9 +42,11 @@ const app = function (state = appData, action) {
     }
 
     if (action.type === 'ADD_GAMES_TAGS') {
+        const tags = action.arrTags.reverse()
+        const tagsWithNone = ['none', ...tags]
         return ({
             ...state,
-            gameTags: action.arrTags,
+            gameTags: tagsWithNone,
         })
     } 
 

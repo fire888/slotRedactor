@@ -26,7 +26,6 @@ function ContainerGames_CreateGame(props) {
 
     return (
         <div>
-            <div className='offset-top' />
             {!isClosed && <AppInput
                 val=''
                 type="name"
@@ -36,6 +35,8 @@ function ContainerGames_CreateGame(props) {
             <AppButton
                 val={isClosed ? "create game" : 'cancel create game'}
                 callBackClick={() => toggleClosed(!isClosed)}/>
+
+            <div className='offset-top' />
         </div>
     )
 }

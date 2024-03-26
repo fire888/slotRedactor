@@ -30,6 +30,8 @@ function ContainerGamesNames (props) {
     return (
             <div className='games-names offset-top'>
                 <div className='content-column'>
+                    {props.authRole === 'animator' && <ContainerGames_CreateGame />}
+
                     {props.gameTags && props.gameTags.map(item =>
                         <AppButton
                             key = {item + Math.random()}
@@ -42,8 +44,6 @@ function ContainerGamesNames (props) {
                             }}
                         />)}
                 </div>
-
-                {props.authRole === 'animator' && <ContainerGames_CreateGame />}
             </div>
     )
 }
