@@ -28,7 +28,7 @@ function ContainerGamesNames (props) {
     })
 
     return (
-            <div className='games-names offset-top'>
+            <div className='games-names'>
                 <div className='content-column'>
                     {props.authRole === 'animator' && <ContainerGames_CreateGame />}
 

@@ -1,8 +1,10 @@
 .games-names {
-    max-width: 100px;
+    max-width: 175px;
     display: flex;
     flex-direction: column;
     border-right: #1d4c35 2px solid;
     padding-right: 5px;
     z-index: 100;
+    overflow: auto;
+    height: 95vh;
 }

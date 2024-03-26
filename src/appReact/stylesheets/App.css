@@ -28,7 +28,7 @@ hr {
   color: #1c9358;
   margin-top: 2px;
   overflow: auto;
-  height: calc(100vh - 100px);
+  height: 95vh;
   padding-left: 10px;
   padding-right: 10px;
 }
